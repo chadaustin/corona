@@ -1,3 +1,6 @@
+2003.01.11
+- added support for saving TGA images
+
 2003.01.04
 - Use __declspec instead of .def files for DLL compatibility with mingw
 

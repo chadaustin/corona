@@ -162,6 +162,9 @@
 				RelativePath="..\src\SavePNG.cpp">
 			</File>
 			<File
+				RelativePath="..\src\SaveTGA.cpp">
+			</File>
+			<File
 				RelativePath="..\src\SimpleImage.h">
 			</File>
 			<File

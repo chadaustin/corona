@@ -162,6 +162,10 @@ SOURCE=..\..\src\SavePNG.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\SaveTGA.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\SimpleImage.h
 # End Source File
 # Begin Source File
