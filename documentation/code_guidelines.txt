@@ -1,0 +1,11 @@
+Corona Coding Guidelines:
+
+Syntax:
+  Pretty straightforward...  just try to write clear code and follow
+  the rest of the library's style.
+
+Semantics:
+  When you write or read data to or from a file, don't read one byte
+  at a time.  Read as large of a buffer as you can, and then process
+  the data in memory.  Remember:  Each read operation is a virtual
+  function *and* a system call.
