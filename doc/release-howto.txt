@@ -11,3 +11,4 @@ The following files contain version information:
   doc/doxygen/mainpage.doxy
   src/corona.h
   src/Corona.cpp
+  vc7/ManagedWrapper.cpp
