@@ -14,10 +14,6 @@ env = Environment(ENV = os.environ,
                   CXX = 'g++',
                   CXXFLAGS = CXXFLAGS)
 
-if sys.platform == 'cygwin':
-    env.Append(CCFLAGS = ['-DWIN32'],
-               CXXFLAGS = ['-DWIN32'])
-
 Export('env CORONA_LIBS')
 
 SConscript(dirs = ['examples', 'src', 'test'])
