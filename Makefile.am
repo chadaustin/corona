@@ -19,3 +19,6 @@ libcorona_la_LDFLAGS = \
 	-release $(VERSION) \
 	-lpng \
 	-ljpeg
+
+libcorona_la_CFLAGS = \
+	-Wall

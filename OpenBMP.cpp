@@ -35,11 +35,11 @@ namespace corona {
   };
 
 
-  inline read16(byte* c) {
+  inline int read16(byte* c) {
     return (c[1] << 8) + c[0];
   }
 
-  inline read32(byte* c) {
+  inline int read32(byte* c) {
     return (read16(c + 2) << 16) + read16(c);
   }
 

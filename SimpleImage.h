@@ -13,7 +13,7 @@ namespace corona {
     SimpleImage(int width,
                 int height,
                 PixelFormat format,
-                void* pixels) {
+                byte* pixels) {
       m_width  = width;
       m_height = height;
       m_format = format;
@@ -40,7 +40,7 @@ namespace corona {
       return m_format;
     }
 
-    void* getPixels() {
+    byte* getPixels() {
       return m_pixels;
     }
 
@@ -48,7 +48,7 @@ namespace corona {
     int         m_width;
     int         m_height;
     PixelFormat m_format;
-    void*       m_pixels;
+    byte*       m_pixels;
   };
 
 }
