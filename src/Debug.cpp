@@ -34,7 +34,8 @@ Log::EnsureOpen()
 #ifdef WIN32
     handle = fopen("C:/corona_debug.log", "w");
 #else
-    handle = stderr;
+    std::string home(getenv("HOME"));
+    handle = fopen((home + "/corona_debug.log").c_str(), "w");
 #endif
     atexit(Close);
   }
