@@ -9,18 +9,6 @@
 #include "resource.h"
 
 
-typedef unsigned char byte;
-
-struct RGBA {
-  byte red, green, blue, alpha;
-};
-
-struct BGRA {
-  byte blue, green, red, alpha;
-};
-
-
-
 static char TITLE[] = "Corona Image Viewer";
 static char CLASSNAME[] = "CoronaWinView";
 
@@ -62,7 +50,7 @@ static bool UpdateImage(const char* filename) {
     return true;
   }
 
-  corona::Image* image = corona::OpenImage(filename, corona::PF_R8G8B8A8);
+  corona::Image* image = corona::OpenImage(filename, corona::PF_B8G8R8A8);
   if (!image) {
     return false;
   }
@@ -87,10 +75,10 @@ static bool UpdateImage(const char* filename) {
   bmih.biBitCount    = 32;
   bmih.biCompression = BI_RGB;
 
-  BGRA* dest;
+  void* dest;
   gBitmap = CreateDIBSection(
     GetDC(NULL), &bmi, DIB_RGB_COLORS,
-    (void**)&dest, NULL, 0);
+    &dest, NULL, 0);
 
   if (!gBitmap) {
     DeleteDC(gDC);
@@ -105,16 +93,7 @@ static bool UpdateImage(const char* filename) {
     return false;
   }
 
-  RGBA* src = (RGBA*)image->getPixels();
-  for (int i = 0; i < gImageWidth * gImageHeight; ++i) {
-    dest->red   = src->red;
-    dest->green = src->green;
-    dest->blue  = src->blue;
-    dest->alpha = src->alpha;
-    ++src;
-    ++dest;
-  }
-
+  memcpy(dest, image->getPixels(), gImageWidth * gImageHeight * 4);
   delete image;
   return true;
 }
