@@ -11,7 +11,7 @@ PCXTests::testLoader() {
     "test",
     "test_odd",
 
-    // we don't officially support these yet
+    // we don't support these yet
     //"test_v0",
     //"test_v0_odd",
     //"test_v2",

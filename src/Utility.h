@@ -124,6 +124,13 @@ namespace corona {
     byte blue;
   };
 
+  struct RGBA {
+    byte red;
+    byte green;
+    byte blue;
+    byte alpha;
+  };
+
 }
 
 

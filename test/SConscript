@@ -8,6 +8,7 @@ sources = [
     'CoronaTest.cpp',
     'APITests.cpp',
     'BMPTests.cpp',
+    'GIFTests.cpp',
     'JPEGTests.cpp',
     'PaletteTests.cpp',
     'PCXTests.cpp',

@@ -3,6 +3,7 @@
 
 void
 JPEGTests::testLoader() {
+  // @todo add tests for JPEG images
 }
 
 
