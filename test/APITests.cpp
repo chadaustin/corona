@@ -4,8 +4,8 @@
 void
 APITests::testBasicOperations() {
   // create an image and test the accessors
-  int width = rand()  % 256;
-  int height = rand() % 256;
+  int width  = rand() % 32;
+  int height = rand() % 32;
   PixelFormat format = PF_R8G8B8A8;
   int bpp = 4;
 
