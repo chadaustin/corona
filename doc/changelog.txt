@@ -1,8 +1,28 @@
+2003.01.04
+- Use __declspec instead of .def files for DLL compatibility with mingw
+
+2003.01.02
+- made interfaces use __stdcall (COR_CALL) in Win32 so they are more
+  compatible with COM
+
+2002.12.27
+- build without PNG or JPEG support if their respective libraries aren't
+  found
+- added a ConvertPalette function to convert palettes between different
+  pixel formats
+
+2002.12.25
+- added a corona-config script
+- fix bug in image cloning where the whole palette wouldn't be cloned
+- added support for BGRA and BGR pixel formats
+
 2002.12.23
 - better TGA support: 32-bit images should be BGRA, not GBRA.  also,
   properly support flipped and mirrored images.
 - added Kevin Gadd's change to make SaveImage() for PNG images save
   the correct pixel format, including the palette.
+- added GetSupportedReadFormats and GetSupportedWriteFormats for
+  supported format enumeration
 
 2002.08.01
 - renamed GetBytesPerPixel to GetPixelSize
