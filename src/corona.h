@@ -25,10 +25,12 @@
   
 
 // DLLs in Windows should use the standard calling convention
-#if defined(WIN32) || defined(_WIN32)
-#  define COR_CALL __stdcall
-#else
-#  define COR_CALL
+#ifndef COR_CALL
+#  if defined(WIN32) || defined(_WIN32)
+#    define COR_CALL __stdcall
+#  else
+#    define COR_CALL
+#  endif
 #endif
 
 
