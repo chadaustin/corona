@@ -1,5 +1,7 @@
 EXPORTS
   CorGetVersion
+  CorGetSupportedReadFormats
+  CorGetSupportedWriteFormats
   CorCreateImage
   CorCreatePalettizedImage
   CorCloneImage
@@ -8,5 +10,6 @@ EXPORTS
   CorSaveImage
   CorSaveImageToFile
   CorConvertImage
+  CorConvertPalette
   CorCreateMemoryFile
   CorGetPixelSize

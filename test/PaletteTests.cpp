@@ -7,6 +7,12 @@ struct RGB {
   byte blue;
 };
 
+struct BGR {
+  byte blue;
+  byte green;
+  byte red;
+};
+
 
 void
 PaletteTests::testAPI() {
@@ -67,6 +73,48 @@ PaletteTests::testAPI() {
   CPPUNIT_ASSERT(img4.get() == 0);
   CPPUNIT_ASSERT(img5.get() == 0);
   CPPUNIT_ASSERT(img6.get() == 0);
+
+
+  // test ConvertPaletteFormat
+
+  auto_ptr<Image> img7(CreateImage(16, 16, PF_I8, 256, PF_R8G8B8));
+  CPPUNIT_ASSERT(img7.get() != 0);
+
+  pixels = (byte*)img7->getPixels();
+  for (int i = 0; i < 16 * 16; ++i) {
+    pixels[i] = i;
+  }
+  palette = (RGB*)img7->getPalette();
+  for (int i = 0; i < 256; ++i) {
+    palette[i].red   = i;
+    palette[i].green = 255 - i;
+    palette[i].blue  = 127 + (i % 2);
+  }
+
+  auto_ptr<Image> img8(ConvertPalette(CloneImage(img7.get()), PF_B8G8R8));
+  CPPUNIT_ASSERT(img8.get() != 0);
+  CPPUNIT_ASSERT(img8->getWidth() == 16);
+  CPPUNIT_ASSERT(img8->getHeight() == 16);
+  CPPUNIT_ASSERT(img8->getFormat() == PF_I8);
+  CPPUNIT_ASSERT(img8->getPaletteSize() == 256);
+  CPPUNIT_ASSERT(img8->getPaletteFormat() == PF_B8G8R8);
+
+  bool pixels_correct = true;
+  pixels = (byte*)img8->getPixels();
+  for (int i = 0; i < 16 * 16; ++i) {
+    pixels_correct = pixels_correct && (pixels[i] == i);
+  }
+  CPPUNIT_ASSERT(pixels_correct == true);
+
+  bool palette_correct = true;
+  BGR* bgr_palette = (BGR*)img8->getPalette();
+  for (int i = 0; i < 256; ++i) {
+    palette_correct = palette_correct && (
+      bgr_palette[i].red   == i       &&
+      bgr_palette[i].green == 255 - i &&
+      bgr_palette[i].blue  == 127 + (i % 2));
+  }
+  CPPUNIT_ASSERT(palette_correct == true);
 }
 
 

@@ -317,6 +317,10 @@ namespace corona {
       Image* image,
       PixelFormat format);
 
+    COR_FUNCTION(Image*, CorConvertPalette)(
+      Image* image,
+      PixelFormat palette_format);
+
     // memory file
 
     COR_FUNCTION(File*, CorCreateMemoryFile)(
@@ -591,6 +595,24 @@ namespace corona {
    */
   inline Image* ConvertImage(Image* source, PixelFormat format) {
     return hidden::CorConvertImage(source, format);
+  }
+
+  /**
+   * Converts the palette of a palettized image from one format to
+   * another, destroying the old image.  If the source is 0, the
+   * palette_format is PF_DONTCARE, or the source and target formats
+   * match, the function returns the unmodified source image.  If a
+   * valid conversion is not found or invalid inputs are given (such
+   * as a direct-color source image), this function destroys the old
+   * image and returns 0.
+   *
+   * @param source          palettized image to convert
+   * @param palette_format  desired pixel format of palette
+   *
+   * @return  valid image object if conversion succeeds, 0 otherwise
+   */
+  inline Image* ConvertPalette(Image* source, PixelFormat palette_format) {
+    return hidden::CorConvertPalette(source, palette_format);
   }
 
   /**

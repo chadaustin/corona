@@ -72,6 +72,40 @@ namespace corona {
   }
 
 
+  bool ConvertPixels(byte* out, PixelFormat out_format,
+                     const byte* in,  PixelFormat in_format,
+                     int pixel_count)
+  {
+    const FormatDesc* out_desc = GetDescription(out_format);
+    const FormatDesc* in_desc  = GetDescription(in_format);
+    if (!out_desc || !in_desc) {
+      return false;
+    }
+
+    const int out_size = GetPixelSize(out_format);
+    const int in_size  = GetPixelSize(in_format);
+
+    for (int i = 0; i < pixel_count; ++i) {
+      out[out_desc->r_shift] = in[in_desc->r_shift];
+      out[out_desc->g_shift] = in[in_desc->g_shift];
+      out[out_desc->b_shift] = in[in_desc->b_shift];
+
+      if (out_desc->has_alpha) {
+        if (in_desc->has_alpha) {
+          out[out_desc->a_shift] = in[in_desc->a_shift];
+        } else {
+          out[out_desc->a_shift] = 255;
+        }
+      }
+
+      in  += in_size;
+      out += out_size;
+    }
+
+    return true;
+  }
+
+
   Image* DirectConversion(Image* image, PixelFormat target_format) {
     COR_GUARD("DirectConversion()");
 
@@ -86,34 +120,15 @@ namespace corona {
         return image;
     }
 
-    const FormatDesc* source_desc = GetDescription(source_format);
-    const FormatDesc* target_desc = GetDescription(target_format);
-    if (!source_desc || !target_desc) {
+    const int target_size = GetPixelSize(target_format);
+    byte* out_pixels = new byte[width * height * target_size];
+    if (!ConvertPixels(out_pixels, target_format,
+                       in, source_format,
+                       width * height))
+    {
+      delete[] out_pixels;
       delete image;
       return 0;
-    }
-
-    const int source_size = GetPixelSize(source_format);
-    const int target_size = GetPixelSize(target_format);
-
-    byte* out_pixels = new byte[width * height * target_size];
-    byte* out = out_pixels;
-
-    for (int i = 0; i < width * height; ++i) {
-      out[target_desc->r_shift] = in[source_desc->r_shift];
-      out[target_desc->g_shift] = in[source_desc->g_shift];
-      out[target_desc->b_shift] = in[source_desc->b_shift];
-
-      if (target_desc->has_alpha) {
-        if (source_desc->has_alpha) {
-          out[target_desc->a_shift] = in[source_desc->a_shift];
-        } else {
-          out[target_desc->a_shift] = 255;
-        }
-      }
-
-      in  += source_size;
-      out += target_size;
     }
 
     delete image;
@@ -147,6 +162,54 @@ namespace corona {
       }
 
       return DirectConversion(image, target_format);
+    }
+
+
+    COR_EXPORT(Image*, CorConvertPalette)(
+      Image* image,
+      PixelFormat palette_format)
+    {
+      // do we need to convert?
+      if (!image ||
+          palette_format == PF_DONTCARE ||
+          image->getPaletteFormat() == palette_format)
+      {
+        return image;
+      }
+
+      // do we have invalid data?
+      if (!IsPalettized(image->getFormat()) ||
+          !IsDirect(palette_format))
+      {
+        delete image;
+        return 0;
+      }
+
+      const int width  = image->getWidth();
+      const int height = image->getHeight();
+      const PixelFormat format = image->getFormat();
+      const int palette_size = image->getPaletteSize();
+
+      // the palette indices don't change, so just make a copy
+      const int image_size = width * height * GetPixelSize(format);
+      byte* pixels = new byte[image_size];
+      memcpy(pixels, image->getPixels(), image_size);
+
+      byte* new_palette = new byte[
+        palette_size * GetPixelSize(palette_format)];
+
+      if (!ConvertPixels(new_palette, palette_format,
+                         (byte*)image->getPalette(), image->getPaletteFormat(),
+                         palette_size))
+      {
+        delete[] pixels;
+        delete[] new_palette;
+        return 0;
+      }
+
+      return new SimpleImage(
+        width, height, format, pixels,
+        new_palette, palette_size, palette_format);
     }
 
   }
