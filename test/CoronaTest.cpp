@@ -1,5 +1,7 @@
 #include <memory>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
 #include <cppunit/TestCaller.h>
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
@@ -10,17 +12,67 @@ using namespace CppUnit;
 using namespace corona;
 
 
+typedef unsigned char byte;
+
+
+class ImageTestCase : public TestCase {
+public:
+  void AssertImagesEqual(
+    string message,
+    Image* i1,
+    Image* i2,
+    int bytes_per_pixel)
+  {
+    // compare sizes
+    CPPUNIT_ASSERT(i1->getWidth()  == i2->getWidth() &&
+                   i1->getHeight() == i2->getHeight());
+    
+    // by this point, we can assume they have the same size
+    int width  = i1->getWidth();
+    int height = i1->getHeight();
+    
+    // compare formats
+    CPPUNIT_ASSERT(i1->getFormat() == i2->getFormat());
+    
+    // compare pixel data
+    int pixel_comparison = memcmp(i1->getPixels(),
+                                  i2->getPixels(),
+                                  width * height * bytes_per_pixel);
+    CPPUNIT_ASSERT_MESSAGE(message, pixel_comparison == 0);
+  }
+};
+
+
 class APITests : public TestCase {
 public:
+  void testBasicOperations() {
+    int width = rand()  % (1 << 12); // 4096
+    int height = rand() % (1 << 12); // 4096
+    PixelFormat format = (rand() % 2 == 0) ? PF_R8G8B8A8 : PF_R8G8B8;
+
+    auto_ptr<Image> image(CreateImage(width, height, format));
+    CPPUNIT_ASSERT(image->getWidth()  == width);
+    CPPUNIT_ASSERT(image->getHeight() == height);
+    CPPUNIT_ASSERT(image->getFormat() == format);
+  }
+
+  void testAPI() {
+    for (int i = 0; i < 10; ++i) {
+      testBasicOperations();
+    }
+  }
+
   static Test* suite() {
+    typedef TestCaller<APITests> Caller;
+
     TestSuite* suite = new TestSuite();
-    // add tests
+    suite->addTest(new Caller("Basic API Tests", &APITests::testAPI));
     return suite;
   }
 };
 
 
-class BMPTests : public TestCase {
+class BMPTests : public ImageTestCase {
 public:
   void testLoader() {
 
@@ -76,22 +128,7 @@ public:
       auto_ptr<Image> img2(OpenImage(right.c_str(), FF_AUTODETECT, PF_R8G8B8));
       CPPUNIT_ASSERT_MESSAGE("opening " + right, img2.get() != 0);
 
-      // compare sizes
-      CPPUNIT_ASSERT(img1->getWidth() == img2->getWidth() &&
-                     img1->getHeight() == img2->getHeight());
-
-      // by this point, we can assume they have the same size
-      int width  = img1->getWidth();
-      int height = img1->getHeight();
-
-      // compare formats
-      CPPUNIT_ASSERT(img1->getFormat() == img2->getFormat());
-
-      // compare pixel data
-      int comparison = memcmp(img1->getPixels(),
-                              img2->getPixels(),
-                              width * height * 3);
-      CPPUNIT_ASSERT_MESSAGE("pixels wrong in " + left, comparison == 0);
+      AssertImagesEqual("comparing " + left, img1.get(), img2.get(), 3);
     }
   }
 
@@ -135,7 +172,7 @@ public:
 };
 
 
-class PNGTests : public TestCase {
+class PNGTests : public ImageTestCase {
 public:
 
   void testLoader() {
@@ -322,6 +359,37 @@ public:
   }
 
   void testWriter() {
+
+    static const int width  = 256;
+    static const int height = 256;
+
+    // create an image and fill it with random data
+    auto_ptr<Image> image(CreateImage(width, height, PF_R8G8B8A8));
+
+    byte* pixels = (byte*)image->getPixels();
+    for (int i = 0; i < width * height * 4; ++i) {
+      *pixels++ = (byte)(rand() % 256);
+    }
+
+    // generate filename
+    char* filename = tmpnam(0);
+    CPPUNIT_ASSERT_MESSAGE("opening temporary file", filename != 0);
+
+    // save image
+    CPPUNIT_ASSERT(SaveImage(filename, FF_PNG, image.get()) == true);
+
+    // load it back
+    auto_ptr<Image> img2(OpenImage(filename, FF_AUTODETECT, PF_R8G8B8A8));
+    CPPUNIT_ASSERT_MESSAGE("reloading image file", img2.get() != 0);
+
+    AssertImagesEqual(
+      "comparing saved with loaded",
+      image.get(),
+      img2.get(),
+      4);
+
+    // remove the temporary file we made
+    remove(filename);
   }
 
   static Test* suite() {

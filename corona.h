@@ -132,6 +132,13 @@ namespace corona {
 
     COR_FUNCTION(const char*, CorGetVersion());
 
+    // creation
+
+    COR_FUNCTION(Image*, CorCreateImage(
+      int width,
+      int height,
+      PixelFormat format));
+
     // loading
 
     COR_FUNCTION(Image*, CorOpenImage(
@@ -182,6 +189,16 @@ namespace corona {
   // return current API version string
   inline const char* GetVersion() {
     return hidden::CorGetVersion();
+  }
+
+  // create an image with a specified width, height, and pixel format
+  // return 0 on failure
+  inline Image* CreateImage(
+    int width,
+    int height,
+    PixelFormat pixel_format)
+  {
+    return hidden::CorCreateImage(width, height, pixel_format);
   }
 
   // open image from default filesystem

@@ -1,8 +1,10 @@
+#include <string.h>
 #include "corona.h"
 #include "DefaultFileSystem.h"
 #include "Open.h"
 #include "Save.h"
 #include "SimpleImage.h"
+#include "Utility.h"
 
 
 #define COR_EXPORT(ret, name) \
@@ -17,6 +19,25 @@ namespace corona {
 
   COR_EXPORT(const char*, CorGetVersion)() {
     return "0.1.0";
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  COR_EXPORT(Image*, CorCreateImage)(
+    int width,
+    int height,
+    PixelFormat format)
+  {
+    int pixel_size = GetPixelSize(format);
+    if (pixel_size == 0) {
+      // unsupported pixel format???
+      return 0;
+    }
+
+    int size = width * height * pixel_size;
+    byte* pixels = new byte[size];
+    memset(pixels, 0, size);
+    return new SimpleImage(width, height, format, pixels);
   }
 
   //////////////////////////////////////////////////////////////////////////////

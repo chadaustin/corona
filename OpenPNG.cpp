@@ -1,3 +1,10 @@
+/**
+ *  @todo  use our own longjmp instead of libpng's.  this way we don't need
+ *         to use PNG_SETJMP_SUPPORTED in Windows, and don't depend on
+ *         png_ptr->jmpbuf in older versions of libpng.
+ */
+
+
 #include <png.h>
 #include "Debug.h"
 #include "Open.h"
@@ -19,6 +26,21 @@ namespace corona {
     if (file->read(data, length) != int(length)) {
       png_error(png_ptr, "Read error");
     }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  void PNG_warning_function(png_structp png_ptr, png_const_charp error) {
+    // no warnings
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  void PNG_error_function(png_structp png_ptr, png_const_charp warning) {
+    // copied from libpng's pngerror.cpp, but without the fprintf
+    jmp_buf jmpbuf;
+    memcpy(jmpbuf, png_ptr->jmpbuf, sizeof(jmp_buf));
+    longjmp(jmpbuf, 1);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -104,6 +126,9 @@ namespace corona {
     }
 
     COR_LOG("setjmp() succeeded");
+
+    // set the error function
+    png_set_error_fn(png_ptr, 0, PNG_error_function, PNG_warning_function);
 
     // read the image
     png_set_read_fn(png_ptr, file, PNG_read_function);
