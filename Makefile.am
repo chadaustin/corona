@@ -5,6 +5,8 @@ include_HEADERS = corona.h
 
 libcorona_la_SOURCES = \
 	Corona.cpp \
+	Debug.cpp \
+	Debug.h \
 	DefaultFileSystem.cpp \
 	DefaultFileSystem.h \
 	Open.h \

@@ -1,4 +1,5 @@
 #include <png.h>
+#include "Debug.h"
 #include "Open.h"
 #include "SimpleImage.h"
 #include "Utility.h"
@@ -24,6 +25,8 @@ namespace corona {
 
   void fill_palette(png_structp png, png_infop info, png_color palette[256]) {
 
+   COR_GUARD("fill_palette");
+
     // by default, the palette is greyscale
     for (int i = 0; i < 256; ++i) {
       palette[i].red   = i;
@@ -33,9 +36,28 @@ namespace corona {
 
     // do we have a palette and is it big enough?
     png_colorp png_palette;
-    int num_palette;
+    int num_palette = 0;
     png_get_PLTE(png, info, &png_palette, &num_palette);
+
+    COR_IF_DEBUG {
+      char str[80];
+      sprintf(str, "palette size: %d", num_palette);
+      COR_LOG(str);
+    }
+
     if (num_palette >= 256) {
+
+      COR_IF_DEBUG {
+        for (int i = 0; i < 256; ++i) {
+          char str[80];
+          sprintf(str, "r(%d) g(%d) b(%d)",
+            int(palette[i].red),
+            int(palette[i].green),
+            int(palette[i].blue));
+          COR_LOG(str);
+        }
+      }
+
       memcpy(palette, png_palette, 256 * sizeof(png_color));
     }
   }
@@ -44,12 +66,16 @@ namespace corona {
 
   Image* OpenPNG(File* file) {
 
+    COR_GUARD("OpenPNG");
+
     // verify PNG signature
     byte sig[8];
     file->read(sig, 8);
     if (png_sig_cmp(sig, 0, 8)) {
       return 0;
     }
+
+    COR_LOG("Signature verified");
 
     // read struct
     png_structp png_ptr = png_create_read_struct(
@@ -59,6 +85,8 @@ namespace corona {
       return 0;
     }
 
+    COR_LOG("png struct created");
+
     // info struct
     png_infop info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr) {
@@ -66,11 +94,16 @@ namespace corona {
       return 0;
     }
 
+    COR_LOG("info struct created");
+
     // the PNG error function calls longjmp(png_ptr->jmpbuf)
     if (setjmp(png_jmpbuf(png_ptr))) {
+      COR_LOG("Error loading PNG");
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
       return 0;
     }
+
+    COR_LOG("setjmp() succeeded");
 
     // read the image
     png_set_read_fn(png_ptr, file, PNG_read_function);
@@ -78,6 +111,8 @@ namespace corona {
     // always give us 8-bit samples (strip 16-bit and expand <8-bit)
     int png_transform = PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_EXPAND;
     png_read_png(png_ptr, info_ptr, png_transform, NULL);
+
+    COR_LOG("PNG read");
 
     if (!png_get_rows(png_ptr, info_ptr)) {
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
@@ -159,6 +194,17 @@ namespace corona {
             *out++ = palette[c].green;
             *out++ = palette[c].blue;
             *out++ = alpha[c];
+
+            COR_IF_DEBUG {
+              char str[100];
+              sprintf(str, "%d %d %d %d %d",
+                int(palette[c].red),
+                int(palette[c].green),
+                int(palette[c].blue),
+                int(alpha[c]),
+                int(c));
+              COR_LOG(str);
+            }
           }
         }
       }
