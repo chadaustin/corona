@@ -28,7 +28,7 @@
 #endif
 
 
-#define COR_FUNCTION(ret, decl) extern "C" ret COR_CALL decl
+#define COR_FUNCTION(ret, name) extern "C" ret COR_CALL name
 
 
 namespace corona {
@@ -245,53 +245,64 @@ namespace corona {
 
     // API information
 
-    COR_FUNCTION(const char*, CorGetVersion());
+    COR_FUNCTION(const char*, CorGetVersion)();
 
     // creation
 
-    COR_FUNCTION(Image*, CorCreateImage(
+    COR_FUNCTION(Image*, CorCreateImage)(
       int width,
       int height,
-      PixelFormat format));
+      PixelFormat format);
 
-    COR_FUNCTION(Image*, CorCreatePalettizedImage(
+    COR_FUNCTION(Image*, CorCreatePalettizedImage)(
       int width,
       int height,
       PixelFormat format, // must be a palettized format
       int palette_size,
-      PixelFormat palette_format));
+      PixelFormat palette_format);
 
-    COR_FUNCTION(Image*, CorCloneImage(
+    COR_FUNCTION(Image*, CorCloneImage)(
       Image* source,
-      PixelFormat format));
+      PixelFormat format);
 
     // loading
 
-    COR_FUNCTION(Image*, CorOpenImage(
+    COR_FUNCTION(Image*, CorOpenImage)(
       const char* filename,
-      FileFormat file_format));
+      FileFormat file_format);
 
-    COR_FUNCTION(Image*, CorOpenImageFromFile(
+    COR_FUNCTION(Image*, CorOpenImageFromFile)(
       File* file,
-      FileFormat file_format));
+      FileFormat file_format);
 
     // saving
 
-    COR_FUNCTION(bool, CorSaveImage(
+    COR_FUNCTION(bool, CorSaveImage)(
       const char* filename,
       FileFormat file_format,
-      Image* image));
+      Image* image);
 
-    COR_FUNCTION(bool, CorSaveImageToFile(
+    COR_FUNCTION(bool, CorSaveImageToFile)(
       File* file,
       FileFormat file_format,
-      Image* image));
+      Image* image);
 
     // conversion
 
-    COR_FUNCTION(Image*, CorConvertImage(
+    COR_FUNCTION(Image*, CorConvertImage)(
       Image* image,
-      PixelFormat format));
+      PixelFormat format);
+
+    // memory file
+
+    COR_FUNCTION(File*, CorCreateMemoryFile)(
+      void* buffer,
+      int size);
+
+    // utility
+
+    COR_FUNCTION(int, CorGetBytesPerPixel)(
+      PixelFormat format);
   }
 
 
@@ -481,6 +492,34 @@ namespace corona {
    */
   inline Image* ConvertImage(Image* source, PixelFormat format) {
     return hidden::CorConvertImage(source, format);
+  }
+
+  /**
+   * Creates a File implementation that reads from a buffer in memory.
+   * It stores a copy of the buffer that is passed in.
+   *
+   * The File object does <i>not</i> take ownership of the memory buffer.
+   * When the file is destroyed, it will not free the memory.
+   *
+   * @param buffer  Pointer to the beginning of the data.
+   * @param size    Size of the buffer in bytes.
+   *
+   * @return  0 if size is non-zero and buffer is null. Otherwise,
+   *          returns a valid File object.
+   */
+  inline File* CreateMemoryFile(void* buffer, int size) {
+    return hidden::CorCreateMemoryFile(buffer, size);
+  }
+
+  /**
+   * Returns the number of bytes needed to store a pixel of a gixen format.
+   *
+   * @param format  The format to query.
+   *
+   * @return  Number of bytes each pixel takes, or 0 if the format is invalid.
+   */
+  inline int GetBytesPerPixel(PixelFormat format) {
+    return hidden::CorGetBytesPerPixel(format);
   }
 
 }

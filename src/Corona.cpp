@@ -2,6 +2,7 @@
 #include <memory>
 #include "corona.h"
 #include "DefaultFileSystem.h"
+#include "MemoryFile.h"
 #include "Open.h"
 #include "Save.h"
 #include "SimpleImage.h"
@@ -32,7 +33,7 @@ namespace corona {
         return 0;
       }
 
-      int size = width * height * GetPixelSize(format);
+      int size = width * height * GetBytesPerPixel(format);
       byte* pixels = new byte[size];
       memset(pixels, 0, size);
       return new SimpleImage(width, height, format, pixels);
@@ -57,11 +58,11 @@ namespace corona {
         return 0;
       }
 
-      int size = width * height * GetPixelSize(format);
+      int size = width * height * GetBytesPerPixel(format);
       byte* pixels = new byte[size];
       memset(pixels, 0, size);
 
-      int palette_bytes = palette_size * GetPixelSize(palette_format);
+      int palette_bytes = palette_size * GetBytesPerPixel(palette_format);
       byte* palette = new byte[palette_bytes];
       memset(palette, 0, palette_bytes);
 
@@ -84,7 +85,7 @@ namespace corona {
       const int height = source->getHeight();
       const PixelFormat source_format = source->getFormat();
 
-      const int source_pixel_size = GetPixelSize(source_format);
+      const int source_pixel_size = GetBytesPerPixel(source_format);
       if (source_pixel_size == 0) {
         // unknown pixel size?
         return 0;
@@ -99,7 +100,7 @@ namespace corona {
         // clone palette
         int palette_size = source->getPaletteSize();
         PixelFormat palette_format = source->getPaletteFormat();
-        int palette_bytes = palette_size * GetPixelSize(palette_format);
+        int palette_bytes = palette_size * GetBytesPerPixel(palette_format);
         byte* palette = new byte[palette_bytes];
         memcpy(palette, source->getPalette(), palette_size);
         Image* image = new SimpleImage(width, height, source_format, pixels,
@@ -231,7 +232,7 @@ namespace corona {
       // if we have a palettized image, convert it to a direct color
       // image and then convert that
       if (source_format == PF_I8) {
-        const int pixel_size = GetPixelSize(palette_format);
+        const int pixel_size = GetBytesPerPixel(palette_format);
         const byte* palette = (byte*)image->getPalette();
         byte* pixels = new byte[width * height * pixel_size];
         for (int i = 0; i < width * height; ++i) {
@@ -270,6 +271,33 @@ namespace corona {
       // delete the source
       delete image;
       return new SimpleImage(width, height, target_format, pixels);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    COR_EXPORT(File*, CorCreateMemoryFile)(
+      void* buffer,
+      int size)
+    {
+      if (size && !buffer) {
+        return 0;
+      }
+      if (size < 0) {
+        return 0;
+      }
+
+      return new MemoryFile(buffer, size);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    COR_EXPORT(int, CorGetBytesPerPixel)(PixelFormat format) {
+      switch (format) {
+        case PF_R8G8B8A8: return 4;
+        case PF_R8G8B8:   return 3;
+        case PF_I8:       return 1;
+        default:          return 0;
+      }
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -76,16 +76,6 @@ namespace corona {
   };
 
 
-  // return size of a pixel in this format in bytes
-  inline int GetPixelSize(PixelFormat format) {
-    switch (format) {
-      case PF_R8G8B8A8: return 4;
-      case PF_R8G8B8:   return 3;
-      case PF_I8:       return 1;
-      default:          return 0;
-    }
-  }
-
   // does this format not use a palette?
   inline bool IsDirect(PixelFormat format) {
     return format == PF_R8G8B8A8 || format == PF_R8G8B8;
