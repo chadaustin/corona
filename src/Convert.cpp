@@ -142,7 +142,7 @@ namespace corona {
 
   namespace hidden {
 
-    COR_EXPORT(Image*, CorConvertImage)(
+    COR_EXPORT(Image*) CorConvertImage(
       Image* image,
       PixelFormat target_format)
     {
@@ -169,7 +169,7 @@ namespace corona {
     }
 
 
-    COR_EXPORT(Image*, CorConvertPalette)(
+    COR_EXPORT(Image*) CorConvertPalette(
       Image* image,
       PixelFormat palette_format)
     {

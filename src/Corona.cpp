@@ -14,13 +14,13 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(const char*, CorGetVersion)() {
+    COR_EXPORT(const char*) CorGetVersion() {
       return "1.0.0";
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(const char*, CorGetSupportedReadFormats)() {
+    COR_EXPORT(const char*) CorGetSupportedReadFormats() {
       return
 #ifndef NO_PNG
 	"PNG Files:png"  ";"
@@ -36,7 +36,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(const char*, CorGetSupportedWriteFormats)() {
+    COR_EXPORT(const char*) CorGetSupportedWriteFormats() {
       return ""
 #ifndef NO_PNG
 	"PNG Files:png"  ";"
@@ -46,7 +46,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(Image*, CorCreateImage)(
+    COR_EXPORT(Image*) CorCreateImage(
       int width,
       int height,
       PixelFormat format)
@@ -64,7 +64,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(Image*, CorCreatePalettizedImage)(
+    COR_EXPORT(Image*) CorCreatePalettizedImage(
       int width,
       int height,
       PixelFormat format,
@@ -95,7 +95,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(Image*, CorCloneImage)(
+    COR_EXPORT(Image*) CorCloneImage(
       Image* source,
       PixelFormat format)
     {
@@ -137,7 +137,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(Image*, CorOpenImage)(
+    COR_EXPORT(Image*) CorOpenImage(
       const char* filename,
       FileFormat file_format)
     {
@@ -151,7 +151,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(Image*, CorOpenImageFromFile)(
+    COR_EXPORT(Image*) CorOpenImageFromFile(
       File* file,
       FileFormat file_format)
     {
@@ -216,7 +216,7 @@ namespace corona {
               strcmp_ci(str + str_len - ext_len, ext) == 0);
     }
 
-    COR_EXPORT(bool, CorSaveImage)(
+    COR_EXPORT(bool) CorSaveImage(
       const char* filename,
       FileFormat file_format,
       Image* image)
@@ -241,7 +241,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(bool, CorSaveImageToFile)(
+    COR_EXPORT(bool) CorSaveImageToFile(
       File* file,
       FileFormat file_format,
       Image* image)
@@ -265,7 +265,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(File*, CorCreateMemoryFile)(
+    COR_EXPORT(File*) CorCreateMemoryFile(
       const void* buffer,
       int size)
     {
@@ -281,7 +281,7 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(int, CorGetPixelSize)(PixelFormat format) {
+    COR_EXPORT(int) CorGetPixelSize(PixelFormat format) {
       switch (format) {
         case PF_R8G8B8A8: return 4;
         case PF_R8G8B8:   return 3;

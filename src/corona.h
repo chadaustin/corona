@@ -53,7 +53,7 @@
 #endif
 
 
-#define COR_FUNCTION(ret, name) extern "C" COR_DECL ret COR_CALL name
+#define COR_FUNCTION(ret) extern "C" COR_DECL ret COR_CALL
 
 
 namespace corona {
@@ -272,7 +272,7 @@ namespace corona {
 
     // API information
 
-    COR_FUNCTION(const char*, CorGetVersion)();
+    COR_FUNCTION(const char*) CorGetVersion();
 
     /// @{
     /**
@@ -283,69 +283,69 @@ namespace corona {
      *
      * description1:ext1,ext2,ext3;description2:ext1,ext2,...
      */
-    COR_FUNCTION(const char*, CorGetSupportedReadFormats)();
-    COR_FUNCTION(const char*, CorGetSupportedWriteFormats)();
+    COR_FUNCTION(const char*) CorGetSupportedReadFormats();
+    COR_FUNCTION(const char*) CorGetSupportedWriteFormats();
     /// @}
 
     // creation
 
-    COR_FUNCTION(Image*, CorCreateImage)(
+    COR_FUNCTION(Image*) CorCreateImage(
       int width,
       int height,
       PixelFormat format);
 
-    COR_FUNCTION(Image*, CorCreatePalettizedImage)(
+    COR_FUNCTION(Image*) CorCreatePalettizedImage(
       int width,
       int height,
       PixelFormat format, // must be a palettized format
       int palette_size,
       PixelFormat palette_format);
 
-    COR_FUNCTION(Image*, CorCloneImage)(
+    COR_FUNCTION(Image*) CorCloneImage(
       Image* source,
       PixelFormat format);
 
     // loading
 
-    COR_FUNCTION(Image*, CorOpenImage)(
+    COR_FUNCTION(Image*) CorOpenImage(
       const char* filename,
       FileFormat file_format);
 
-    COR_FUNCTION(Image*, CorOpenImageFromFile)(
+    COR_FUNCTION(Image*) CorOpenImageFromFile(
       File* file,
       FileFormat file_format);
 
     // saving
 
-    COR_FUNCTION(bool, CorSaveImage)(
+    COR_FUNCTION(bool) CorSaveImage(
       const char* filename,
       FileFormat file_format,
       Image* image);
 
-    COR_FUNCTION(bool, CorSaveImageToFile)(
+    COR_FUNCTION(bool) CorSaveImageToFile(
       File* file,
       FileFormat file_format,
       Image* image);
 
     // conversion
 
-    COR_FUNCTION(Image*, CorConvertImage)(
+    COR_FUNCTION(Image*) CorConvertImage(
       Image* image,
       PixelFormat format);
 
-    COR_FUNCTION(Image*, CorConvertPalette)(
+    COR_FUNCTION(Image*) CorConvertPalette(
       Image* image,
       PixelFormat palette_format);
 
     // memory file
 
-    COR_FUNCTION(File*, CorCreateMemoryFile)(
+    COR_FUNCTION(File*) CorCreateMemoryFile(
       const void* buffer,
       int size);
 
     // utility
 
-    COR_FUNCTION(int, CorGetPixelSize)(
+    COR_FUNCTION(int) CorGetPixelSize(
       PixelFormat format);
   }
 

@@ -5,7 +5,7 @@
 #include "Types.h"
 
 
-#define COR_EXPORT(ret, name)  COR_FUNCTION(ret, name)
+#define COR_EXPORT(ret)  COR_FUNCTION(ret)
 
 
 #if defined(_MSC_VER) && _MSC_VER <= 1200
