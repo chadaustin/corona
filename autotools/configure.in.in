@@ -19,12 +19,13 @@ AC_PROG_CPP
 AC_PROG_CXX
 AC_PROG_CXXCPP
 AC_PROG_MAKE_SET
-AC_PROG_LIBTOOL
+AM_PROG_LIBTOOL
 
 dnl Checks for libraries.
 
 AC_CHECK_LIB(png, png_create_read_struct,,AC_MSG_RESULT(no)
-    AC_MSG_ERROR(could not find libpng))
+    AC_MSG_ERROR(could not find libpng),
+    -lz -lm)
 AC_CHECK_LIB(jpeg, jpeg_start_decompress,,AC_MSG_RESULT(no)
     AC_MSG_ERROR(could not find libjpeg))
 
