@@ -11,7 +11,6 @@
 #define CORONA_H
 
 
-/* extern C */
 #ifndef __cplusplus
 #error Corona requires C++
 #endif
