@@ -23,11 +23,15 @@ namespace corona {
     /**
      * Creates a new image, setting all properties.
      *
-     * @param width   width of the new image
-     * @param height  height of the new image
-     * @param format  format that the pixels are stored in
-     * @param pixels  pixel buffer that the SimpleImage takes ownership of.
-     *                it should be width*height*sizeof(pixel) bytes.
+     * @param width           width of the new image
+     * @param height          height of the new image
+     * @param format          format that the pixels are stored in
+     * @param pixels          pixel buffer that the SimpleImage takes
+                              ownership of.  it should be
+                              width*height*sizeof(pixel) bytes.
+     * @param palette         palette color buffer
+     * @param palette_size    number of entries in palette
+     * @param palette_format  color format palette is stored as
      */
     SimpleImage(int width,
                 int height,
