@@ -2,7 +2,7 @@ import os
 import string
 import sys
 
-Default('.')
+EnsureSConsVersion(0, 12)
 
 base_env = Environment(ENV = os.environ)
 
@@ -15,12 +15,14 @@ elif string.find(sys.platform, 'irix') == -1:
     # on IRIX, don't add these options to the build
     # are we building debug?
     base_env.Append(CXXFLAGS = ['-Wall', '-Wno-non-virtual-dtor'])
-    if ARGUMENTS.get('debug', 0):
+    if ARGUMENTS.get('debug'):
         base_env.Append(CXXFLAGS = ['-g', '-DCORONA_DEBUG'])
 else:
     # but do make sure we look in /usr/freeware for libraries
     base_env.Prepend(CPPPATH = ['/usr/freeware/include'],
-                LIBPATH = ['/usr/freeware/lib32'])
+                     LIBPATH = ['/usr/freeware/lib32'])
+    if ARGUMENTS.get('debug'):
+        base_env.Append(CXXFLAGS = ['-g', '-DCORONA_DEBUG'])
     
 
 CORONA_LIBS = ['corona', 'png', 'z', 'jpeg']
