@@ -121,6 +121,10 @@ namespace corona {
   //////////////////////////////////////////////////////////////////////////////
 
   COR_EXPORT(Image*, CorGuaranteeFormat)(Image* image, PixelFormat format) {
+    if (format == PF_DONTCARE) {
+      return image;
+    }
+
     if (!image) {
       return 0;
     } else {
