@@ -9,6 +9,7 @@ libcorona_la_SOURCES =				\
 	DefaultFileSystem.h			\
 	Open.h					\
 	OpenBMP.cpp				\
+	OpenGIF.cpp                             \
 	OpenJPEG.cpp				\
 	OpenPCX.cpp				\
 	OpenPNG.cpp				\
