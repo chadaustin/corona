@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /O2 /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /FD /c
+# ADD CPP /nologo /MD /W3 /O2 /I "jpeg-6b" /I "zlib-1.1.3" /I "libpng-1.2.1" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /ZI /Od /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /ZI /Od /I "jpeg-6b" /I "zlib-1.1.3" /I "libpng-1.2.1" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -114,15 +114,19 @@ SOURCE=.\DefaultFileSystem.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\JPEG.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\Open.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\PCX.cpp
+SOURCE=.\OpenJPEG.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\OpenPCX.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\OpenPNG.cpp
 # End Source File
 # Begin Source File
 
@@ -162,6 +166,10 @@ SOURCE=".\jpeg-6b\jchuff.c"
 # End Source File
 # Begin Source File
 
+SOURCE=".\jpeg-6b\jchuff.h"
+# End Source File
+# Begin Source File
+
 SOURCE=".\jpeg-6b\jcinit.c"
 # End Source File
 # Begin Source File
@@ -182,7 +190,7 @@ SOURCE=".\jpeg-6b\jcomapi.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\third-party\sphere\jconfig.h"
+SOURCE=".\jpeg-6b\jconfig.h"
 # End Source File
 # Begin Source File
 
@@ -230,11 +238,19 @@ SOURCE=".\jpeg-6b\jdcolor.c"
 # End Source File
 # Begin Source File
 
+SOURCE=".\jpeg-6b\jdct.h"
+# End Source File
+# Begin Source File
+
 SOURCE=".\jpeg-6b\jddctmgr.c"
 # End Source File
 # Begin Source File
 
 SOURCE=".\jpeg-6b\jdhuff.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdhuff.h"
 # End Source File
 # Begin Source File
 
@@ -278,6 +294,10 @@ SOURCE=".\jpeg-6b\jerror.c"
 # End Source File
 # Begin Source File
 
+SOURCE=".\jpeg-6b\jerror.h"
+# End Source File
+# Begin Source File
+
 SOURCE=".\jpeg-6b\jfdctflt.c"
 # End Source File
 # Begin Source File
@@ -306,7 +326,7 @@ SOURCE=".\jpeg-6b\jidctred.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\jpeg-6b\jmemansi.c"
+SOURCE=".\jpeg-6b\jinclude.h"
 # End Source File
 # Begin Source File
 
@@ -314,7 +334,27 @@ SOURCE=".\jpeg-6b\jmemmgr.c"
 # End Source File
 # Begin Source File
 
+SOURCE=".\jpeg-6b\jmemnobs.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jmemsys.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jmorecfg.h"
+# End Source File
+# Begin Source File
+
 SOURCE="..\third-party\sphere\jmorecfg.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jpegint.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jpeglib.h"
 # End Source File
 # Begin Source File
 
@@ -334,7 +374,215 @@ SOURCE=".\jpeg-6b\jutils.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\jpeg-6b\transupp.c"
+SOURCE=".\jpeg-6b\jversion.h"
+# End Source File
+# End Group
+# Begin Group "libpng"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\png.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\png.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\sphere\png.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngasmrd.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngconf.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\sphere\pngconf.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngerror.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pnggccrd.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngget.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngmem.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngpread.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngread.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngrio.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngrtran.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngrutil.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngset.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngtest.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngtrans.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngvcrd.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngwio.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngwrite.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngwtran.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\libpng-1.2.1\pngwutil.c"
+# End Source File
+# End Group
+# Begin Group "zlib"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\adler32.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\compress.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\crc32.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\deflate.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\deflate.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\gzio.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\infblock.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\infblock.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\infcodes.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\infcodes.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\inffast.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\inffast.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\inffixed.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\inflate.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\inftrees.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\inftrees.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\infutil.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\infutil.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\trees.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\trees.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\uncompr.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\zconf.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\sphere\zconf.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\zlib.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\sphere\zlib.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\zutil.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\zlib-1.1.3\zutil.h"
 # End Source File
 # End Group
 # End Target
