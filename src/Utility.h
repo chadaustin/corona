@@ -19,19 +19,11 @@ namespace corona {
       delete[] array;
     }
 
-    operator T*() {
+    operator T*() const {
       return array;
     }
 
-    operator const T*() const {
-      return array;
-    }
-
-    T* get() {
-      return array;
-    }
-
-    const T* get() const {
+    T* get() const {
       return array;
     }
 
@@ -89,8 +81,23 @@ namespace corona {
     switch (format) {
       case PF_R8G8B8A8: return 4;
       case PF_R8G8B8:   return 3;
+      case PF_I8:       return 1;
       default:          return 0;
     }
+  }
+
+  // does this format not use a palette?
+  inline bool IsDirect(PixelFormat format) {
+    return format == PF_R8G8B8A8 || format == PF_R8G8B8;
+  }
+
+  // does this format require a palette?
+  inline bool IsPalettized(PixelFormat format) {
+    return format == PF_I8;
+  }
+
+  inline int GetPaletteSize(PixelFormat format) {
+    return (format == PF_I8 ? 256 : 0);
   }
 
 

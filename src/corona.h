@@ -53,6 +53,7 @@ namespace corona {
                                 desired pixel format */
     PF_R8G8B8A8 = 0x0201,  /**< RGBA, channels have eight bits of precision */
     PF_R8G8B8   = 0x0202,  /**< RGB, channels have eight bits of precision  */
+    PF_I8       = 0x0203,  /**< Palettized, 8-bit indices into palette      */
   };
 
 
@@ -95,6 +96,28 @@ namespace corona {
      * @return  pointer to first element in pixel buffer
      */
     virtual void* getPixels() = 0;
+
+    /**
+     * Get the palette.  Pixels are packed in the format defined by
+     * getPaletteFormat().
+     *
+     * @return  pointer to first palette entry
+     */
+    virtual void* getPalette() = 0;
+
+    /**
+     * Get the number of entries in the palette.
+     *
+     * @return  number of palette entries
+     */
+    virtual int getPaletteSize() = 0;
+
+    /**
+     * Get the format of the colors in the palette.
+     *
+     * @return  pixel format of palette entries
+     */
+    virtual PixelFormat getPaletteFormat() = 0;
 
     /**
      * "delete image" should actually call image->destroy(), thus putting the
@@ -242,6 +265,13 @@ namespace corona {
       int height,
       PixelFormat format));
 
+    COR_FUNCTION(Image*, CorCreatePalettizedImage(
+      int width,
+      int height,
+      PixelFormat format, // must be a palettized format
+      int palette_size,
+      PixelFormat palette_format));
+
     COR_FUNCTION(Image*, CorCloneImage(
       Image* source,
       PixelFormat format));
@@ -315,6 +345,28 @@ namespace corona {
     PixelFormat format)
   {
     return hidden::CorCreateImage(width, height, format);
+  }
+
+  /**
+   * Create a new, blank image with a specified width, height, format,
+   * and palette.
+   *
+   * @param width           width of image
+   * @param height          height of image
+   * @param format          format of palette indices, should be PF_I8
+   * @param palette_size    number of colors in palette
+   * @param palette_format  pixel format of palette entries
+   */
+  inline Image* CreateImage(
+    int width,
+    int height,
+    PixelFormat format,
+    int palette_size,
+    PixelFormat palette_format)
+  {
+    return hidden::CorCreatePalettizedImage(
+      width, height, format,
+      palette_size, palette_format);
   }
 
   /**
@@ -492,7 +544,9 @@ namespace corona {
    * image.  If source is 0, the function returns 0.  If format is
    * PF_DONTCARE or the source and target formats match, returns the
    * unmodified source image.  If a valid conversion is not found,
-   * ConvertImage destroys the old image and returns 0.
+   * ConvertImage destroys the old image and returns 0.  For example,
+   * ConvertImage does not support creating a palettized image from a
+   * direct color image yet.
    *
    * @param source  image to convert
    * @param format  desired format -- can be PF_DONTCARE

@@ -1,6 +1,7 @@
 EXPORTS
   CorGetVersion
   CorCreateImage
+  CorCreatePalettizedImage
   CorCloneImage
   CorOpenImage
   CorOpenImageFromFileSystem

@@ -13,8 +13,8 @@ namespace corona {
    * Basic, flat, simple image.  Has a width, a height, a pixel
    * format, and a 2D array of pixels (one-byte packing).
    *
-   * The constructor takes a pixel buffer which it then owns and delete[]'s
-   * when the image is destroyed.
+   * The constructor takes a pixel buffer (and optionally a palette)
+   * which it then owns and delete[]'s when the image is destroyed.
    */
 
   class SimpleImage : public DefaultDelete<Image> {
@@ -32,58 +32,58 @@ namespace corona {
     SimpleImage(int width,
                 int height,
                 PixelFormat format,
-                byte* pixels) {
-      m_width  = width;
-      m_height = height;
-      m_format = format;
-      m_pixels = pixels;
+                byte* pixels,
+                byte* palette = 0,
+                int palette_size = 0,
+                PixelFormat palette_format = PF_DONTCARE) {
+
+      m_width          = width;
+      m_height         = height;
+      m_format         = format;
+      m_pixels         = pixels;
+      m_palette        = palette;
+      m_palette_size   = palette_size;
+      m_palette_format = palette_format;
     }
 
     /**
-     * Destroys the image, freeing the owned pixel buffer.
+     * Destroys the image, freeing the owned pixel buffer and palette.
      */
     ~SimpleImage() {
       delete[] m_pixels;
+      delete[] m_palette;
     }
 
     void destroy() {
       delete this;
     }
 
-    /**
-     * Width accessor.
-     *
-     * @return  image width
-     */
     int getWidth() {
       return m_width;
     }
 
-    /**
-     * Height accessor.
-     *
-     * @return  image height
-     */
     int getHeight() {
       return m_height;
     }
 
-    /**
-     * Format accessor.
-     *
-     * @return  image format
-     */
     PixelFormat getFormat() {
       return m_format;
     }
 
-    /**
-     * Pixel buffer accessor.
-     *
-     * @return  mutable pixel buffer
-     */
     void* getPixels() {
       return m_pixels;
+    }
+
+    void* getPalette() {
+      return m_palette;
+    }
+
+    int getPaletteSize() {
+      return m_palette_size;
+    }
+
+    PixelFormat getPaletteFormat() {
+      return m_palette_format;
     }
 
   private:
@@ -91,6 +91,9 @@ namespace corona {
     int         m_height;
     PixelFormat m_format;
     byte*       m_pixels;
+    byte*       m_palette;
+    int         m_palette_size;
+    PixelFormat m_palette_format;
   };
 
 }

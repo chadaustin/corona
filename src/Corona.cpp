@@ -16,7 +16,7 @@ namespace corona {
     ///////////////////////////////////////////////////////////////////////////
 
     COR_EXPORT(const char*, CorGetVersion)() {
-      return "1.0.0";
+      return "0.2.0";
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -26,16 +26,46 @@ namespace corona {
       int height,
       PixelFormat format)
     {
-      int pixel_size = GetPixelSize(format);
-      if (pixel_size == 0) {
-        // unsupported pixel format???
+      // this function only supports creation of non-palettized images
+      if (!IsDirect(format)) {
         return 0;
       }
 
-      int size = width * height * pixel_size;
+      int size = width * height * GetPixelSize(format);
       byte* pixels = new byte[size];
       memset(pixels, 0, size);
       return new SimpleImage(width, height, format, pixels);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    COR_EXPORT(Image*, CorCreatePalettizedImage)(
+      int width,
+      int height,
+      PixelFormat format,
+      int palette_size,
+      PixelFormat palette_format)
+    {
+      // only support creation of palettized images
+      if (!IsPalettized(format) || !IsDirect(palette_format)) {
+        return 0;
+      }
+
+      // make sure the palette is the right size
+      if (palette_size != GetPaletteSize(format)) {
+        return 0;
+      }
+
+      int size = width * height * GetPixelSize(format);
+      byte* pixels = new byte[size];
+      memset(pixels, 0, size);
+
+      int palette_bytes = palette_size * GetPixelSize(palette_format);
+      byte* palette = new byte[palette_bytes];
+      memset(palette, 0, palette_bytes);
+
+      return new SimpleImage(width, height, format, pixels,
+                             palette, palette_size, palette_format);      
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -49,22 +79,34 @@ namespace corona {
         return 0;
       }
 
-      int width = source->getWidth();
-      int height = source->getHeight();
-      PixelFormat source_format = source->getFormat();
+      const int width = source->getWidth();
+      const int height = source->getHeight();
+      const PixelFormat source_format = source->getFormat();
 
-      int pixel_size = GetPixelSize(source_format);
-      if (pixel_size == 0) {
+      const int source_pixel_size = GetPixelSize(source_format);
+      if (source_pixel_size == 0) {
         // unknown pixel size?
         return 0;
       }
 
       // duplicate the image
-      int image_size = width * height * pixel_size;
+      int image_size = width * height * source_pixel_size;
       byte* pixels = new byte[image_size];
       memcpy(pixels, source->getPixels(), image_size);
-      Image* image = new SimpleImage(width, height, source_format, pixels);
       
+      if (IsPalettized(source_format)) {
+        // clone palette
+        int palette_size = source->getPaletteSize();
+        PixelFormat palette_format = source->getPaletteFormat();
+        int palette_bytes = palette_size * GetPixelSize(palette_format);
+        byte* palette = new byte[palette_bytes];
+        memcpy(palette, source->getPalette(), palette_size);
+        Image* image = new SimpleImage(width, height, source_format, pixels,
+                                       palette, palette_size, palette_format);
+        return ConvertImage(image, format);
+      }
+
+      Image* image = new SimpleImage(width, height, source_format, pixels);
       return ConvertImage(image, format);
     }
 
@@ -179,25 +221,46 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(Image*, CorConvertImage)(Image* image, PixelFormat format) {
+    COR_EXPORT(Image*, CorConvertImage)(
+      Image* image,
+      PixelFormat target_format)
+    {
 
-      if (!image ||                       // no image to convert?
-          format == PF_DONTCARE ||        // user doesn't care about format?
-          format == image->getFormat()) { // formats match?
-
-        // don't convert anything! :)
+      // if we don't have an image, user doesn't care about format, or
+      // the formats match, don't do any conversion.
+      if (!image ||
+          target_format == PF_DONTCARE ||
+          target_format == image->getFormat())
+      {
         return image;
       }
 
-      // store source attributes
-      int width = image->getWidth();
-      int height = image->getHeight();
-      PixelFormat source = image->getFormat();
+      // cache source attributes
+      const int width = image->getWidth();
+      const int height = image->getHeight();
+      const PixelFormat source_format = image->getFormat();
+      const PixelFormat palette_format = image->getPaletteFormat();
 
       // do the conversion
       byte* in = (byte*)image->getPixels();
       byte* pixels;
-      if (source == PF_R8G8B8A8 && format == PF_R8G8B8) {
+
+      // if we have a palettized image, convert it to a direct color
+      // image and then convert that
+      if (source_format == PF_I8) {
+        const int pixel_size = GetPixelSize(palette_format);
+        const byte* palette = (byte*)image->getPalette();
+        byte* pixels = new byte[width * height * pixel_size];
+        for (int i = 0; i < width * height; ++i) {
+          memcpy(pixels  +    i  * pixel_size,
+                 palette + in[i] * pixel_size,
+                 pixel_size);
+        }
+        Image* image = new SimpleImage(width, height, palette_format, pixels);
+        return ConvertImage(image, target_format);
+      }
+
+      if (source_format == PF_R8G8B8A8 && target_format == PF_R8G8B8) {
         pixels = new byte[width * height * 3];
         byte* out = pixels;
         for (int i = 0; i < width * height; ++i) {
@@ -206,7 +269,7 @@ namespace corona {
           *out++ = *in++;
           ++in;           // ignore alpha
         }
-      } else if (source == PF_R8G8B8 && format == PF_R8G8B8A8) {
+      } else if (source_format == PF_R8G8B8 && target_format == PF_R8G8B8A8) {
         pixels = new byte[width * height * 4];
         byte* out = pixels;
         for (int i = 0; i < width * height; ++i) {
@@ -217,13 +280,13 @@ namespace corona {
         }
       } else {
         // unknown conversion...
-        delete image;  // should we really delete the source?
+        delete image;
         return 0;
       }
 
       // delete the source
       delete image;
-      return new SimpleImage(width, height, format, pixels);
+      return new SimpleImage(width, height, target_format, pixels);
     }
 
     ///////////////////////////////////////////////////////////////////////////
