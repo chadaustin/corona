@@ -6,7 +6,12 @@ Default('.')
 
 base_env = Environment(ENV = os.environ)
 
-if string.find(sys.platform, 'irix') == -1:
+if os.name is 'nt':
+    # MSVC options
+    base_env.Append(CXXFLAGS = ['/GX', '/DWIN32', '/D_WIN32',
+                                '/DCORONA_EXPORTS', '/Dfor=if(0); else for'])
+    pass
+elif string.find(sys.platform, 'irix') == -1:
     # on IRIX, don't add these options to the build
     # are we building debug?
     base_env.Append(CXXFLAGS = ['-Wall', '-Wno-non-virtual-dtor'])
