@@ -12,6 +12,7 @@ JPEGTests::testLoader() {
     "63-progressive",
     "63-restart",
     "64",
+    "comic-progressive",
   };
   static const int image_count = sizeof(images) / sizeof(*images);
 

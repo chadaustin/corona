@@ -136,10 +136,21 @@ namespace corona {
   //////////////////////////////////////////////////////////////////////////////
 
   boolean JPEG_fill_input_buffer(j_decompress_ptr cinfo) {
+    // more or less copied from jdatasrc.c
+
     InternalStruct* is = (InternalStruct*)(cinfo->client_data);
-    cinfo->src->bytes_in_buffer = is->file->read(is->buffer, JPEG_BUFFER_SIZE);
+
+    int nbytes = is->file->read(is->buffer, JPEG_BUFFER_SIZE);
+    if (nbytes <= 0) {
+      /* Insert a fake EOI marker */
+      is->buffer[0] = (JOCTET)0xFF;
+      is->buffer[1] = (JOCTET)JPEG_EOI;
+      nbytes = 2;
+    }
+
+    cinfo->src->bytes_in_buffer = nbytes;
     cinfo->src->next_input_byte = is->buffer;
-    return (cinfo->src->bytes_in_buffer != 0);
+    return TRUE;
   }
 
   //////////////////////////////////////////////////////////////////////////////
