@@ -122,6 +122,10 @@ SOURCE=..\..\src\DefaultFileSystem.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\MemoryFile.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\Open.h
 # End Source File
 # Begin Source File
