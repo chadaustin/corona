@@ -117,6 +117,9 @@
 			Name="files"
 			Filter="">
 			<File
+				RelativePath="..\src\Convert.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Corona.cpp">
 			</File>
 			<File

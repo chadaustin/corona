@@ -94,6 +94,10 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\src\Convert.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\Corona.cpp
 # End Source File
 # Begin Source File

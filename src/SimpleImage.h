@@ -17,7 +17,7 @@ namespace corona {
    * which it then owns and delete[]'s when the image is destroyed.
    */
 
-  class SimpleImage : public DefaultDelete<Image> {
+  class SimpleImage : public DLLImplementation<Image> {
   public:
 
     /**
@@ -58,35 +58,31 @@ namespace corona {
       delete[] m_palette;
     }
 
-    void destroy() {
-      delete this;
-    }
-
-    int getWidth() {
+    int COR_CALL getWidth() {
       return m_width;
     }
 
-    int getHeight() {
+    int COR_CALL getHeight() {
       return m_height;
     }
 
-    PixelFormat getFormat() {
+    PixelFormat COR_CALL getFormat() {
       return m_format;
     }
 
-    void* getPixels() {
+    void* COR_CALL getPixels() {
       return m_pixels;
     }
 
-    void* getPalette() {
+    void* COR_CALL getPalette() {
       return m_palette;
     }
 
-    int getPaletteSize() {
+    int COR_CALL getPaletteSize() {
       return m_palette_size;
     }
 
-    PixelFormat getPaletteFormat() {
+    PixelFormat COR_CALL getPaletteFormat() {
       return m_palette_format;
     }
 

@@ -15,15 +15,15 @@ namespace corona {
       fclose(m_file);
     }
 
-    int read(void* buffer, int size) {
+    int COR_CALL read(void* buffer, int size) {
       return fread(buffer, 1, size, m_file);
     }
 
-    int write(const void* buffer, int size) {
+    int COR_CALL write(const void* buffer, int size) {
       return fwrite(buffer, 1, size, m_file);
     }
 
-    bool seek(int position, SeekMode mode) {
+    bool COR_CALL seek(int position, SeekMode mode) {
       int m;
       switch (mode) {
         case BEGIN:   m = SEEK_SET; break;
@@ -34,7 +34,7 @@ namespace corona {
       return fseek(m_file, position, m) == 0;
     }
 
-    int tell() {
+    int COR_CALL tell() {
       return ftell(m_file);
     }
 

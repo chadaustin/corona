@@ -34,6 +34,12 @@
 #endif
 
 
+// evil "identifier is too long in debug information" warning
+#ifdef _MSC_VER
+#pragma warning(disable : 4786)
+#endif
+
+
 #define COR_FUNCTION(ret, name) extern "C" ret COR_CALL name
 
 

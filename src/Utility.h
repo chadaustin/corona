@@ -59,25 +59,6 @@ namespace corona {
   }
 
 
-  template<typename T>
-  class DefaultDelete : public T {
-  public:
-
-    // Deriving from DefaultDelete<T> instead of T shadows any interface-
-    // defined |operator delete|, thus making implementation code easier to
-    // write and read.
-
-    // For example, SimpleImage's implementation of Image::destroy is simply
-    // |delete this|, which, if SimpleImage inherited Image directly, would
-    // infinitely recurse.  (Image::operator delete simply calls destroy())
-    // This class "undefines" the overloaded operator delete by shadowing it.
-
-    void operator delete(void* p) {
-      ::operator delete(p);
-    }
-  };
-
-
   // does this format not use a palette?
   inline bool IsDirect(PixelFormat format) {
     return (format == PF_R8G8B8A8 || format == PF_R8G8B8 ||

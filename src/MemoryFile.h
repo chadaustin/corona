@@ -23,19 +23,19 @@ namespace corona {
       delete[] m_buffer;
     }
 
-    int read(void* buffer, int size) {
+    int COR_CALL read(void* buffer, int size) {
       int real_read = Min((m_size - m_position), size);
       memcpy(buffer, m_buffer + m_position, real_read);
       m_position += real_read;
       return real_read;
     }
 
-    int write(const void* buffer, int size) {
+    int COR_CALL write(const void* buffer, int size) {
       // readonly
       return 0;
     }
 
-    bool seek(int position, SeekMode mode) {
+    bool COR_CALL seek(int position, SeekMode mode) {
       int real_pos;
       switch (mode) {
         case BEGIN:   real_pos = position; break;
@@ -53,7 +53,7 @@ namespace corona {
       }
     }
 
-    int tell() {
+    int COR_CALL tell() {
       return m_position;
     }
 

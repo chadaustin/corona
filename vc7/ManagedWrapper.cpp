@@ -6,16 +6,14 @@
 using namespace System;
 using namespace System::Text;
 
-[assembly: System::Reflection::AssemblyVersion("0.2.0.2")];
+[assembly: System::Reflection::AssemblyVersion("1.0.0.0")];
 [assembly: System::Reflection::AssemblyKeyFileAttribute("Corona.snk")];
 
 
 
-namespace C {
-  #include "../src/corona.h"
-  #include "../src/Utility.h"
-  #include <string.h>
-}
+#include "../src/corona.h"
+#include "../src/Utility.h"
+#include <string.h>
 
 
 namespace Corona {
@@ -38,7 +36,7 @@ namespace Corona {
 
 
   __nogc class _StreamFile_Unmanaged
-    : public C::corona::DLLImplementation<C::corona::File>
+    : public corona::DLLImplementation<corona::File>
   {
   private:
     void** m_Stream;
@@ -48,7 +46,7 @@ namespace Corona {
       m_Stream = stream;
     }
 
-    bool seek(int position, C::corona::File::SeekMode mode) {
+    bool COR_CALL seek(int position, corona::File::SeekMode mode) {
       System::IO::Stream __gc* stream =
         *((System::IO::Stream __gc* __nogc*)m_Stream);
 
@@ -56,20 +54,20 @@ namespace Corona {
         return false;
 
       switch(mode) {
-        case C::corona::File::SeekMode::BEGIN:
+        case corona::File::SeekMode::BEGIN:
           stream->Seek(position, System::IO::SeekOrigin::Begin);
           break;
-        case C::corona::File::SeekMode::CURRENT:
+        case corona::File::SeekMode::CURRENT:
           stream->Seek(position, System::IO::SeekOrigin::Current);
           break;
-        case C::corona::File::SeekMode::END:
+        case corona::File::SeekMode::END:
           stream->Seek(position, System::IO::SeekOrigin::End); break;
       }
 
       return true;
     }
 
-    int write(const void* buffer, int size) {
+    int COR_CALL write(const void* buffer, int size) {
       System::IO::Stream __gc* stream =
         *((System::IO::Stream __gc* __nogc*)m_Stream);
 
@@ -79,13 +77,13 @@ namespace Corona {
 
       System::Byte writebuf __gc[] = __gc new System::Byte[size];
       unsigned char __pin* writebuf_pin = &writebuf[0];
-      C::memcpy(writebuf_pin, buffer, size);
+      memcpy(writebuf_pin, buffer, size);
       __int64 original = stream->Position;
       stream->Write(writebuf, 0, size);
       return (int)(stream->Position-original);
     }
 
-    int read(void* buffer, int size) {
+    int COR_CALL read(void* buffer, int size) {
       System::IO::Stream __gc* stream =
         *((System::IO::Stream __gc* __nogc*)m_Stream);
 
@@ -95,11 +93,11 @@ namespace Corona {
       System::Byte readbuf __gc[] = __gc new System::Byte[size];
       int read = stream->Read(readbuf,0,size);
       unsigned char __pin* readbuf_pin = &readbuf[0];
-      C::memcpy(buffer,readbuf_pin,read);
+      memcpy(buffer,readbuf_pin,read);
       return read;
     }
 
-    int tell() {
+    int COR_CALL tell() {
       System::IO::Stream __gc* stream =
         *((System::IO::Stream __gc* __nogc*)m_Stream);
       return (int)stream->Position;
@@ -110,16 +108,16 @@ namespace Corona {
   public __gc class Image : public System::IDisposable {
   private:
     bool m_Disposed;
-    C::corona::Image __nogc* m_CorImage;
+    corona::Image __nogc* m_CorImage;
 
   private:
     //Constructs an Image from a corimage
-    Image(C::corona::Image __nogc* corimage) {
+    Image(corona::Image __nogc* corimage) {
       Init(corimage);
     }
 
     //internal initialization from a corimage
-    void Init(C::corona::Image __nogc* corimage) {
+    void Init(corona::Image __nogc* corimage) {
       m_Disposed = false;
       m_CorImage = corimage;
     }
@@ -150,7 +148,7 @@ namespace Corona {
           "Disposed Corona.Image passed to Corona.Image copy constructor");
       }
 
-      Init(C::corona::CloneImage(img->m_CorImage, img->m_CorImage->getFormat()));
+      Init(corona::CloneImage(img->m_CorImage, img->m_CorImage->getFormat()));
     }
 
     // copy constructor forcing to a specified PixelFormat
@@ -165,9 +163,9 @@ namespace Corona {
           "Disposed Corona.Image passed to Corona.Image copy constructor");
       }
 
-      Init(C::corona::CloneImage(
+      Init(corona::CloneImage(
         img->m_CorImage,
-        static_cast<C::corona::PixelFormat>(pixel_format)));
+        static_cast<corona::PixelFormat>(pixel_format)));
     }
 
   public:
@@ -183,15 +181,15 @@ namespace Corona {
 
   public:
     static int GetFormatSize(Corona::PixelFormat pixel_format) {
-      return C::corona::GetPixelSize(
-        static_cast<C::corona::PixelFormat>(pixel_format));
+      return corona::GetPixelSize(
+        static_cast<corona::PixelFormat>(pixel_format));
     }
 
     static Image __gc* Create(int width, int height, Corona::PixelFormat pixel_format) {
-      C::corona::Image __nogc* newimage = C::corona::CreateImage(
+      corona::Image __nogc* newimage = corona::CreateImage(
         width,
         height,
-        static_cast<C::corona::PixelFormat>(pixel_format));
+        static_cast<corona::PixelFormat>(pixel_format));
       return (newimage ? __gc new Image(newimage) : 0);
     }
 
@@ -212,10 +210,10 @@ namespace Corona {
       _StreamFile_Unmanaged __nogc* streamfile =
         new _StreamFile_Unmanaged((void **)&input_pinned);
 
-      C::corona::Image __nogc* newimage = C::corona::OpenImage(
+      corona::Image __nogc* newimage = corona::OpenImage(
         streamfile,
-        static_cast<C::corona::PixelFormat>(pixel_format),
-        static_cast<C::corona::FileFormat>(file_format));
+        static_cast<corona::PixelFormat>(pixel_format),
+        static_cast<corona::FileFormat>(file_format));
 
       delete streamfile;
       return (newimage ? __gc new Image(newimage) : 0);
@@ -231,10 +229,10 @@ namespace Corona {
       char __pin* pstr = &strbuf[0];
       char* str = static_cast<char*>(pstr);
 
-      C::corona::Image __nogc* newimage = C::corona::OpenImage(
+      corona::Image __nogc* newimage = corona::OpenImage(
         str,
-        static_cast<C::corona::PixelFormat>(pixel_format),
-        static_cast<C::corona::FileFormat>(file_format));
+        static_cast<corona::PixelFormat>(pixel_format),
+        static_cast<corona::FileFormat>(file_format));
       return (newimage ? __gc new Image(newimage) : 0);
     }
 
@@ -249,9 +247,9 @@ namespace Corona {
       char __pin* pstr = &strbuf[0];
       char* str = static_cast<char*>(pstr);
       
-      return C::corona::SaveImage(
+      return corona::SaveImage(
         str,
-        static_cast<C::corona::FileFormat>(file_format),
+        static_cast<corona::FileFormat>(file_format),
         m_CorImage);
     }
 
@@ -270,9 +268,9 @@ namespace Corona {
       System::IO::Stream __pin* output_pinned = output;
       _StreamFile_Unmanaged __nogc* streamfile = new _StreamFile_Unmanaged((void **)&output_pinned);
 
-      bool result = C::corona::SaveImage(
+      bool result = corona::SaveImage(
         streamfile,
-        static_cast<C::corona::FileFormat>(file_format),
+        static_cast<corona::FileFormat>(file_format),
         m_CorImage);
 
       delete streamfile;
@@ -285,9 +283,9 @@ namespace Corona {
           "Convert() executed on disposed Corona.Image");
       }
 
-      C::corona::Image __nogc* newimage = C::corona::ConvertImage(
+      corona::Image __nogc* newimage = corona::ConvertImage(
         m_CorImage,
-        static_cast<C::corona::PixelFormat>(pixel_format));
+        static_cast<corona::PixelFormat>(pixel_format));
       return (newimage ? __gc new Image(newimage) : 0);
     }
 
@@ -316,7 +314,7 @@ namespace Corona {
 
       Byte arr __gc[,] = __gc new Byte[Width*PixelSize, Height];
       Byte __pin* arrptr = &arr[0,0];
-      C::memcpy(arrptr, Pixels, Width * Height * PixelSize);
+      memcpy(arrptr, Pixels, Width * Height * PixelSize);
       return arr;
     }
 
@@ -328,7 +326,7 @@ namespace Corona {
 
       Byte arr __gc[] = __gc new Byte[Width * Height * PixelSize];
       Byte __pin* arrptr = &arr[0];
-      C::memcpy(arrptr, Pixels, Width * Height * PixelSize);
+      memcpy(arrptr, Pixels, Width * Height * PixelSize);
       return arr;
     }
 
@@ -340,7 +338,7 @@ namespace Corona {
 
       Byte arr __gc[] = __gc new Byte[PaletteSize * PaletteElementSize];
       Byte __pin* arrptr = &arr[0];
-      C::memcpy(arrptr, Palette, PaletteSize * PaletteElementSize);
+      memcpy(arrptr, Palette, PaletteSize * PaletteElementSize);
       return arr;
     }
   };
