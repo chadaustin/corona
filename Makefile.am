@@ -1,4 +1,4 @@
-EXTRA_DIST = documentation
+SUBDIRS = documentation
 
 lib_LTLIBRARIES = libcorona.la
 include_HEADERS = corona.h

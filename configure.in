@@ -36,4 +36,4 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Output makefiles.
 
-AC_OUTPUT(Makefile)
+AC_OUTPUT(Makefile documentation/Makefile)
