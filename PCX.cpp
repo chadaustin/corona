@@ -58,11 +58,9 @@ namespace corona {
         return false;
       }
 
-      if (data <= 192) {
-        *out++ = data;
-      } else {
+      if ((data & 0xC0) == 0xC0) {
 
-        int numbytes = data - 192;
+        int numbytes = data & 0x3F;
         read = file->read(&data, 1);
         if (read != 1) {
           return false;
@@ -72,6 +70,8 @@ namespace corona {
           *out++ = data;
         }
 
+      } else {
+        *out++ = data;
       }
     }
 
@@ -83,9 +83,9 @@ namespace corona {
   Image* OpenPCX(File* file) {
 
     // read the header block
-    byte pcx_header[256];
-    int read = file->read(pcx_header, 256);
-    if (read != 256) {
+    byte pcx_header[128];
+    int read = file->read(pcx_header, 128);
+    if (read != 128) {
       return 0;
     }
 
@@ -96,7 +96,7 @@ namespace corona {
     int xmax           = read16(pcx_header + 8);
     int ymax           = read16(pcx_header + 10);
     int num_planes     = pcx_header[65];
-    int bytes_per_line = pcx_header[66];
+    int bytes_per_line = read16(pcx_header + 66);
 
     // create the image structure
     int width  = xmax - xmin + 1;
@@ -108,11 +108,11 @@ namespace corona {
     if (num_planes == 1) {               // 256 colors
 
       RGB palette[256];
-      auto_array<byte> image(new byte[width * height]);
+      auto_array<byte> image(new byte[bytes_per_line * height]);
 
       // read all of the scanlines
       for (int iy = 0; iy < height; ++iy) {
-        if (!ReadScanline(file, bytes_per_line, image + iy * width)) {
+        if (!ReadScanline(file, bytes_per_line, image + iy * bytes_per_line)) {
           return 0;
         }
       }
@@ -128,13 +128,14 @@ namespace corona {
 
       // convert palettized image to RGB image
       byte* out = pixels;
-      byte* in  = image;
-      int pixel_count = width * height;
-      while (pixel_count--) {
-        *out++ = palette[*in].red;
-        *out++ = palette[*in].green;
-        *out++ = palette[*in].blue;
-        ++in;
+      for (int iy = 0; iy < height; ++iy) {
+        byte* in = image + iy * bytes_per_line;
+        for (int ix = 0; ix < width; ++ix) {
+          *out++ = palette[*in].red;
+          *out++ = palette[*in].green;
+          *out++ = palette[*in].blue;
+          ++in;
+        }
       }
 
     } else if (num_planes == 3) { // 24-bit color
