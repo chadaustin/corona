@@ -16,52 +16,11 @@ Run the test suite!!
 
 
 Build the VC6 Binary Release
-
-    1) Check out a fresh copy from CVS in a temporary directory
-    2) Do a complete VC6 build from corona.dsw
-    3) Make a corona-$VERSION-vc6 directory
-    4) Include the following subdirectories:
-       bin/     : winviewer.exe, corona.dll
-       doc/     : entire contents of doc directory
-       include/ : corona.h
-       lib/     : corona.lib
-
-
 Build the VC7 Binary Release
-
-    1) Check out a fresh copy from CVS in a temporary directory
-    2) Do a complete VC7 build from corona.sln
-    3) Make a corona-$VERSION-vc7 directory
-    4) Include the following subdirectories:
-       bin/     : winviewer.exe, corona.dll
-       doc/     : entire contents of doc directory
-       include/ : corona.h
-       lib/     : corona.lib
-
-
 Build the automake dist Release
-
-    1) ssh to a UNIX machine
-    2) Check out a fresh copy from CVS
-    3) ./bootstrap && ./configure && gmake dist
-
-
 Build Source Release
-
-    1) Export a fresh copy from CVS:
-        cvs export -D now corona
-    2) tar cfvj corona-$VERSION-src.tar.bz2 corona
-
-
 Generate Documentation
-
-    1) From a checked out copy...
-        cd corona/doc/doxygen
-        ./docify.sh
-        cygstart html/index.hhp
-        <click "build project">
-        mv html/index.chm ./corona-$VERSION-doxygen.chm
-    2) scp -r corona-1.0.1-doxygen aegis@shell.sourceforge.net:~/corona/htdocs
+    Run full-release.sh
 
 
 Upload files to SourceForge
