@@ -1,13 +1,8 @@
-#ifdef _MSC_VER
-// GLUT in VC7 requires windows.h.
-#include <windows.h>
-#endif
-
+#include <stdlib.h>
 #include <GL/glut.h>
 #include <corona.h>
 #include <memory>
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 using namespace std;
 using namespace corona;
