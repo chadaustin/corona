@@ -1,6 +1,20 @@
 /*! \mainpage Corona 1.0.0
 
 Corona is a high-level, portable image I/O library usable from C++.
-It can read PNG, JPEG, PCX, and BMP images, and can write PNGs.
+
+Supported read formats:
+<ul>
+<li>BMP</li>
+<li>GIF</li>
+<li>JPEG</li>
+<li>PCX</li>
+<li>PNG</li>
+<li>GIF</li>
+</ul>
+
+Supported write formats:
+<ul>
+<li>PNG</li>
+</ul>
 
 */
