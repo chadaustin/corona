@@ -274,6 +274,7 @@ namespace corona {
 
     COR_FUNCTION(const char*, CorGetVersion)();
 
+    /// @{
     /**
      * Returns a formatted string that lists the file formats that
      * Audiere supports.  This function is DLL-safe.
@@ -281,14 +282,10 @@ namespace corona {
      * It is formatted in the following way:
      *
      * description1:ext1,ext2,ext3;description2:ext1,ext2,...
-     *
-     * @{
      */
     COR_FUNCTION(const char*, CorGetSupportedReadFormats)();
     COR_FUNCTION(const char*, CorGetSupportedWriteFormats)();
-    /**
-     * @}
-     */
+    /// @}
 
     // creation
 
