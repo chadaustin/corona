@@ -1,4 +1,4 @@
-SUBDIRS = src examples doc
+SUBDIRS = src examples tools doc
 
 # this is from glib's Makefile.am
 bin_SCRIPTS = corona-config

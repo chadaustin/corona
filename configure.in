@@ -72,5 +72,8 @@ AC_OUTPUT(
         examples/Makefile
         examples/formats/Makefile
         src/Makefile
-        src/libungif-4.1.0/Makefile,
-    [chmod a+x corona-config])
+        src/libungif-4.1.0/Makefile
+        tools/Makefile
+        tools/corconvert/Makefile
+    ,
+        [chmod a+x corona-config])

@@ -12,8 +12,8 @@ if os.name is 'nt':
                                 '/DCORONA_EXPORTS', '/Dfor=if(0); else for'])
 elif string.find(sys.platform, 'irix') == -1:
     # on IRIX, don't add these options to the build
-    # are we building debug?
     base_env.Append(CXXFLAGS = ['-Wall', '-Wno-non-virtual-dtor'])
+    # are we building debug?
     if ARGUMENTS.get('debug'):
         base_env.Append(CXXFLAGS = ['-g', '-DCORONA_DEBUG'])
 else:
@@ -28,4 +28,4 @@ CORONA_LIBS = ['corona', 'png', 'z', 'jpeg']
 
 Export('base_env CORONA_LIBS')
 
-SConscript(dirs = ['examples', 'src', 'test'])
+SConscript(dirs = ['examples', 'src', 'test', 'tools'])
