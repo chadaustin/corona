@@ -9,9 +9,6 @@
 #include "Utility.h"
 
 
-#define COR_EXPORT(ret, name)  ret COR_CALL name
-
-
 namespace corona {
   namespace hidden {
 
@@ -121,7 +118,7 @@ namespace corona {
         PixelFormat palette_format = source->getPaletteFormat();
         int palette_bytes = palette_size * GetPixelSize(palette_format);
         byte* palette = new byte[palette_bytes];
-        memcpy(palette, source->getPalette(), palette_size);
+        memcpy(palette, source->getPalette(), palette_bytes);
         Image* image = new SimpleImage(width, height, source_format, pixels,
                                        palette, palette_size, palette_format);
         return ConvertImage(image, format);
@@ -222,78 +219,6 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(Image*, CorConvertImage)(
-      Image* image,
-      PixelFormat target_format)
-    {
-      // @todo  allow conversions from direct color images to
-      //        palettized images
-
-      // if we don't have an image, user doesn't care about format, or
-      // the formats match, don't do any conversion.
-      if (!image ||
-          target_format == PF_DONTCARE ||
-          target_format == image->getFormat())
-      {
-        return image;
-      }
-
-      // cache source attributes
-      const int width = image->getWidth();
-      const int height = image->getHeight();
-      const PixelFormat source_format = image->getFormat();
-      const PixelFormat palette_format = image->getPaletteFormat();
-
-      // do the conversion
-      byte* in = (byte*)image->getPixels();
-      byte* pixels;
-
-      // if we have a palettized image, convert it to a direct color
-      // image and then convert that
-      if (source_format == PF_I8) {
-        const int pixel_size = GetPixelSize(palette_format);
-        const byte* palette = (byte*)image->getPalette();
-        byte* pixels = new byte[width * height * pixel_size];
-        for (int i = 0; i < width * height; ++i) {
-          memcpy(pixels  +    i  * pixel_size,
-                 palette + in[i] * pixel_size,
-                 pixel_size);
-        }
-        Image* image = new SimpleImage(width, height, palette_format, pixels);
-        return ConvertImage(image, target_format);
-      }
-
-      if (source_format == PF_R8G8B8A8 && target_format == PF_R8G8B8) {
-        pixels = new byte[width * height * 3];
-        byte* out = pixels;
-        for (int i = 0; i < width * height; ++i) {
-          *out++ = *in++;
-          *out++ = *in++;
-          *out++ = *in++;
-          ++in;           // ignore alpha
-        }
-      } else if (source_format == PF_R8G8B8 && target_format == PF_R8G8B8A8) {
-        pixels = new byte[width * height * 4];
-        byte* out = pixels;
-        for (int i = 0; i < width * height; ++i) {
-          *out++ = *in++;
-          *out++ = *in++;
-          *out++ = *in++;
-          *out++ = 255;   // assume opaque
-        }
-      } else {
-        // unknown conversion...
-        delete image;
-        return 0;
-      }
-
-      // delete the source
-      delete image;
-      return new SimpleImage(width, height, target_format, pixels);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
     COR_EXPORT(File*, CorCreateMemoryFile)(
       void* buffer,
       int size)
@@ -314,6 +239,8 @@ namespace corona {
       switch (format) {
         case PF_R8G8B8A8: return 4;
         case PF_R8G8B8:   return 3;
+        case PF_B8G8R8A8: return 4;
+        case PF_B8G8R8:   return 3;
         case PF_I8:       return 1;
         default:          return 0;
       }

@@ -62,6 +62,8 @@ namespace corona {
     PF_R8G8B8A8 = 0x0201,  /**< RGBA, channels have eight bits of precision */
     PF_R8G8B8   = 0x0202,  /**< RGB, channels have eight bits of precision  */
     PF_I8       = 0x0203,  /**< Palettized, 8-bit indices into palette      */
+    PF_B8G8R8A8 = 0x0204,  /**< BGRA, channels have eight bits of precision */
+    PF_B8G8R8   = 0x0205,  /**< BGR, channels have eight bits of precision  */
   };
 
 

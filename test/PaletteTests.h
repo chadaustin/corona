@@ -2,10 +2,10 @@
 #define PALETTE_TESTS_H
 
 
-#include "TestFramework.h"
+#include "ImageTestCase.h"
 
 
-class PaletteTests : public TestCase {
+class PaletteTests : public ImageTestCase {
 public:
   void testAPI();
   void testImages();

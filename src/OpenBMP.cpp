@@ -27,7 +27,7 @@ namespace corona {
     int pitch;  // number of bytes in each scanline
     int image_size;
 
-    auto_array<RGB> palette;
+    auto_array<BGR> palette;
     int palette_size;
 
     // for bitfield specification...
@@ -241,7 +241,7 @@ namespace corona {
       h.palette_size = 0;
       return true;
     }
-    h.palette = new RGB[h.palette_size];
+    h.palette = new BGR[h.palette_size];
 
     // read the BMP color table
     const int buffer_size = h.palette_size * (h.os2 ? 3 : 4);
@@ -251,7 +251,7 @@ namespace corona {
     }
 
     byte* in = buffer;
-    RGB* out = h.palette;
+    BGR* out = h.palette;
     for (int i = 0; i < h.palette_size; ++i) {
       out->blue  = *in++;
       out->green = *in++;
@@ -279,9 +279,9 @@ namespace corona {
   Image* ReadBitmap1(const byte* raster_data, const Header& h) {
     auto_array<byte> pixels(new byte[h.width * h.height]);
     
-    auto_array<RGB> palette(new RGB[256]);
-    memset(palette, 0, 256 * sizeof(RGB));
-    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+    auto_array<BGR> palette(new BGR[256]);
+    memset(palette, 0, 256 * sizeof(BGR));
+    memcpy(palette, h.palette, h.palette_size * sizeof(BGR));
 
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
@@ -300,15 +300,15 @@ namespace corona {
     }
 
     return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
-                           (byte*)palette.release(), 256, PF_R8G8B8);
+                           (byte*)palette.release(), 256, PF_B8G8R8);
   }
 
   Image* ReadBitmap4(const byte* raster_data, const Header& h) {
     auto_array<byte> pixels(new byte[h.width * h.height]);
     
-    auto_array<RGB> palette(new RGB[256]);
-    memset(palette, 0, 256 * sizeof(RGB));
-    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+    auto_array<BGR> palette(new BGR[256]);
+    memset(palette, 0, 256 * sizeof(BGR));
+    memcpy(palette, h.palette, h.palette_size * sizeof(BGR));
 
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
@@ -327,15 +327,15 @@ namespace corona {
     }
 
     return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
-                           (byte*)palette.release(), 256, PF_R8G8B8);
+                           (byte*)palette.release(), 256, PF_B8G8R8);
   }
 
   Image* ReadBitmapRLE4(const byte* raster_data, const Header& h) {
     auto_array<byte> pixels(new byte[h.width * h.height]);
     
-    auto_array<RGB> palette(new RGB[256]);
-    memset(palette, 0, 256 * sizeof(RGB));
-    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+    auto_array<BGR> palette(new BGR[256]);
+    memset(palette, 0, 256 * sizeof(BGR));
+    memcpy(palette, h.palette, h.palette_size * sizeof(BGR));
 
     // by default, we have an empty bitmap
     memset(pixels, 0, h.width * h.height);
@@ -447,15 +447,15 @@ namespace corona {
     }
 
     return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
-                           (byte*)palette.release(), 256, PF_R8G8B8);
+                           (byte*)palette.release(), 256, PF_B8G8R8);
   }
 
   Image* ReadBitmap8(const byte* raster_data, const Header& h) {
     auto_array<byte> pixels(new byte[h.width * h.height]);
     
-    auto_array<RGB> palette(new RGB[256]);
-    memset(palette, 0, 256 * sizeof(RGB));
-    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+    auto_array<BGR> palette(new BGR[256]);
+    memset(palette, 0, 256 * sizeof(BGR));
+    memcpy(palette, h.palette, h.palette_size * sizeof(BGR));
 
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
@@ -467,15 +467,15 @@ namespace corona {
     }
 
     return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
-                           (byte*)palette.release(), 256, PF_R8G8B8);
+                           (byte*)palette.release(), 256, PF_B8G8R8);
   }
 
   Image* ReadBitmapRLE8(const byte* raster_data, const Header& h) {
     auto_array<byte> pixels(new byte[h.width * h.height]);
     
-    auto_array<RGB> palette(new RGB[256]);
-    memset(palette, 0, 256 * sizeof(RGB));
-    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+    auto_array<BGR> palette(new BGR[256]);
+    memset(palette, 0, 256 * sizeof(BGR));
+    memcpy(palette, h.palette, h.palette_size * sizeof(BGR));
 
     // by default, we have an empty bitmap
     memset(pixels, 0, h.width * h.height);
@@ -568,7 +568,7 @@ namespace corona {
     }
 
     return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
-                           (byte*)palette.release(), 256, PF_R8G8B8);
+                           (byte*)palette.release(), 256, PF_B8G8R8);
   }
   
   Image* ReadBitmap16(const byte* raster_data, const Header& h) {
@@ -599,11 +599,11 @@ namespace corona {
   }
 
   Image* ReadBitmap24(const byte* raster_data, const Header& h) {
-    auto_array<RGB> pixels(new RGB[h.width * h.height]);
+    auto_array<BGR> pixels(new BGR[h.width * h.height]);
 
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
-      RGB* out = pixels + (h.height - i - 1) * h.width;
+      BGR* out = pixels + (h.height - i - 1) * h.width;
 
       for (int j = 0; j < h.width; ++j) {
         out->blue  = *in++;
@@ -613,7 +613,7 @@ namespace corona {
       }
     }
 
-    return new SimpleImage(h.width, h.height, PF_R8G8B8,
+    return new SimpleImage(h.width, h.height, PF_B8G8R8,
                            (byte*)pixels.release());
   }
 

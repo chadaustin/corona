@@ -6,6 +6,7 @@ lib_LTLIBRARIES = libcorona.la
 include_HEADERS = corona.h
 
 libcorona_la_SOURCES =				\
+	Convert.cpp				\
 	Corona.cpp				\
 	Debug.cpp				\
 	Debug.h					\

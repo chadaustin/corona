@@ -5,8 +5,10 @@
 #include "Types.h"
 
 
-namespace corona {
+#define COR_EXPORT(ret, name)  ret COR_CALL name
 
+
+namespace corona {
 
   template<typename T>
   class auto_array {
@@ -78,7 +80,8 @@ namespace corona {
 
   // does this format not use a palette?
   inline bool IsDirect(PixelFormat format) {
-    return format == PF_R8G8B8A8 || format == PF_R8G8B8;
+    return (format == PF_R8G8B8A8 || format == PF_R8G8B8 ||
+            format == PF_B8G8R8A8 || format == PF_B8G8R8);
   }
 
   // does this format require a palette?
@@ -118,6 +121,19 @@ namespace corona {
     byte red;
     byte green;
     byte blue;
+    byte alpha;
+  };
+
+  struct BGR {
+    byte blue;
+    byte green;
+    byte red;
+  };
+
+  struct BGRA {
+    byte blue;
+    byte green;
+    byte red;
     byte alpha;
   };
 

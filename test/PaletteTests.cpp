@@ -33,8 +33,11 @@ PaletteTests::testAPI() {
   CPPUNIT_ASSERT(clone->getPaletteFormat() == PF_R8G8B8);
   CPPUNIT_ASSERT(clone->getPaletteSize() == 256);
 
+  AssertImagesEqual("Comparing clone of palettized image",
+                    img1.get(), clone.get());
+
   // convert to R8G8B8
-  auto_ptr<Image> conv(ConvertImage(img1.get(), PF_R8G8B8));
+  auto_ptr<Image> conv(CloneImage(img1.get(), PF_R8G8B8));
   CPPUNIT_ASSERT(conv->getFormat() == PF_R8G8B8);
   CPPUNIT_ASSERT(conv->getPalette() == 0);
   CPPUNIT_ASSERT(conv->getPaletteFormat() == PF_DONTCARE);

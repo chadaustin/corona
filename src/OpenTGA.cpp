@@ -73,46 +73,22 @@ namespace corona {
 
       COR_LOG("24-bit image");
 
-      format = PF_R8G8B8;
+      format = PF_B8G8R8;
       int image_size = width * height * 3;
       pixels = new byte[image_size];
       if (file->read(pixels, image_size) != image_size) {
         return 0;
       }
 
-      // swap blue and red
-      byte* in = pixels;
-      for (int i = 0; i < width * height; ++i) {
-        byte r = in[0];
-        byte g = in[1];
-        byte b = in[2];
-        *in++ = b;
-        *in++ = g;
-        *in++ = r;
-      }
-
     } else if (pixel_depth == 32) {
 
       COR_LOG("32-bit image");
 
-      format = PF_R8G8B8A8;
+      format = PF_B8G8R8A8;
       int image_size = width * height * 4;
       pixels = new byte[image_size];
       if (file->read(pixels, image_size) != image_size) {
         return 0;
-      }
-
-      // convert pixels from BGRA to RGBA
-      byte* in = pixels;
-      for (int i = 0; i < width * height; ++i) {
-        byte b = in[0];
-        byte g = in[1];
-        byte r = in[2];
-        byte a = in[3];
-        *in++ = r;
-        *in++ = g;
-        *in++ = b;
-        *in++ = a;
       }
 
     } else {

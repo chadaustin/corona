@@ -6,6 +6,7 @@ Import('env')
 gifdir = 'libungif-4.1.0'
 
 SOURCES = [
+    'Convert.cpp',
     'Corona.cpp',
     'Debug.cpp',
     'DefaultFileSystem.cpp',
