@@ -50,7 +50,6 @@ dnl Output makefiles.
 AC_OUTPUT(
         Makefile
         doc/Makefile
-        doc/doxygen/Makefile
         src/Makefile
         src/libungif-4.1.0/Makefile
 )
