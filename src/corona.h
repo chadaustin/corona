@@ -25,9 +25,8 @@
 #endif
 
 
-#include <string>
-#include <vector>
-  
+#include <stddef.h>
+
 
 // DLLs in Windows should use the standard calling convention
 #ifndef COR_CALL
@@ -277,6 +276,26 @@ namespace corona {
   };
 
 
+  /// Describes a file format that Corona supports.
+  class FileFormatDesc {
+  protected:
+    ~FileFormatDesc() { }
+
+  public:
+    /// Actual FileFormat being described.
+    virtual FileFormat getFormat() = 0;
+
+    /// Short description of format, such as "PNG Files" or "JPEG Files"
+    virtual const char* getDescription() = 0;
+
+    /// @{
+    /// List of supported extensions, such as {"bmp", "rle", "dib"}
+    virtual size_t getExtensionCount() = 0;
+    virtual const char* getExtension(size_t i) = 0;
+    /// @}
+  };
+
+
   /// PRIVATE API - for internal use only
   namespace hidden {
 
@@ -287,18 +306,8 @@ namespace corona {
 
     COR_FUNCTION(const char*) CorGetVersion();
 
-    /// @{
-    /**
-     * Returns a formatted string that lists the file formats that
-     * Corona supports.  This function is DLL-safe.
-     *
-     * It is formatted in the following way:
-     *
-     * description1:ext1,ext2,ext3;description2:ext1,ext2,...
-     */
-    COR_FUNCTION(const char*) CorGetSupportedReadFormats();
-    COR_FUNCTION(const char*) CorGetSupportedWriteFormats();
-    /// @}
+    COR_FUNCTION(FileFormatDesc**) CorGetSupportedReadFormats();
+    COR_FUNCTION(FileFormatDesc**) CorGetSupportedWriteFormats();
 
     // creation
 
@@ -384,59 +393,22 @@ namespace corona {
   }
 
 
-  /// Describes a file format that Corona supports.
-  struct FileFormatDesc {
-    /// Short description of format, such as "PNG Files" or "JPEG Files"
-    std::string description;
-
-    /// List of supported extensions, such as {"bmp", "rle", "dib"}
-    std::vector<std::string> extensions;
-  };
-
-  inline void SplitString(
-    std::vector<std::string>& out,
-    const char* in,
-    char delim)
-  {
-    out.clear();
-    while (*in) {
-      const char* next = strchr(in, delim);
-      if (next) {
-        out.push_back(std::string(in, next));
-      } else {
-        out.push_back(in);
-      }
-
-      in = (next ? next + 1 : "");
-    }
+  /**
+   * Returns a null-terminated array of FileFormatDesc* pointers that
+   * describe the file formats Corona can read.  The array is owned by
+   * Corona, so do not delete it when you are done using it.
+   */
+  inline FileFormatDesc** GetSupportedReadFormats() {
+    return hidden::CorGetSupportedReadFormats();
   }
 
-  /// Populates a vector of FileFormatDesc structs.
-  inline void GetSupportedReadFormats(std::vector<FileFormatDesc>& formats) {
-    std::vector<std::string> descriptions;
-    SplitString(descriptions, hidden::CorGetSupportedReadFormats(), ';');
-
-    formats.resize(descriptions.size());
-    for (unsigned i = 0; i < descriptions.size(); ++i) {
-      const char* d = descriptions[i].c_str();
-      const char* colon = strchr(d, ':');
-      formats[i].description.assign(d, colon);
-      SplitString(formats[i].extensions, colon + 1, ',');
-    }
-  }
-
-  /// Populates a vector of FileFormatDesc structs.
-  inline void GetSupportedWriteFormats(std::vector<FileFormatDesc>& formats) {
-    std::vector<std::string> descriptions;
-    SplitString(descriptions, hidden::CorGetSupportedWriteFormats(), ';');
-
-    formats.resize(descriptions.size());
-    for (unsigned i = 0; i < descriptions.size(); ++i) {
-      const char* d = descriptions[i].c_str();
-      const char* colon = strchr(d, ':');
-      formats[i].description.assign(d, colon);
-      SplitString(formats[i].extensions, colon + 1, ',');
-    }
+  /**
+   * Returns a null-terminated array of FileFormatDesc* pointers that
+   * describe the file formats Corona can write.  The array is owned
+   * by Corona, so do not delete it when you are done using it.
+   */
+  inline FileFormatDesc** GetSupportedWriteFormats() {
+    return hidden::CorGetSupportedWriteFormats();
   }
 
 

@@ -1,4 +1,6 @@
+#include <string.h>
 #include "MemoryFile.h"
+#include "Utility.h"
 
 namespace corona {
 

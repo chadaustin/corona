@@ -1,4 +1,6 @@
 #include <memory>
+#include <string>
+#include <vector>
 #include <string.h>
 #include <ctype.h>
 #include "corona.h"
@@ -19,28 +21,73 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(const char*) CorGetSupportedReadFormats() {
-      return
+    class FFDImpl : public FileFormatDesc {
+    public:
+      FFDImpl(FileFormat format, const char* description, const char* exts) {
+        m_format = format;
+        m_description = description;
+
+        const char* ext = exts;
+        while (*ext) {
+          m_extensions.push_back(ext);
+          ext += strlen(ext) + 1;
+        }
+      }
+
+      FileFormat getFormat()             { return m_format;                }
+      const char* getDescription()       { return m_description.c_str();   }
+      size_t getExtensionCount()         { return m_extensions.size();     }
+      const char* getExtension(size_t i) { return m_extensions[i].c_str(); }
+
+    private:
+      FileFormat m_format;
+      std::string m_description;
+      std::vector<std::string> m_extensions;
+    };
+
+    FFDImpl ffPNG (FF_PNG,  "PNG Files",  "png\0");
+    FFDImpl ffJPEG(FF_JPEG, "JPEG Files", "jpeg\0jpg\0");
+    FFDImpl ffPCX (FF_PCX,  "PCX Files",  "pcx\0");
+    FFDImpl ffBMP (FF_BMP,  "BMP Files",  "bmp\0");
+    FFDImpl ffTGA (FF_TGA,  "TGA Files",  "tga\0");
+    FFDImpl ffGIF (FF_GIF,  "GIF Files",  "gif\0");
+
+    const int MAX_FORMAT_COUNT = 64;
+    FileFormatDesc** g_read_formats  = 0;
+    FileFormatDesc** g_write_formats = 0;
+    FileFormatDesc* g_read_array[MAX_FORMAT_COUNT + 1]  = {0};
+    FileFormatDesc* g_write_array[MAX_FORMAT_COUNT + 1] = {0};
+
+
+    COR_EXPORT(FileFormatDesc**) CorGetSupportedReadFormats() {
+      if (!g_read_formats) {
+        g_read_formats = g_read_array;
+        FileFormatDesc** f = g_read_formats;
 #ifndef NO_PNG
-	"PNG Files:png"  ";"
+        *f++ = &ffPNG;
 #endif
 #ifndef NO_JPEG
-	"JPEG Files:jpeg,jpg"  ";"
+        *f++ = &ffJPEG;
 #endif
-	"PCX Files:pcx"  ";"
-	"BMP Files:bmp"  ";"
-	"TGA Files:tga"  ";"
-	"GIF Files:gif"  ;
+        *f++ = &ffPCX;
+        *f++ = &ffBMP;
+        *f++ = &ffTGA;
+        *f++ = &ffGIF;
+      }
+      return g_read_formats;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(const char*) CorGetSupportedWriteFormats() {
-      return ""
+    COR_EXPORT(FileFormatDesc**) CorGetSupportedWriteFormats() {
+      if (!g_write_formats) {
+        g_write_formats = g_write_array;
+        FileFormatDesc** f = g_write_formats;
 #ifndef NO_PNG
-	"PNG Files:png"  ";"
+	*f++ = &ffPNG;
 #endif
-        "TGA Files:tga"  ;
+        *f++ = &ffTGA;
+      }
+      return g_write_formats;
     }
 
     ///////////////////////////////////////////////////////////////////////////
