@@ -1,4 +1,4 @@
-/*! \mainpage Corona
+/*! \mainpage Corona 0.2.0
 
 Corona is a high-level, portable image I/O library usable from C++.
 It can read PNG, JPEG, PCX, and BMP images, and can write PNGs.
