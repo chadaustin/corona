@@ -9,6 +9,7 @@ The following files contain version information:
   configure.in
   doc/doxygen/corona.doxy
   doc/doxygen/mainpage.doxy
+  doc/doxygen/docify.sh
   src/corona.h
   src/Corona.cpp
   vc7/ManagedWrapper.cpp
