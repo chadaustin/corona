@@ -211,10 +211,12 @@ public:
       "palettized_odd",
       "test",
       "test_odd",
-      "test_v0",
-      "test_v0_odd",
-      "test_v2",
-      "test_v2_odd",
+
+      // we don't officially support these yet
+      //"test_v0",
+      //"test_v0_odd",
+      //"test_v2",
+      //"test_v2_odd",
     };
     static const int image_count = sizeof(images) / sizeof(*images);
 
