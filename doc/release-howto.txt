@@ -9,4 +9,5 @@ The following files contain version information:
   configure.in
   doc/doxygen/corona.doxy
   doc/doxygen/mainpage.doxy
+  src/corona.h
   src/Corona.cpp
