@@ -14,12 +14,7 @@ Log::Write(const char* str)
 {
   EnsureOpen();
   if (handle) {
-    std::string s;
-    for (int i = 0; i < indent_count; ++i) {
-      s += "  ";
-    }
-    s += str;
-    s += "\n";
+    std::string s(std::string(indent_count * 2, ' ') + str + "\n");
     fwrite(s.c_str(), 1, s.length(), handle);
     fflush(handle);
   }
