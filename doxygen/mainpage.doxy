@@ -1,0 +1,6 @@
+/*! \mainpage Corona
+
+Corona is a high-level, portable image I/O library usable from C++.
+It can read PNG, JPEG, PCX, and BMP images, and can write PNGs.
+
+*/
