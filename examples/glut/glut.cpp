@@ -40,12 +40,15 @@ void reshape(int w, int h) {
 }
 
 
+void error(const char* message);
+
+
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
 
   auto_ptr<Image> img(OpenImage("f03n0g08.png", FF_AUTODETECT, PF_R8G8B8A8));
   if (!img.get()) {
-    puts("Error loading image");
+    error("Error loading image");
     return EXIT_FAILURE;
   }
 
@@ -69,4 +72,28 @@ int main(int argc, char** argv) {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
   glutMainLoop();
+
+  // VC++ 6 sucks
+  return 0;
 }
+
+
+#ifdef _WIN32
+
+  #include <windows.h>
+
+  void error(const char* message) {
+    MessageBox(0, message, "Corona/GLUT", MB_ICONERROR | MB_OK);
+  }
+
+  int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+    return main(__argc, __argv);
+  }
+
+#else
+
+  void error(const char* message) {
+    puts(message);
+  }
+
+#endif
