@@ -3,6 +3,7 @@ import string
 import sys
 
 EnsureSConsVersion(0, 12)
+SConsignFile()
 
 base_env = Environment(ENV = os.environ)
 
