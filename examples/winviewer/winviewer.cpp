@@ -14,13 +14,18 @@ static std::string TITLE =
 static char CLASSNAME[] = "CoronaWinView";
 
 
+static corona::Image* gImage;
 static HDC gDC;
 static HBITMAP gBitmap;
 static int gImageWidth;
 static int gImageHeight;
 
 
-static std::string BrowseForFileDialog(HWND parent, const char* title) {
+static std::string BrowseForFileDialog(
+  HWND parent,
+  const char* title,
+  bool save = false)
+{
   char file[MAX_PATH] = ""  ;
   OPENFILENAME ofn;
   memset(&ofn, 0, sizeof(ofn));
@@ -30,10 +35,17 @@ static std::string BrowseForFileDialog(HWND parent, const char* title) {
   ofn.lpstrFile   = file;
   ofn.nMaxFile    = MAX_PATH;
   ofn.lpstrTitle  = title;
-  ofn.Flags       = OFN_FILEMUSTEXIST;
-  if (!GetOpenFileName(&ofn)) {
-    DWORD error = CommDlgExtendedError();
-    return "";
+  
+  if (!save) {
+    ofn.Flags       = OFN_FILEMUSTEXIST;
+    if (!GetOpenFileName(&ofn)) {
+      //DWORD error = CommDlgExtendedError();
+      return "";
+    }
+  } else {
+    if (!GetSaveFileName(&ofn)) {
+      return "";
+    }
   }
   return file;
 }
@@ -48,18 +60,22 @@ static bool UpdateImage(const char* filename) {
       DeleteObject(gBitmap);
       gBitmap = NULL;
     }
+    delete gImage;
+    gImage = 0;
+
     return true;
   }
 
-  corona::Image* image = corona::OpenImage(filename, corona::PF_B8G8R8A8);
-  if (!image) {
-    return false;
-  }
-  gImageWidth = image->getWidth();
-  gImageHeight = image->getHeight();
-
   // destroy the old DC and bitmap
   UpdateImage(0);
+
+  gImage = corona::OpenImage(filename, corona::PF_B8G8R8);
+  if (!gImage) {
+    return false;
+  }
+
+  gImageWidth = gImage->getWidth();
+  gImageHeight = gImage->getHeight();
 
   gDC = CreateCompatibleDC(NULL);
   if (!gDC) {
@@ -73,7 +89,7 @@ static bool UpdateImage(const char* filename) {
   bmih.biWidth       = gImageWidth;
   bmih.biHeight      = -gImageHeight;
   bmih.biPlanes      = 1;
-  bmih.biBitCount    = 32;
+  bmih.biBitCount    = 24;
   bmih.biCompression = BI_RGB;
 
   void* dest;
@@ -94,8 +110,7 @@ static bool UpdateImage(const char* filename) {
     return false;
   }
 
-  memcpy(dest, image->getPixels(), gImageWidth * gImageHeight * 4);
-  delete image;
+  memcpy(dest, gImage->getPixels(), gImageWidth * gImageHeight * 3);
   return true;
 }
 
@@ -172,6 +187,20 @@ static LRESULT CALLBACK WindowProc(
               sprintf(str, "Failed to open image '%s'", image.c_str());
               MessageBox(window, str, "Open Image", MB_OK | MB_ICONERROR);
             }
+          }
+          return 0;
+        }
+
+        case ID_FILE_SAVEIMAGE: {
+          if (gImage) {
+            std::string fn = BrowseForFileDialog(window, "Save Image", true);
+            if (!fn.empty()) {
+              if (!corona::SaveImage(fn.c_str(), corona::FF_PNG, gImage)) {
+                MessageBox(window, "Error saving image", "Save Image", MB_OK | MB_ICONERROR);
+              }
+            }
+          } else {
+            MessageBox(window, "No image to save!", "Save Image", MB_OK | MB_ICONERROR);
           }
           return 0;
         }

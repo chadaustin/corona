@@ -57,6 +57,7 @@ BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "&Open Image...",              ID_FILE_OPENIMAGE
+        MENUITEM "&Save Image...",              ID_FILE_SAVEIMAGE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_FILE_EXIT
     END
