@@ -225,8 +225,7 @@ namespace corona {
   };
 
 
-  /* PRIVATE API */
-  /* for internal use only */
+  /** PRIVATE API - for internal use only */
   namespace hidden {
 
     // these are extern "C" so we don't mangle the names
