@@ -77,8 +77,8 @@ namespace corona {
     }
 
     // parse the header...
-    int manufacturer   = pcx_header[0];
-    int version        = pcx_header[1];
+    //int manufacturer   = pcx_header[0];
+    //int version        = pcx_header[1];
     int encoding       = pcx_header[2];
     int bpp            = pcx_header[3];
     int xmin           = read16_le(pcx_header + 4);

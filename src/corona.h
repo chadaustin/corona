@@ -433,6 +433,24 @@ namespace corona {
       pixel_format);
   }
 
+  /// For compatibility.  This function may be deprecated.
+  inline Image* OpenImage(
+    const char* filename,
+    FileFormat file_format,
+    PixelFormat pixel_format = PF_DONTCARE)
+  {
+    return OpenImage(filename, pixel_format, file_format);
+  }
+
+  /// For compatibility.  This function may be deprecated.
+  inline Image* OpenImage(
+    File* file,
+    FileFormat file_format,
+    PixelFormat pixel_format = PF_DONTCARE)
+  {
+    return OpenImage(file, pixel_format, file_format);
+  }
+
   /**
    * Saves an image to a file in the default filesystem.  This
    * function simply calls SaveImage(fs, filename, file_format, image)

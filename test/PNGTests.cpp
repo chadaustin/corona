@@ -186,17 +186,21 @@ PNGTests::testLoader() {
 
 
 void
+setRandomBytes(byte* b, int size) {
+  while (size--) {
+    *b++ = byte(rand() % 256);
+  }
+}
+
+
+void
 PNGTests::testWriter() {
   static const int width  = 256;
   static const int height = 256;
 
   // create an image and fill it with random data
   auto_ptr<Image> image(CreateImage(width, height, PF_R8G8B8A8));
-
-  byte* pixels = (byte*)image->getPixels();
-  for (int i = 0; i < width * height * 4; ++i) {
-    *pixels++ = (byte)(rand() % 256);
-  }
+  setRandomBytes((byte*)image->getPixels(), width * height * 4);
 
   // generate filename
   char* filename = tmpnam(0);
@@ -218,8 +222,32 @@ PNGTests::testWriter() {
   auto_ptr<Image> img3(OpenImage(filename, PF_R8G8B8));
   CPPUNIT_ASSERT(SaveImage(filename, FF_PNG, img3.get()) == true);
 
-  // remove the temporary file we made
   remove(filename);
+
+
+  //== PALETTIZED SAVING TEST ==
+  // disabled until OpenPNG can load palettized images in the right format
+#if 0
+  char* plt_filename = tmpnam(0);
+  CPPUNIT_ASSERT_MESSAGE("opening temporary file (palette)", plt_filename != 0);
+
+  auto_ptr<Image> plt(CreateImage(256, 256, PF_I8, 256, PF_R8G8B8));
+  setRandomBytes((byte*)plt->getPixels(), 256 * 256);
+  setRandomBytes((byte*)plt->getPalette(), 256);
+
+  CPPUNIT_ASSERT(SaveImage(plt_filename, FF_PNG, plt.get()) == true);
+
+  auto_ptr<Image> plt2(OpenImage(plt_filename, FF_PNG));
+  CPPUNIT_ASSERT_MESSAGE("reloading palettized image", plt2.get() != 0);
+  CPPUNIT_ASSERT(plt2->getPaletteSize() == 256);
+  CPPUNIT_ASSERT(plt2->getPaletteFormat() == PF_R8G8B8);
+  CPPUNIT_ASSERT(plt2->getFormat() == PF_I8);
+  AssertImagesEqual("Comparing palettized image", plt.get(), plt2.get());
+
+  remove(plt_filename);
+#endif
+
+  // remove the temporary files we made
 }
 
 

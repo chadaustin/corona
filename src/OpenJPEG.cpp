@@ -145,7 +145,7 @@ namespace corona {
   //////////////////////////////////////////////////////////////////////////////
 
   void JPEG_skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
-    InternalStruct* is = (InternalStruct*)(cinfo->client_data);
+    //InternalStruct* is = (InternalStruct*)(cinfo->client_data);
     if (num_bytes > 0) {
       while (num_bytes > (long)cinfo->src->bytes_in_buffer) {
         num_bytes -= (long)cinfo->src->bytes_in_buffer;

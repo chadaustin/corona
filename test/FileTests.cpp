@@ -62,7 +62,7 @@ FileTests::testMemoryLoads() {
     int file_size = ftell(file);
     byte* buffer = new byte[file_size];
     fseek(file, 0, SEEK_SET);
-    CPPUNIT_ASSERT(fread(buffer, 1, file_size, file) == file_size);
+    CPPUNIT_ASSERT((int)fread(buffer, 1, file_size, file) == file_size);
     fclose(file);
 
     // then create a memory file from it
