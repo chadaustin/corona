@@ -85,6 +85,14 @@ namespace corona {
     PF_B8G8R8   = 0x0205,  /**< BGR, channels have eight bits of precision  */
   };
 
+  /**
+   * Axis specifications.  The image can be flipped along the following
+   * axes.
+   */
+  enum CoordinateAxis {
+    CA_X     = 0x0001,
+    CA_Y     = 0x0002,
+  };
 
   /**
    * A helper class for DLL-compatible interfaces.  Derive your cross-DLL
@@ -336,6 +344,10 @@ namespace corona {
     COR_FUNCTION(Image*) CorConvertPalette(
       Image* image,
       PixelFormat palette_format);
+
+    COR_FUNCTION(Image*) CorFlipImage(
+      Image* image,
+      int coordinate_axis);
 
     // files
 
@@ -631,6 +643,20 @@ namespace corona {
    */
   inline Image* ConvertPalette(Image* source, PixelFormat palette_format) {
     return hidden::CorConvertPalette(source, palette_format);
+  }
+
+  /**
+   * Flips the pixels in the image around the given axis, destroying
+   * the old image.  If the source is 0, the function returns 0.
+   *
+   * @param source           image to flip
+   * @param coordinate_axis  Axis around which to flip.  Both CA_X and CA_Y
+   *                         can be specified by ORing them together.
+   *
+   * @return  valid image object if flip succeeds, 0 otherwise
+   */
+  inline Image* FlipImage(Image* source, int coordinate_axis) {
+    return hidden::CorFlipImage(source, coordinate_axis);
   }
 
   /**

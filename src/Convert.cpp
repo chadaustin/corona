@@ -218,6 +218,67 @@ namespace corona {
         new_palette, palette_size, palette_format);
     }
 
+    COR_EXPORT(Image*) CorFlipImage(
+      Image* image,
+      int coordinate_axis)
+    {
+      COR_GUARD("CorFlipImage");
+
+      // if we don't have an image, don't flip.
+      if (!image) {
+        return image;
+      }
+      // only two possible values are CA_X and CA_Y
+      if (coordinate_axis & ~(CA_X | CA_Y)) {
+        delete image;
+        return 0;
+      }
+
+      COR_LOG("Doing the flip...");
+
+      const int width                 = image->getWidth();
+      const int height                = image->getHeight();
+      const PixelFormat pixel_format  = image->getFormat();
+      const int pixel_size            = GetPixelSize(pixel_format);
+
+      byte* pixels = new byte[width * height * pixel_size];
+      memcpy(pixels, image->getPixels(), width * height * pixel_size);
+      delete image;
+      image = 0;
+
+      // flip about the X axis
+      if (coordinate_axis & CA_X) {
+
+        byte* row = new byte[width * pixel_size];
+        for (int h = 0; h < height / 2; ++h) {
+          byte* top = pixels + h                * width * pixel_size;
+          byte* bot = pixels + (height - h - 1) * width * pixel_size;
+          memcpy(row, top, width * pixel_size);
+          memcpy(top, bot, width * pixel_size);
+          memcpy(bot, row, width * pixel_size);
+        }
+        delete[] row;
+
+      }
+
+      // flip about the Y axis
+      if (coordinate_axis & CA_Y) {
+
+        for (int h = 0; h < height; ++h) {
+          byte* row = pixels + h * width * pixel_size;
+          for (int w = 0; w < width / 2; ++w) {
+            byte* left  = row + w               * pixel_size;
+            byte* right = row + (width - w - 1) * pixel_size;
+            for (int b = 0; b < pixel_size; ++b) {
+              std::swap(left[b], right[b]);
+            }
+          }
+        }
+
+      }
+
+      return new SimpleImage(width, height, pixel_format, pixels);
+    }
   }
 
 }

@@ -61,6 +61,12 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_FILE_EXIT
     END
+    POPUP "&Modify"
+    BEGIN
+        MENUITEM "Flip About &X",               ID_MODIFY_FLIPABOUTX
+        MENUITEM "Flip About &Y",               ID_MODIFY_FLIPABOUTY
+        MENUITEM "Flip About &Both",            ID_MODIFY_FLIPABOUTBOTH
+    END
 END
 
 #endif    // English (U.S.) resources

@@ -25,4 +25,5 @@ int main() {
   runner.addTest(PaletteTests::suite());
 
   runner.run();
+  return 0;
 }

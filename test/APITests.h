@@ -2,12 +2,12 @@
 #define API_TESTS_H
 
 
-#include "TestFramework.h"
+#include "ImageTestCase.h"
 
 
-class APITests : public TestCase {
+class APITests : public ImageTestCase {
 public:
-  void testBasicOperations();
+  void testBasicOperations(int width, int height);
   void testAPI();
   void testMemory();
   static Test* suite();

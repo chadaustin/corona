@@ -8,14 +8,19 @@
 #include <stdlib.h>
 #include "corona.h"
 #include "resource.h"
+using namespace corona;
 
 
-static std::string TITLE =
-  "Corona (" + std::string(corona::GetVersion()) + ") Image Viewer";
+static std::string GetCoronaVersion() {
+  return corona::GetVersion();
+}
+
+
+static std::string TITLE = "Corona (" + GetCoronaVersion() + ") Image Viewer";
 static char CLASSNAME[] = "CoronaWinView";
 
 
-static corona::Image* gImage;
+static Image* gImage;
 static HDC gDC;
 static HBITMAP gBitmap;
 static int gImageWidth;
@@ -51,27 +56,8 @@ static std::string BrowseForFileDialog(
   return file;
 }
 
-static bool UpdateImage(const char* filename) {
-  if (!filename) {
-    if (gDC) {
-      DeleteDC(gDC);
-      gDC = NULL;
-    }
-    if (!gBitmap) {
-      DeleteObject(gBitmap);
-      gBitmap = NULL;
-    }
-    delete gImage;
-    gImage = 0;
 
-    return true;
-  }
-
-  // destroy the old DC and bitmap
-  UpdateImage(0);
-
-  // use a format that keeps the most possible image fidelity
-  gImage = corona::OpenImage(filename, corona::PF_B8G8R8A8);
+static bool UpdateImage() {
   if (!gImage) {
     return false;
   }
@@ -114,6 +100,35 @@ static bool UpdateImage(const char* filename) {
 
   memcpy(dest, gImage->getPixels(), gImageWidth * gImageHeight * 4);
   return true;
+}
+
+
+static bool UpdateImage(const char* filename) {
+  if (!filename) {
+    if (gDC) {
+      DeleteDC(gDC);
+      gDC = NULL;
+    }
+    if (!gBitmap) {
+      DeleteObject(gBitmap);
+      gBitmap = NULL;
+    }
+    delete gImage;
+    gImage = 0;
+
+    return true;
+  }
+
+  // destroy the old DC and bitmap
+  UpdateImage(0);
+
+  // use a format that keeps the most possible image fidelity
+  gImage = OpenImage(filename, PF_B8G8R8A8);
+  if (!gImage) {
+    return false;
+  }
+
+  return UpdateImage();
 }
 
 
@@ -197,7 +212,7 @@ static LRESULT CALLBACK WindowProc(
           if (gImage) {
             std::string fn = BrowseForFileDialog(window, "Save Image", true);
             if (!fn.empty()) {
-              if (!corona::SaveImage(fn.c_str(), corona::FF_AUTODETECT, gImage)) {
+              if (!SaveImage(fn.c_str(), FF_AUTODETECT, gImage)) {
                 MessageBox(window, "Error saving image", "Save Image", MB_OK | MB_ICONERROR);
               }
             }
@@ -211,6 +226,29 @@ static LRESULT CALLBACK WindowProc(
           DestroyWindow(window);
           return 0;
         }
+
+
+        case ID_MODIFY_FLIPABOUTX: {
+          gImage = FlipImage(gImage, CA_X);
+          UpdateImage();
+          InvalidateRect(window, NULL, TRUE);
+          return 0;
+        }
+
+        case ID_MODIFY_FLIPABOUTY: {
+          gImage = FlipImage(gImage, CA_Y);
+          UpdateImage();
+          InvalidateRect(window, NULL, TRUE);
+          return 0;
+        }
+        
+        case ID_MODIFY_FLIPABOUTBOTH: {
+          gImage = FlipImage(gImage, CA_X | CA_Y);
+          UpdateImage();
+          InvalidateRect(window, NULL, TRUE);
+          return 0;
+        }
+        
 
         default:
           return 0;
