@@ -198,8 +198,8 @@ namespace corona {
     /**
      * Read size bytes from the file, storing them in buffer.
      *
-     * @param buffer  
-     * @param size    
+     * @param buffer  buffer to read into
+     * @param size    number of bytes to read
      *
      * @return  number of bytes successfully read
      */
@@ -237,7 +237,7 @@ namespace corona {
   };
 
 
-  /** PRIVATE API - for internal use only */
+  /// PRIVATE API - for internal use only
   namespace hidden {
 
     // these are extern "C" so we don't mangle the names
