@@ -40,7 +40,7 @@ namespace corona {
       return m_format;
     }
 
-    byte* getPixels() {
+    void* getPixels() {
       return m_pixels;
     }
 

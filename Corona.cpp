@@ -1,6 +1,7 @@
 #include "corona.h"
 #include "DefaultFileSystem.h"
 #include "Open.h"
+#include "Save.h"
 #include "SimpleImage.h"
 
 
@@ -73,7 +74,55 @@ namespace corona {
       case FF_JPEG: return OpenJPEG(file);
       case FF_PCX:  return OpenPCX(file);
       case FF_BMP:  return OpenBMP(file);
-      default:   return 0;
+      default:      return 0;
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  COR_EXPORT(bool, CorSaveImage)(
+    const char* filename,
+    FileFormat file_format,
+    Image* image)
+  {
+    return CorSaveImageToFileSystem(
+      GetDefaultFileSystem(),
+      filename,
+      file_format,
+      image);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  COR_EXPORT(bool, CorSaveImageToFileSystem)(
+    FileSystem* fs,
+    const char* filename,
+    FileFormat file_format,
+    Image* image)
+  {
+    File* file = fs->openFile(filename, FileSystem::WRITE);
+    if (!file) {
+      return 0;
+    }
+
+    bool success = CorSaveImageToFile(file, file_format, image);
+    file->close();
+    return success;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  COR_EXPORT(bool, CorSaveImageToFile)(
+    File* file,
+    FileFormat file_format,
+    Image* image)
+  {
+    switch (file_format) {
+      case FF_PNG:  return SavePNG(file, image);
+      case FF_JPEG: return false;
+      case FF_PCX:  return false;
+      case FF_BMP:  return false;
+      default:      return false;
     }
   }
 

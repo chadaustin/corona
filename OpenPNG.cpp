@@ -15,8 +15,29 @@ namespace corona {
                          png_bytep data,
                          png_size_t length) {
     File* file = (File*)png_get_io_ptr(png_ptr);
-    int read = file->read(data, length);
-    memset(data + read, 0, length - read);  // fill the rest with zeroes
+    if (file->read(data, length) != int(length)) {
+      png_error(png_ptr, "Read error");
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  void fill_palette(png_structp png, png_infop info, png_color palette[256]) {
+
+    // by default, the palette is greyscale
+    for (int i = 0; i < 256; ++i) {
+      palette[i].red   = i;
+      palette[i].green = i;
+      palette[i].blue  = i;
+    }
+
+    // do we have a palette and is it big enough?
+    png_colorp png_palette;
+    int num_palette;
+    png_get_PLTE(png, info, &png_palette, &num_palette);
+    if (num_palette >= 256) {
+      memcpy(palette, png_palette, 256 * sizeof(png_color));
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -46,7 +67,7 @@ namespace corona {
     }
 
     // the PNG error function calls longjmp(png_ptr->jmpbuf)
-    if (setjmp(png_ptr->jmpbuf)) {
+    if (setjmp(png_jmpbuf(png_ptr))) {
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
       return 0;
     }
@@ -54,9 +75,8 @@ namespace corona {
     // read the image
     png_set_read_fn(png_ptr, file, PNG_read_function);
     png_set_sig_bytes(png_ptr, 8);  // we already read 8 bytes for the sig
-    int png_transform = PNG_TRANSFORM_STRIP_16;
-    png_transform    |= PNG_TRANSFORM_PACKING;
-    png_transform    |= PNG_TRANSFORM_PACKSWAP;
+    // always give us 8-bit samples (strip 16-bit and expand <8-bit)
+    int png_transform = PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_EXPAND;
     png_read_png(png_ptr, info_ptr, png_transform, NULL);
 
     if (!png_get_rows(png_ptr, info_ptr)) {
@@ -93,262 +113,57 @@ namespace corona {
       }
 
     // palettized or greyscale with alpha
-    } else if (bit_depth == 8 && num_channels == 2) {
+    } else if (bit_depth == 8 && (num_channels == 2 || num_channels == 1)) {
 
       format = PF_R8G8B8A8;
       pixels = new byte[width * height * 4];
       byte* out = pixels;
 
-      // try to get the palette
-      png_colorp palette;
-      int num_palette;
-      png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette);
+      png_color palette[256];
+      fill_palette(png_ptr, info_ptr, palette);
 
-      if (num_palette < 256) {    // greyscale
+      if (num_channels == 2) {
+
         for (int i = 0; i < height; ++i) {
           byte* in = row_pointers[i];
           for (int j = 0; j < width; ++j) {
-            *out++ = *in;   // red
-            *out++ = *in;   // green
-            *out++ = *in++; // blue
-            *out++ = *in++; // alpha
+            byte c = *in++;
+            *out++ = palette[c].red;
+            *out++ = palette[c].green;
+            *out++ = palette[c].blue;
+            *out++ = *in++;  // alpha
           }
         }
-      } else {                   // palettized
-        for (int i = 0; i < height; ++i) {
-          byte* in = row_pointers[i];
-          for (int j = 0; j < width; ++j) {
-            *out++ = palette[*in].red;
-            *out++ = palette[*in].green;
-            *out++ = palette[*in].blue;
-            ++in;
-            *out++ = *in++;    // alpha
-          }
+
+      } else { // (num_channels == 1)
+
+        byte alpha[256];
+        memset(alpha, 255, 256);  // by default, everything is opaque
+
+        // get the transparent palette flags
+        png_bytep trans;
+        int num_trans = 0;
+        png_color_16p trans_values; // XXX not used - should be?
+        png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, &trans_values);
+
+        // update the alpha table
+        for (int i = 0; i < num_trans; ++i) {
+          alpha[trans[i]] = 0;
         }
-      }
 
-    // palettized or greyscale, no alpha
-    } else if (bit_depth == 8 && num_channels == 1) {
-
-      format = PF_R8G8B8A8;
-      pixels = new byte[width * height * 4];
-      byte* out = pixels;
-
-      // try to get the palette
-      png_colorp palette;
-      int num_palette = 0;
-      png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette);
-
-      // get the transparent palette flags
-      png_bytep trans;
-      int num_trans = 0;
-      png_color_16p trans_values; // these aren't used
-      png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, &trans_values);
-
-      // create a transparency table
-      int alphas_size = Max(num_palette, 256);
-      auto_array<byte> alphas(new byte[alphas_size]);
-      for (int i = 0; i < alphas_size; ++i) {
-        alphas[i] = 255;
-      }
-      for (int i = 0; i < Min(alphas_size, num_trans); ++i) {
-        alphas[i] = 0;
-      }
-
-      if (num_palette < 256) {     // greyscale
         for (int i = 0; i < height; ++i) {
           byte* row = row_pointers[i];
           for (int j = 0; j < width; j++) {
-            *out++ = *row; // red
-            *out++ = *row; // green
-            *out++ = *row; // blue
-            *out++ = alphas[*row];
-            ++row;
-          }
-        }
-      } else {                    // palettized
-        for (int i = 0; i < height; i++) {
-          byte* row = row_pointers[i];
-          for (int j = 0; j < width; j++) {
-            *out++ = palette[*row].red;
-            *out++ = palette[*row].green;
-            *out++ = palette[*row].blue;
-            *out++ = alphas[*row];
-            ++row;
-          }
-        }
-      }
-    
-    // 4-bit palettized
-    } else if (bit_depth == 4 && num_channels == 1) {
-
-      format = PF_R8G8B8;
-      pixels = new byte[width * height * 3];
-      byte* out = pixels;
-
-      // try to read the palette
-      png_colorp palette;
-      int num_palette = 0;
-      png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette);
-
-      if (num_palette < 16) {  // greyscale
-
-        for (int i = 0; i < height; i++) {
-          byte* row = row_pointers[i];
-          for (int j = 0; j < width / 2; j++) {
-          
-            *out++ = (*row & 0xF0);
-            *out++ = (*row & 0xF0);
-            *out++ = (*row & 0xF0);
-
-            *out++ = (*row & 0x0F) << 4;
-            *out++ = (*row & 0x0F) << 4;
-            *out++ = (*row & 0x0F) << 4;
-
-            ++row;
-          }
-
-          if (width % 2) {
-            byte p = *row >> 4;
-            *out++ = (*row & 0xF0);
-            *out++ = (*row & 0xF0);
-            *out++ = (*row & 0xF0);
-          }
-        }
-
-      } else {
-        for (int i = 0; i < height; i++) {
-          byte* row = row_pointers[i];
-          for (int j = 0; j < width / 2; j++) {
-          
-            byte p1 = *row >> 4;
-            *out++ = palette[p1].red;
-            *out++ = palette[p1].green;
-            *out++ = palette[p1].blue;
-
-            byte p2 = *row & 0xF;
-            *out++ = palette[p2].red;
-            *out++ = palette[p2].green;
-            *out++ = palette[p2].blue;
-
-            ++row;
-          }
-
-          if (width % 2) {
-            byte p = *row >> 4;
-            *out++ = palette[p].red;
-            *out++ = palette[p].green;
-            *out++ = palette[p].blue;
-          }
-        }
-      }
-
-    // 2-bit palettized
-    } else if (bit_depth == 2 && num_channels == 1) {
-
-      format = PF_R8G8B8;
-      pixels = new byte[width * height * 3];
-      byte* out = pixels;
-
-      // try to read the palette
-      png_colorp palette;
-      int num_palette;
-      png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette);
-
-      if (num_palette < 4) {  // greyscale
-        for (int i = 0; i < height; i++) {
-
-          int level = 0;
-          byte* row = row_pointers[i];
-
-          for (int j = 0; j < width; j++) {
-
-            *out++ = ((*row >> level) & 3) * 85;
-            *out++ = ((*row >> level) & 3) * 85;
-            *out++ = ((*row >> level) & 3) * 85;
-
-            level += 2;
-            if (level == 8) {
-              row++;
-              level = 0;
-            }
-          }
-        }
-      } else {                // palettized
-        for (int i = 0; i < height; i++) {
-
-          int level = 0;
-          byte* row = row_pointers[i];
-
-          for (int j = 0; j < width; j++) {
-
-            *out++ = palette[(*row >> level) & 3].red;
-            *out++ = palette[(*row >> level) & 3].green;
-            *out++ = palette[(*row >> level) & 3].blue;
-
-            level += 2;
-            if (level == 8) {
-              row++;
-              level = 0;
-            }
-          }
-        }
-      }
-
-    // 1-bit palettized
-    } else if (bit_depth == 1 && num_channels == 1) {
-
-      format = PF_R8G8B8;
-      pixels = new byte[width * height * 3];
-      byte* out = pixels;
-
-      // try to read the palette
-      png_colorp palette;
-      int num_palette;
-      png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette);
-
-      if (num_palette < 2) {  // black and white
-        for (int i = 0; i < height; i++) {
-
-          int mask = 1;
-          byte* row = row_pointers[i];
-
-          for (int j = 0; j < width; j++) {
-
-            *out++ = ((*row & mask) > 0) * 255;
-            *out++ = ((*row & mask) > 0) * 255;
-            *out++ = ((*row & mask) > 0) * 255;
-
-            mask <<= 1;
-            if (mask == 256) {
-              row++;
-              mask = 1;
-            }
-          }
-        }
-      } else {                // palettized two-color
-        for (int i = 0; i < height; i++) {
-
-          int mask = 1;
-          byte* row = row_pointers[i];
-
-          for (int j = 0; j < width; j++) {
-
-            *out++ = palette[(*row & mask) > 0].red;
-            *out++ = palette[(*row & mask) > 0].green;
-            *out++ = palette[(*row & mask) > 0].blue;
-
-            mask <<= 1;
-            if (mask == 256) {
-              row++;
-              mask = 1;
-            }
+            byte c = *row++;
+            *out++ = palette[c].red;
+            *out++ = palette[c].green;
+            *out++ = palette[c].blue;
+            *out++ = alpha[c];
           }
         }
       }
 
     } else {  // unknown format
-      png_destroy_info_struct(png_ptr, &info_ptr);
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
       return 0;
     }

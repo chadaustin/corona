@@ -23,6 +23,10 @@ namespace corona {
       return fread(buffer, 1, size, m_file);
     }
 
+    int write(void* buffer, int size) {
+      return fwrite(buffer, 1, size, m_file);
+    }
+
     bool seek(int position, SeekMode mode) {
       int m;
       switch (mode) {

@@ -66,6 +66,7 @@ namespace corona {
 
     virtual void close() = 0;
     virtual int read(void* buffer, int size) = 0;
+    virtual int write(void* buffer, int size) = 0;
     virtual bool seek(int position, SeekMode mode) = 0;
     virtual int tell() = 0;
   };
@@ -91,7 +92,10 @@ namespace corona {
 
     // these are extern "C" so we don't mangle the names...
     // different compilers mangle names differently
+
     COR_FUNCTION(const char*, CorGetVersion());
+
+    // loading
 
     COR_FUNCTION(Image*, CorOpenImage(
       const char* filename,
@@ -105,6 +109,26 @@ namespace corona {
     COR_FUNCTION(Image*, CorOpenImageFromFile(
       File* file,
       FileFormat file_format));
+
+    // saving
+
+    COR_FUNCTION(bool, CorSaveImage(
+      const char* filename,
+      FileFormat file_format,
+      Image* image));
+
+    COR_FUNCTION(bool, CorSaveImageToFileSystem(
+      FileSystem* fs,
+      const char* filename,
+      FileFormat file_format,
+      Image* image));
+
+    COR_FUNCTION(bool, CorSaveImageToFile(
+      File* file,
+      FileFormat file_format,
+      Image* image));
+
+    // conversion
 
     COR_FUNCTION(Image*, CorConvertImage(
       Image* image,
@@ -151,6 +175,31 @@ namespace corona {
     return hidden::CorGuaranteeFormat(
       hidden::CorOpenImageFromFile(file, file_format),
       pixel_format);
+  }
+
+  inline bool SaveImage(
+    const char* filename,
+    FileFormat file_format,
+    Image* image)
+  {
+    return hidden::CorSaveImage(filename, file_format, image);
+  }
+
+  inline bool SaveImage(
+    FileSystem* fs,
+    const char* filename,
+    FileFormat file_format,
+    Image* image)
+  {
+    return hidden::CorSaveImageToFileSystem(fs, filename, file_format, image);
+  }
+
+  inline bool SaveImage(
+    File* file,
+    FileFormat file_format,
+    Image* image)
+  {
+    return hidden::CorSaveImageToFile(file, file_format, image);
   }
 }
 

@@ -134,6 +134,14 @@ SOURCE=.\OpenPNG.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Save.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SavePNG.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SimpleImage.h
 # End Source File
 # Begin Source File
