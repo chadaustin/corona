@@ -301,7 +301,7 @@ namespace corona {
 
     // utility
 
-    COR_FUNCTION(int, CorGetBytesPerPixel)(
+    COR_FUNCTION(int, CorGetPixelSize)(
       PixelFormat format);
   }
 
@@ -518,8 +518,8 @@ namespace corona {
    *
    * @return  Number of bytes each pixel takes, or 0 if the format is invalid.
    */
-  inline int GetBytesPerPixel(PixelFormat format) {
-    return hidden::CorGetBytesPerPixel(format);
+  inline int GetPixelSize(PixelFormat format) {
+    return hidden::CorGetPixelSize(format);
   }
 
 }

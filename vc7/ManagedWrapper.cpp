@@ -108,7 +108,7 @@ namespace Corona {
 
   public:
     static int GetFormatSize(Corona::PixelFormat pixel_format) {
-      return C::corona::GetBytesPerPixel(
+      return C::corona::GetPixelSize(
         static_cast<C::corona::PixelFormat>(pixel_format));
     }
   

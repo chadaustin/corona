@@ -9,4 +9,4 @@ EXPORTS
   CorSaveImageToFile
   CorConvertImage
   CorCreateMemoryFile
-  CorGetBytesPerPixel
+  CorGetPixelSize

@@ -46,7 +46,7 @@ public:
     int pixel_comparison = memcmp(
       i1->getPixels(),
       i2->getPixels(),
-      width * height * GetBytesPerPixel(i1_format));
+      width * height * GetPixelSize(i1_format));
     CPPUNIT_ASSERT_MESSAGE(message, pixel_comparison == 0);
   }
 };
