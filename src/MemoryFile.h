@@ -11,7 +11,7 @@ namespace corona {
 
   class MemoryFile : public DLLImplementation<File> {
   public:
-    MemoryFile(void* buffer, int size) {
+    MemoryFile(const void* buffer, int size) {
       m_buffer = new byte[size];
       memcpy(m_buffer, buffer, size);
 

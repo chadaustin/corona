@@ -320,7 +320,7 @@ namespace corona {
     // memory file
 
     COR_FUNCTION(File*, CorCreateMemoryFile)(
-      void* buffer,
+      const void* buffer,
       int size);
 
     // utility
@@ -606,7 +606,7 @@ namespace corona {
    * @return  0 if size is non-zero and buffer is null. Otherwise,
    *          returns a valid File object.
    */
-  inline File* CreateMemoryFile(void* buffer, int size) {
+  inline File* CreateMemoryFile(const void* buffer, int size) {
     return hidden::CorCreateMemoryFile(buffer, size);
   }
 

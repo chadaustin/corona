@@ -237,7 +237,7 @@ namespace corona {
     ///////////////////////////////////////////////////////////////////////////
 
     COR_EXPORT(File*, CorCreateMemoryFile)(
-      void* buffer,
+      const void* buffer,
       int size)
     {
       if (size && !buffer) {
