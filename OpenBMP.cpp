@@ -303,15 +303,20 @@ namespace corona {
 
     } else if (h.bpp == 32 && h.compression == 0) {
 
+      // is this right?  does anybody actually use 32-bit bitmaps?
+
       for (int i = 0; i < h.height; ++i) {
         byte* in = raster_data + i * h.pitch;
         byte* out = pixels + (h.height - i - 1) * h.width * 3;
 
         for (int j = 0; j < h.width; ++j) {
-          *out++ = *in++;
-          *out++ = *in++;
-          *out++ = *in++;
+          byte b = *in++;
+          byte g = *in++;
+          byte r = *in++;
           ++in;  // skip alpha
+          *out++ = r;
+          *out++ = g;
+          *out++ = b;
         }
       }
 
