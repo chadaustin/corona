@@ -56,8 +56,12 @@ namespace corona {
   };
 
 
-  #define DEFINE_DESC(format, desc) \
-    case format: { COR_LOG(#format); static FormatDesc d desc; return &d; }
+  #define DEFINE_DESC(format, desc)          \
+    case format: {                           \
+      COR_LOG(#format);                      \
+      static FormatDesc format##_desc desc;  \
+      return &format##_desc;                 \
+    }
 
   FormatDesc* GetDescription(PixelFormat format) {
     // assert isDirect(image->getFormat())
