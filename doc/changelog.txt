@@ -1,3 +1,7 @@
+2002.07.07
+- added test Win32 image viewer
+- made BMP loader return palettized images when relevant
+
 2002.07.06
 - added JPEG tests to test suite (aegis)
 
