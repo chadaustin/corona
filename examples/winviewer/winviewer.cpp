@@ -9,7 +9,8 @@
 #include "resource.h"
 
 
-static char TITLE[] = "Corona Image Viewer";
+static std::string TITLE =
+  "Corona (" + std::string(corona::GetVersion()) + ") Image Viewer";
 static char CLASSNAME[] = "CoronaWinView";
 
 
@@ -220,7 +221,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     if (!UpdateImage(__argv[1])) {
       char str[1024];
       sprintf(str, "Could not open image '%s'", __argv[1]);
-      MessageBox(NULL, str, TITLE, MB_OK | MB_ICONERROR);
+      MessageBox(NULL, str, TITLE.c_str(), MB_OK | MB_ICONERROR);
       return 1;
     }
   }
@@ -238,13 +239,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
   RegisterClass(&wc);
 
   HWND window = CreateWindow(
-    CLASSNAME, TITLE,
+    CLASSNAME, TITLE.c_str(),
     WS_OVERLAPPEDWINDOW,
     CW_USEDEFAULT, 0,
     CW_USEDEFAULT, 0,
     NULL, NULL, GetModuleHandle(NULL), NULL);
   if (!window) {
-    MessageBox(NULL, "Window creation failed", TITLE, MB_OK | MB_ICONERROR);
+    MessageBox(NULL, "Window creation failed", TITLE.c_str(), MB_OK | MB_ICONERROR);
     return 1;
   }
 
