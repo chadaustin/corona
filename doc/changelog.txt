@@ -1,3 +1,8 @@
+2003.09.29
+- Added a corconvert program to convert one image file to another.
+- Changed FileFormatDesc from a struct to an interface, removing a
+  bunch of string parsing code from corona.h.
+
 2003.09.02
 - Fixed file read callbacks for JPEG loader.  This fixes a bug where
   some progressive JPEGs could not be opened.

@@ -1,7 +1,7 @@
 /**
  * Corona Image I/O Library
- * Version 1.0.1
- * (c) 2002 Chad Austin
+ * Version 1.0.2
+ * (c) 2003 Chad Austin
  *
  * This API uses principles explained at
  * http://aegisknight.org/cppinterface.html
