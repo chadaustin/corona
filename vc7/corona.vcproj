@@ -132,9 +132,6 @@
 				RelativePath="..\src\DefaultFileSystem.cpp">
 			</File>
 			<File
-				RelativePath="..\src\DefaultFileSystem.h">
-			</File>
-			<File
 				RelativePath="..\src\Open.h">
 			</File>
 			<File

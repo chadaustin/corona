@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "DefaultFileSystem.h"
 #include "Utility.h"
 
 
@@ -43,11 +42,8 @@ namespace corona {
   };
 
 
-  File* OpenDefaultFile(const char* filename, bool writeable) {
-    char mode_str[3] = " b";
-    mode_str[0] = (writeable ? 'w' : 'r');
-
-    FILE* file = fopen(filename, mode_str);
+  COR_EXPORT(File*) CorOpenFile(const char* filename, bool writeable) {
+    FILE* file = fopen(filename, (writeable ? "wb" : "rb"));
     return (file ? new CFile(file) : 0);
   }
 

@@ -2,6 +2,19 @@
 #include "FileTests.h"
 
 
+inline int GetFileSize(File* file) {
+  int pos = file->tell();
+  if (!file->seek(0, File::END)) {
+    return -1;
+  }
+  int end = file->tell();
+  if (!file->seek(pos, File::BEGIN)) {
+    return -1;
+  }
+  return end;
+}
+
+
 void
 FileTests::testMemoryFiles() {
   // a valid size but no data?
@@ -16,6 +29,16 @@ FileTests::testMemoryFiles() {
   // no size, no buffer
   std::auto_ptr<File> empty_file(CreateMemoryFile(0, 0));
   CPPUNIT_ASSERT(empty_file.get() != 0);
+
+  dummy[0] = 1;
+  dummy[1] = 2;
+  dummy[2] = 3;
+  CPPUNIT_ASSERT(empty_file->write(dummy, 3) == 3);
+  CPPUNIT_ASSERT(GetFileSize(empty_file.get()) == 3);
+  CPPUNIT_ASSERT(empty_file->read(dummy, 3) == 0);
+  CPPUNIT_ASSERT(empty_file->seek(0, File::BEGIN) == true);
+  CPPUNIT_ASSERT(empty_file->read(dummy, 3) == 3);
+  CPPUNIT_ASSERT(dummy[0] == 1 && dummy[1] == 2 && dummy[2] == 3);
 
   byte* buffer = new byte[101];
   for (int i = 0; i < 101; ++i) {

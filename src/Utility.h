@@ -2,6 +2,7 @@
 #define CORONA_UTILITY_H
 
 
+#include "corona.h"
 #include "Types.h"
 
 

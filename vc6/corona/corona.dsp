@@ -118,10 +118,6 @@ SOURCE=..\..\src\DefaultFileSystem.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\DefaultFileSystem.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\src\MemoryFile.h
 # End Source File
 # Begin Source File

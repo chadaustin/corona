@@ -174,7 +174,7 @@ APITests::suite() {
   typedef TestCaller<APITests> Caller;
 
   TestSuite* suite = new TestSuite();
-  suite->addTest(new Caller("Basic API Tests", &APITests::testAPI));
+  suite->addTest(new Caller("Basic API Tests",   &APITests::testAPI));
   suite->addTest(new Caller("Memory Management", &APITests::testMemory));
   return suite;
 }

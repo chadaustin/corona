@@ -337,7 +337,11 @@ namespace corona {
       Image* image,
       PixelFormat palette_format);
 
-    // memory file
+    // file
+
+    COR_FUNCTION(File*) CorOpenFile(
+      const char* name,
+      bool writeable);
 
     COR_FUNCTION(File*) CorCreateMemoryFile(
       const void* buffer,
@@ -633,6 +637,16 @@ namespace corona {
    */
   inline Image* ConvertPalette(Image* source, PixelFormat palette_format) {
     return hidden::CorConvertPalette(source, palette_format);
+  }
+
+  /**
+   * Returns a default File implementation.
+   *
+   * @param  filename   name of the file on local filesystem
+   * @param  writeable  whether the file can be written to
+   */
+  inline File* OpenFile(const char* filename, bool writeable) {
+    return hidden::CorOpenFile(filename, writeable);
   }
 
   /**
