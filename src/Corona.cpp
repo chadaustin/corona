@@ -225,6 +225,8 @@ namespace corona {
       Image* image,
       PixelFormat target_format)
     {
+      // @todo  allow conversions from direct color images to
+      //        palettized images
 
       // if we don't have an image, user doesn't care about format, or
       // the formats match, don't do any conversion.

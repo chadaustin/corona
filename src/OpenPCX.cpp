@@ -122,7 +122,7 @@ namespace corona {
 
     if (num_planes == 1) {               // 256 colors
 
-      RGB palette[256];
+      auto_array<RGB> palette(new RGB[256]);
       auto_array<byte> image(new byte[width * height]);
 
       // read all of the scanlines
@@ -153,17 +153,8 @@ namespace corona {
         return 0;
       }
 
-      // convert palettized image to RGB image
-      byte* out = pixels;
-      for (int iy = 0; iy < height; ++iy) {
-        byte* in = image + iy * bytes_per_line;
-        for (int ix = 0; ix < width; ++ix) {
-          *out++ = palette[*in].red;
-          *out++ = palette[*in].green;
-          *out++ = palette[*in].blue;
-          ++in;
-        }
-      }
+      return new SimpleImage(width, height, PF_I8, image.release(),
+                             (byte*)palette.release(), 256, PF_R8G8B8);
 
     } else if (num_planes == 3) { // 24-bit color
 
@@ -186,12 +177,12 @@ namespace corona {
         }
       }
 
+      return new SimpleImage(width, height, PF_R8G8B8, pixels.release());
+
     } else {
       COR_LOG("Unknown number of planes");
       return 0;
     }
-
-    return new SimpleImage(width, height, PF_R8G8B8, pixels.release());
   }
 
   //////////////////////////////////////////////////////////////////////////////

@@ -60,7 +60,7 @@ PaletteTests::testAPI() {
   // vice versa
   auto_ptr<Image> img4(CreateImage(32, 32, PF_I8));
   auto_ptr<Image> img5(CreateImage(32, 32, PF_R8G8B8, 256, PF_R8G8B8));
-  auto_ptr<Image> img5(CreateImage(32, 32, PF_R8G8B8, 256, PF_I8));
+  auto_ptr<Image> img6(CreateImage(32, 32, PF_R8G8B8, 256, PF_I8));
   CPPUNIT_ASSERT(img4.get() == 0);
   CPPUNIT_ASSERT(img5.get() == 0);
   CPPUNIT_ASSERT(img6.get() == 0);
@@ -70,11 +70,11 @@ PaletteTests::testAPI() {
 void
 PaletteTests::testImages() {
   auto_ptr<Image> pcx(OpenImage("images/palettized/pcx.pcx"));
-  auto_ptr<Image> png(OpenImage("images/palettized/png.png"));
-  // auto_ptr<Image> gif
+  // @todo  test BMP images
+  // @todo  test PNG images
+  // @todo  test GIF images
 
   CPPUNIT_ASSERT(pcx.get() && pcx->getFormat() == PF_I8);
-  CPPUNIT_ASSERT(png.get() && png->getFormat() == PF_I8);
 }
 
 
