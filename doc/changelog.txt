@@ -1,3 +1,6 @@
+2003.05.11
+- added IsDirect(), IsPalettized(), and GetPaletteSize() functions
+
 2003.02.25
 - made FlipImage() operate in-place on the image object
 

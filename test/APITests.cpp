@@ -169,6 +169,37 @@ private:
 };
 
 
+void
+APITests::testFormatQueries() {
+    CPPUNIT_ASSERT(GetPixelSize(PF_R8G8B8A8) == 4);
+    CPPUNIT_ASSERT(GetPixelSize(PF_B8G8R8A8) == 4);
+    CPPUNIT_ASSERT(GetPixelSize(PF_R8G8B8)   == 3);
+    CPPUNIT_ASSERT(GetPixelSize(PF_B8G8R8)   == 3);
+    CPPUNIT_ASSERT(GetPixelSize(PF_I8)       == 1);
+    CPPUNIT_ASSERT(GetPixelSize(PF_DONTCARE) == 0);
+    
+    CPPUNIT_ASSERT(IsDirect(PF_R8G8B8A8));
+    CPPUNIT_ASSERT(IsDirect(PF_B8G8R8A8));
+    CPPUNIT_ASSERT(IsDirect(PF_R8G8B8));
+    CPPUNIT_ASSERT(IsDirect(PF_B8G8R8));
+    CPPUNIT_ASSERT(!IsDirect(PF_I8));
+    CPPUNIT_ASSERT(!IsDirect(PF_DONTCARE));
+    
+    CPPUNIT_ASSERT(!IsPalettized(PF_R8G8B8A8));
+    CPPUNIT_ASSERT(!IsPalettized(PF_B8G8R8A8));
+    CPPUNIT_ASSERT(!IsPalettized(PF_R8G8B8));
+    CPPUNIT_ASSERT(!IsPalettized(PF_B8G8R8));
+    CPPUNIT_ASSERT(IsPalettized(PF_I8));
+    CPPUNIT_ASSERT(!IsPalettized(PF_DONTCARE));
+
+    CPPUNIT_ASSERT(GetPaletteSize(PF_R8G8B8A8) == 0);
+    CPPUNIT_ASSERT(GetPaletteSize(PF_B8G8R8A8) == 0);
+    CPPUNIT_ASSERT(GetPaletteSize(PF_R8G8B8)   == 0);
+    CPPUNIT_ASSERT(GetPaletteSize(PF_B8G8R8)   == 0);
+    CPPUNIT_ASSERT(GetPaletteSize(PF_I8)       == 256);
+    CPPUNIT_ASSERT(GetPaletteSize(PF_DONTCARE) == 0);
+}
+
 
 void
 APITests::testMemory() {
@@ -229,6 +260,7 @@ APITests::suite() {
 
   TestSuite* suite = new TestSuite();
   suite->addTest(new Caller("Basic API Tests",   &APITests::testAPI));
+  suite->addTest(new Caller("Format Queries",    &APITests::testFormatQueries));
   suite->addTest(new Caller("Memory Management", &APITests::testMemory));
   return suite;
 }

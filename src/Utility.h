@@ -67,22 +67,6 @@ namespace corona {
   };
 
 
-  // does this format not use a palette?
-  inline bool IsDirect(PixelFormat format) {
-    return (format == PF_R8G8B8A8 || format == PF_R8G8B8 ||
-            format == PF_B8G8R8A8 || format == PF_B8G8R8);
-  }
-
-  // does this format require a palette?
-  inline bool IsPalettized(PixelFormat format) {
-    return format == PF_I8;
-  }
-
-  inline int GetPaletteSize(PixelFormat format) {
-    return (format == PF_I8 ? 256 : 0);
-  }
-
-
   inline u16 read16_le(const byte* b) {
     return b[0] + (b[1] << 8);
   }

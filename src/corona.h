@@ -696,6 +696,43 @@ namespace corona {
     return hidden::CorGetPixelSize(format);
   }
 
+  /**
+   * Returns true if the pixel format does not require a palette; that
+   * is, if each pixel itself contains color data.
+   *
+   * @param format  The format to query.
+   *
+   * @return  True if format is direct color, false otherwise.
+   */
+  inline bool IsDirect(PixelFormat format) {
+    return (format == PF_R8G8B8A8 || format == PF_R8G8B8 ||
+            format == PF_B8G8R8A8 || format == PF_B8G8R8);
+  }
+
+  /**
+   * Returns true if the pixel format requires a palette; that
+   * is, if each pixel is an index into a separate palette.
+   *
+   * @param format  The format to query.
+   *
+   * @return  True if format is palettized, false otherwise.
+   */
+  inline bool IsPalettized(PixelFormat format) {
+    return format == PF_I8;
+  }
+
+  /**
+   * Returns the number of color entries in a palette for an image
+   * of the given format.
+   *
+   * @param format  The format to query.
+   *
+   * @return  Number of color entries, or 0 if the format is not palettized.
+   */
+  inline int GetPaletteSize(PixelFormat format) {
+    return (format == PF_I8 ? 256 : 0);
+  }
+
 }
 
 
