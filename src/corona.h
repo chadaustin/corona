@@ -1,6 +1,6 @@
 /**
  * Corona Image I/O Library
- * Version 1.0.0
+ * Version 1.0.1
  * (c) 2002 Chad Austin
  *
  * This API uses principles explained at
