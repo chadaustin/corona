@@ -5,7 +5,7 @@
 #include "Types.h"
 
 
-#define COR_EXPORT(ret, name)  ret COR_CALL name
+#define COR_EXPORT(ret, name)  COR_FUNCTION(ret, name)
 
 
 namespace corona {
