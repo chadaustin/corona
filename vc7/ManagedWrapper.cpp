@@ -131,8 +131,8 @@ namespace Corona {
 
       C::corona::Image __nogc* newimage = C::corona::OpenImage(
         str,
-        static_cast<C::corona::FileFormat>(file_format),
-        static_cast<C::corona::PixelFormat>(pixel_format));
+        static_cast<C::corona::PixelFormat>(pixel_format),
+        static_cast<C::corona::FileFormat>(file_format));
       return (newimage ? __gc new Image(newimage) : 0);
     }
 
