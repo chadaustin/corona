@@ -20,7 +20,7 @@
   
 
 /* calling convention */
-#ifdef _WIN32
+#if defined(WIN32) || defined(_WIN32)
 #  define COR_CALL __stdcall
 #else
 #  define COR_CALL
