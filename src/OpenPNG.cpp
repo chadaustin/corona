@@ -150,6 +150,8 @@ namespace corona {
     int height = png_get_image_height(png_ptr, info_ptr);
     byte* pixels = 0;  // allocate when we know the format
     PixelFormat format;
+    byte* palette = 0;
+    PixelFormat palette_format;
 
     // decode based on pixel format
     int bit_depth = png_get_bit_depth(png_ptr, info_ptr);
@@ -158,6 +160,7 @@ namespace corona {
 
     // 32-bit RGBA
     if (bit_depth == 8 && num_channels == 4) {
+      COR_LOG("32-bit RGBA: bit_depth = 8 && num_channels = 4");
 
       format = PF_R8G8B8A8;
       pixels = new byte[width * height * 4];
@@ -167,6 +170,7 @@ namespace corona {
 
     // 24-bit RGB
     } else if (bit_depth == 8 && num_channels == 3) {
+      COR_LOG("24-bit RGB: bit_depth = 8 && num_channels = 3");
 
       format = PF_R8G8B8;
       pixels = new byte[width * height * 3];
@@ -176,31 +180,35 @@ namespace corona {
 
     // palettized or greyscale with alpha
     } else if (bit_depth == 8 && (num_channels == 2 || num_channels == 1)) {
-
-      format = PF_R8G8B8A8;
-      pixels = new byte[width * height * 4];
-      byte* out = pixels;
-
-      png_color palette[256];
-      fill_palette(png_ptr, info_ptr, palette);
+      png_color png_palette[256];
+      fill_palette(png_ptr, info_ptr, png_palette);
 
       if (num_channels == 2) {
+        COR_LOG("bit_depth = 8 && num_channels = 2");
+
+	format = PF_R8G8B8A8;
+	pixels = new byte[width * height * 4];
+	byte* out = pixels;
 
         for (int i = 0; i < height; ++i) {
           byte* in = row_pointers[i];
           for (int j = 0; j < width; ++j) {
             byte c = *in++;
-            *out++ = palette[c].red;
-            *out++ = palette[c].green;
-            *out++ = palette[c].blue;
+            *out++ = png_palette[c].red;
+            *out++ = png_palette[c].green;
+            *out++ = png_palette[c].blue;
             *out++ = *in++;  // alpha
           }
         }
 
       } else { // (num_channels == 1)
+        COR_LOG("bit_depth = 8 && num_channels = 1");
 
-        byte alpha[256];
-        memset(alpha, 255, 256);  // by default, everything is opaque
+        pixels = new byte[width * height];
+        format = PF_I8;
+        palette = new byte[256 * 4];
+        palette_format = PF_R8G8B8A8;
+
 
         // get the transparent palette flags
         png_bytep trans;
@@ -208,34 +216,22 @@ namespace corona {
         png_color_16p trans_values; // XXX not used - should be?
         png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, &trans_values);
 
-        // update the alpha table
+        // copy the palette from the PNG
+        for (int i = 0; i < 256; ++i) {
+          palette[i * 4 + 0] = png_palette[i].red;
+          palette[i * 4 + 1] = png_palette[i].green;
+          palette[i * 4 + 2] = png_palette[i].blue;
+          palette[i * 4 + 3] = 255;
+        }
+        // apply transparency to palette entries
         for (int i = 0; i < num_trans; ++i) {
-          alpha[trans[i]] = 0;
+          palette[trans[i] * 4 + 3] = 0;
         }
 
+        byte* out = pixels;
         for (int i = 0; i < height; ++i) {
-          byte* row = row_pointers[i];
-          for (int j = 0; j < width; j++) {
-            byte c = *row++;
-            *out++ = palette[c].red;
-            *out++ = palette[c].green;
-            *out++ = palette[c].blue;
-            *out++ = alpha[c];
-
-#if 0
-            COR_IF_DEBUG {
-              char str[100];
-              sprintf(str, "%d %d %d %d %d",
-                int(palette[c].red),
-                int(palette[c].green),
-                int(palette[c].blue),
-                int(alpha[c]),
-                int(c));
-              COR_LOG(str);
-            }
-#endif
-
-          }
+          memcpy(out, row_pointers[i], width);
+          out += width;
         }
       }
 
@@ -245,7 +241,13 @@ namespace corona {
     }
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    return new SimpleImage(width, height, format, pixels);
+
+    if (palette) {
+      return new SimpleImage(width, height, format, pixels,
+			     palette, 256, palette_format);
+    } else {
+      return new SimpleImage(width, height, format, pixels);
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////

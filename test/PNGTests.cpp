@@ -226,11 +226,11 @@ PNGTests::testWriter() {
 
 
   //== PALETTIZED SAVING TEST ==
-  // disabled until OpenPNG can load palettized images in the right format
+  // disabled until loading palettized PNGs with a correct palette format
+  // is implemented.
 #if 0
   char* plt_filename = tmpnam(0);
   CPPUNIT_ASSERT_MESSAGE("opening temporary file (palette)", plt_filename != 0);
-
   auto_ptr<Image> plt(CreateImage(256, 256, PF_I8, 256, PF_R8G8B8));
   setRandomBytes((byte*)plt->getPixels(), 256 * 256);
   setRandomBytes((byte*)plt->getPalette(), 256);
@@ -246,8 +246,6 @@ PNGTests::testWriter() {
 
   remove(plt_filename);
 #endif
-
-  // remove the temporary files we made
 }
 
 
