@@ -1,3 +1,12 @@
+2002.12.23
+- better TGA support: 32-bit images should be BGRA, not GBRA.  also,
+  properly support flipped and mirrored images.
+- added Kevin Gadd's change to make SaveImage() for PNG images save
+  the correct pixel format, including the palette.
+
+2002.08.01
+- renamed GetBytesPerPixel to GetPixelSize
+
 2002.07.28
 - made GetBytesPerPixel public within the API
 - added a MemoryFile implementation for loading images from a block of
@@ -13,6 +22,22 @@
 2002.07.06
 - added JPEG tests to test suite (aegis)
 
+2002.06.28
+- switch the order of the file type and pixel format in OpenImage.  This
+  is so people can do OpenImage("filename", PF_R8G8B8A8) without caring
+  about the file type.
+
+2002.06.21
+- don't crash when loading incomplete JPEGs
+
+2002.06.07
+- added Matt Gambrell's .NET bindings to the VC7 build
+
+2002.06.07
+- const correctness in File::write
+
+2002.06.05
+- 0.2.0 release
 
 --- undocumented changes ---
 - fill this area in!
