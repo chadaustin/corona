@@ -1,1 +1,4 @@
 SConscript(dirs = ['formats', 'glut'])
+if DefaultEnvironment()['PLATFORM'] == 'cygwin':
+    SConscript(dirs = ['winviewer'])
+

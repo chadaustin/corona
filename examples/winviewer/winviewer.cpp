@@ -1,3 +1,6 @@
+// include corona first so it isn't messed up by Win32 includes.
+#include "corona.h"
+
 #include <memory>
 #include <string>
 #include <windows.h>
@@ -6,7 +9,6 @@
 #include <shellapi.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "corona.h"
 #include "resource.h"
 using namespace corona;
 
@@ -328,6 +330,12 @@ static LRESULT CALLBACK WindowProc(
 }
 
 
+#ifdef __CYGWIN__
+int __argc;
+char** __argv;
+#endif
+
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
   if (__argc >= 2) {
@@ -375,3 +383,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
   UpdateImage(0);
   return msg.wParam;
 }
+
+
+#ifdef __CYGWIN__
+int main(int argc, char** argv) {
+    __argc = argc;
+    __argv = argv;
+    WinMain(0, 0, 0, 0);
+}
+#endif

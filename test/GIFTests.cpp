@@ -15,6 +15,7 @@ GIFTests::testLoader() {
     "solid2",
     "x-trans",
     "zemus2",
+    "bob_hit_james",
   };
   static const int image_count = sizeof(images) / sizeof(*images);
 

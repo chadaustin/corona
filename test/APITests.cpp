@@ -26,7 +26,7 @@ APITests::testBasicOperations(int width, int height) {
   auto_ptr<Image> create_clone(
       CreateImage(image->getWidth(), image->getHeight(),
                   image->getFormat(), image->getPixels()));
-  CPPUNIT_ASSERT(create_clone.get());
+  CPPUNIT_ASSERT(create_clone.get() != 0);
   CPPUNIT_ASSERT(image->getWidth()  == create_clone->getWidth());
   CPPUNIT_ASSERT(image->getHeight() == create_clone->getHeight());
   CPPUNIT_ASSERT(image->getFormat() == create_clone->getFormat());

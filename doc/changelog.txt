@@ -1,3 +1,7 @@
+2003.12.23
+- Fixed corrupt loading of certain GIF files. (Brian Robb)
+- Build winviewer in Cygwin in SCons build.
+
 2003.09.29
 - Added a corconvert program to convert one image file to another.
 - Changed FileFormatDesc from a struct to an interface, removing a

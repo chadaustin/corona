@@ -114,7 +114,19 @@ namespace corona {
       }
 
     } else {
-      memcpy(out, in, width * height);
+      if (transparent == -1) {
+        memset(out, 0, width * height);
+      } else {
+        memset(out, transparent, width * height);
+      }
+      const int x = gif_image->ImageDesc.Left;
+      const int y = gif_image->ImageDesc.Top;
+      const int w = gif_image->ImageDesc.Width;
+      const int h = gif_image->ImageDesc.Height;
+
+      for (int iy = 0; iy < h; iy++) {
+        memcpy(out + (width * (y+iy)) + x, in + (w*iy), w);
+      }
     }
 
     DGifCloseFile(gif);
