@@ -4,7 +4,7 @@ import os
 # execfile('glut_libs.py')
 execfile('examples/glut/glut_libs.py')
 
-LIBS = ['corona'] + GLUT_LIBS + ['png', 'jpeg']
+LIBS = ['corona'] + GLUT_LIBS + ['png', 'jpeg', 'z']
 
 env = Environment(
     CPPPATH = '#src',
