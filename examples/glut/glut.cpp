@@ -3,6 +3,7 @@
 #include <memory>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 using namespace std;
 using namespace corona;
 
@@ -43,12 +44,39 @@ void reshape(int w, int h) {
 void error(const char* message);
 
 
+int count_bits(int n) {
+  int total = 0;
+  int i = 0;
+  while (i < 32) {
+    if (n & (1 << i)) {
+      ++total;
+    }
+    ++i;
+  }
+  return total;
+}
+
+
 int main(int argc, char** argv) {
+
+  if (argc != 2) {
+    error("Usage: glut <filename>");
+    return EXIT_FAILURE;
+  }
+
   glutInit(&argc, argv);
 
-  auto_ptr<Image> img(OpenImage("f03n0g08.png", FF_AUTODETECT, PF_R8G8B8A8));
+  auto_ptr<Image> img(OpenImage(argv[1], FF_AUTODETECT, PF_R8G8B8A8));
   if (!img.get()) {
     error("Error loading image");
+    return EXIT_FAILURE;
+  }
+
+  // verify power-of-two dimensions
+  const int width  = img->getWidth();
+  const int height = img->getHeight();
+  if (count_bits(width) != 1 || count_bits(height) != 1) {
+    error("Image must have dimensions that are powers of two");
     return EXIT_FAILURE;
   }
 
@@ -63,7 +91,7 @@ int main(int argc, char** argv) {
   glGenTextures(1, &g_texture);
   glBindTexture(GL_TEXTURE_2D, g_texture);
   glTexImage2D(
-    GL_TEXTURE_2D, 0, GL_RGBA8, img->getWidth(), img->getHeight(),
+    GL_TEXTURE_2D, 0, GL_RGBA8, width, height,
     0, GL_RGBA, GL_UNSIGNED_BYTE, img->getPixels());
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);

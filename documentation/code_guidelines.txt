@@ -1,6 +1,8 @@
 Corona Coding Guidelines:
 
 Syntax:
+  - Keep lines under eighty characters.
+
   - Pretty straightforward...  just try to write clear code and
     follow the rest of the library's style.
 

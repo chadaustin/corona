@@ -11,6 +11,7 @@ SOURCES = [
     'OpenJPEG.cpp',
     'OpenPCX.cpp',
     'OpenPNG.cpp',
+    'OpenTGA.cpp',
     'SavePNG.cpp',
 ]
 

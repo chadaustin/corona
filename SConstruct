@@ -48,8 +48,9 @@ if GNU_SYSTEM:
     SOURCES = [ 'Corona.cpp', 'corona.h', 'Debug.cpp', 'Debug.h',
                 'DefaultFileSystem.cpp', 'DefaultFileSystem.h',
                 'OpenBMP.cpp', 'Open.h', 'OpenJPEG.cpp',
-                'OpenPCX.cpp', 'OpenPNG.cpp', 'Save.h', 'SavePNG.cpp',
-                'SimpleImage.h', 'Types.h', 'Utility.h' ]
+                'OpenPCX.cpp', 'OpenPNG.cpp', 'OpenTGA.cpp', 'Save.h',
+                'SavePNG.cpp', 'SimpleImage.h', 'Types.h', 'Utility.h'
+                ]
 
     BASE  = pj(BUILD, 'autotools')
 
@@ -110,5 +111,6 @@ if GNU_SYSTEM:
 
 
 # normal SCons builders
+SConscript('examples/SConscript')
 SConscript('src/SConscript')
 SConscript('test/SConscript')

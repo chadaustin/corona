@@ -10,6 +10,7 @@ namespace corona {
   Image* OpenJPEG(File* file); // OpenJPEG.cpp
   Image* OpenPCX (File* file); // OpenPCX.cpp
   Image* OpenPNG (File* file); // OpenPNG.cpp
+  Image* OpenTGA (File* file); // OpenTGA.cpp
 }
 
 

@@ -444,6 +444,31 @@ public:
 };
 
 
+class TGATests : public ImageTestCase {
+public:
+
+  void testLoader() {
+    auto_ptr<Image> tga(OpenImage("images/targa/test.tga",
+                                  FF_AUTODETECT, PF_R8G8B8));
+    CPPUNIT_ASSERT(tga.get() != 0);
+
+    auto_ptr<Image> ref(OpenImage("images/targa/reference/test.png",
+                                  FF_AUTODETECT, PF_R8G8B8));
+    CPPUNIT_ASSERT(ref.get() != 0);
+
+    AssertImagesEqual("Comparing Targa image", tga.get(), ref.get(), 3);
+  }
+
+  static Test* suite() {
+    typedef TestCaller<TGATests> Caller;
+
+    TestSuite* suite = new TestSuite();
+    suite->addTest(new Caller("Test TGA Loader", &TGATests::testLoader));
+    return suite;
+  }
+};
+
+
 int main() {
   TextTestRunner runner;
   runner.addTest(APITests::suite());
@@ -451,5 +476,6 @@ int main() {
   runner.addTest(JPEGTests::suite());
   runner.addTest(PCXTests::suite());
   runner.addTest(PNGTests::suite());
+  runner.addTest(TGATests::suite());
   runner.run();
 }
