@@ -1,10 +1,14 @@
+// maintained by matthew gambrell - zeromus@zeromus.org
+// bug me if something is screwy or just fix it yerself
+
 #using <mscorlib.dll>
 
 using namespace System;
 using namespace System::Text;
 
-[assembly: System::Reflection::AssemblyVersion("0.2.0.1")];
+[assembly: System::Reflection::AssemblyVersion("0.2.0.2")];
 [assembly: System::Reflection::AssemblyKeyFileAttribute("Corona.snk")];
+
 
 
 namespace C {
@@ -12,6 +16,7 @@ namespace C {
   #include "../src/Utility.h"
   #include <string.h>
 }
+
 
 namespace Corona {
   public __value enum FileFormat {
@@ -24,13 +29,83 @@ namespace Corona {
     GIF   = 0x0106,
   };
 
-  public __value enum PixelFormat
-  {
+  public __value enum PixelFormat {
     DontCare  = 0x0200,
     R8G8B8A8  = 0x0201,
     R8G8B8    = 0x0202,
     PF_I8     = 0x0203,
   };
+
+
+  __nogc class _StreamFile_Unmanaged
+    : public C::corona::DLLImplementation<C::corona::File>
+  {
+  private:
+    void** m_Stream;
+
+  public:
+    _StreamFile_Unmanaged(void** stream) {
+      m_Stream = stream;
+    }
+
+    bool seek(int position, C::corona::File::SeekMode mode) {
+      System::IO::Stream __gc* stream =
+        *((System::IO::Stream __gc* __nogc*)m_Stream);
+
+      if (!stream->CanSeek)
+        return false;
+
+      switch(mode) {
+        case C::corona::File::SeekMode::BEGIN:
+          stream->Seek(position, System::IO::SeekOrigin::Begin);
+          break;
+        case C::corona::File::SeekMode::CURRENT:
+          stream->Seek(position, System::IO::SeekOrigin::Current);
+          break;
+        case C::corona::File::SeekMode::END:
+          stream->Seek(position, System::IO::SeekOrigin::End); break;
+      }
+
+      return true;
+    }
+
+    int write(const void* buffer, int size) {
+      System::IO::Stream __gc* stream =
+        *((System::IO::Stream __gc* __nogc*)m_Stream);
+
+      if (!stream->CanWrite) {
+        return 0;
+      }
+
+      System::Byte writebuf __gc[] = __gc new System::Byte[size];
+      unsigned char __pin* writebuf_pin = &writebuf[0];
+      C::memcpy(writebuf_pin, buffer, size);
+      __int64 original = stream->Position;
+      stream->Write(writebuf, 0, size);
+      return (int)(stream->Position-original);
+    }
+
+    int read(void* buffer, int size) {
+      System::IO::Stream __gc* stream =
+        *((System::IO::Stream __gc* __nogc*)m_Stream);
+
+      if (!stream->CanRead) {
+        return 0;
+      }
+      System::Byte readbuf __gc[] = __gc new System::Byte[size];
+      int read = stream->Read(readbuf,0,size);
+      unsigned char __pin* readbuf_pin = &readbuf[0];
+      C::memcpy(buffer,readbuf_pin,read);
+      return read;
+    }
+
+    int tell() {
+      System::IO::Stream __gc* stream =
+        *((System::IO::Stream __gc* __nogc*)m_Stream);
+      return (int)stream->Position;
+    }
+  };
+
 
   public __gc class Image : public System::IDisposable {
   private:
@@ -42,7 +117,7 @@ namespace Corona {
     Image(C::corona::Image __nogc* corimage) {
       Init(corimage);
     }
-    
+
     //internal initialization from a corimage
     void Init(C::corona::Image __nogc* corimage) {
       m_Disposed = false;
@@ -111,7 +186,7 @@ namespace Corona {
       return C::corona::GetPixelSize(
         static_cast<C::corona::PixelFormat>(pixel_format));
     }
-  
+
     static Image __gc* Create(int width, int height, Corona::PixelFormat pixel_format) {
       C::corona::Image __nogc* newimage = C::corona::CreateImage(
         width,
@@ -120,10 +195,37 @@ namespace Corona {
       return (newimage ? __gc new Image(newimage) : 0);
     }
 
+    // Open a file from a System.IO.Stream.  Beware that some loaders
+    // may seek to the end of the stream so your stream needs to be no
+    // larger than the actual desired input file.  I sure hope your
+    // stream is readable.
+    static Image __gc* Open(
+      System::IO::Stream __gc* input,
+      Corona::PixelFormat pixel_format,
+      FileFormat file_format)
+    {
+      if (!input->CanRead) {
+        return 0;
+      }
+
+      System::IO::Stream __pin* input_pinned = input;
+      _StreamFile_Unmanaged __nogc* streamfile =
+        new _StreamFile_Unmanaged((void **)&input_pinned);
+
+      C::corona::Image __nogc* newimage = C::corona::OpenImage(
+        streamfile,
+        static_cast<C::corona::PixelFormat>(pixel_format),
+        static_cast<C::corona::FileFormat>(file_format));
+
+      delete streamfile;
+      return (newimage ? __gc new Image(newimage) : 0);
+    }
+
+
     static Image __gc* Open(
       String __gc* filename,
-      FileFormat file_format,
-      Corona::PixelFormat pixel_format)
+      Corona::PixelFormat pixel_format,
+      FileFormat file_format)
     {
       char strbuf __gc[] = Encoding::ASCII->GetBytes(filename);
       char __pin* pstr = &strbuf[0];
@@ -138,17 +240,51 @@ namespace Corona {
 
   public:
     bool Save(String __gc* filename, Corona::FileFormat file_format) {
+      if (m_Disposed) {
+        throw new ObjectDisposedException(
+          "Save() executed on disposed Corona.Image");
+      }
+
       char strbuf __gc[] = Encoding::ASCII->GetBytes(filename);
       char __pin* pstr = &strbuf[0];
       char* str = static_cast<char*>(pstr);
-
+      
       return C::corona::SaveImage(
         str,
         static_cast<C::corona::FileFormat>(file_format),
         m_CorImage);
     }
 
+    // Save an image to a System.IO.Stream.  I sure hope your stream
+    // is writable.
+    bool Save(System::IO::Stream __gc* output, FileFormat file_format) {
+      if (!output->CanWrite) {
+        return false;
+      }
+
+      if (m_Disposed) {
+        throw new ObjectDisposedException(
+          "Save() executed on disposed Corona.Image");
+      }
+
+      System::IO::Stream __pin* output_pinned = output;
+      _StreamFile_Unmanaged __nogc* streamfile = new _StreamFile_Unmanaged((void **)&output_pinned);
+
+      bool result = C::corona::SaveImage(
+        streamfile,
+        static_cast<C::corona::FileFormat>(file_format),
+        m_CorImage);
+
+      delete streamfile;
+      return result;
+    }
+
     Image __gc* Convert(Corona::PixelFormat pixel_format) {
+      if (m_Disposed) {
+        throw new ObjectDisposedException(
+          "Convert() executed on disposed Corona.Image");
+      }
+
       C::corona::Image __nogc* newimage = C::corona::ConvertImage(
         m_CorImage,
         static_cast<C::corona::PixelFormat>(pixel_format));
@@ -156,22 +292,40 @@ namespace Corona {
     }
 
     Image __gc* Clone(Corona::PixelFormat pixel_format) {
+      if (m_Disposed) {
+        throw new ObjectDisposedException(
+          "Clone() executed on disposed Corona.Image");
+      }
+
       return new Image(this, pixel_format);
     }
 
     Image __gc* Clone() {
+      if (m_Disposed) {
+        throw new ObjectDisposedException(
+          "Clone() executed on disposed Corona.Image");
+      }
       return new Image(this);
     }
 
     Byte GrabPixels2d() __gc[,] {
-      Byte arr __gc[,] = static_cast<Byte __gc[,]>(
-        Array::CreateInstance(__typeof(Byte), Width * PixelSize, Height));
+      if (m_Disposed) {
+        throw new ObjectDisposedException(
+          "GrabPixels2d() executed on disposed Corona.Image");
+      }
+
+      Byte arr __gc[,] = __gc new Byte[Width*PixelSize, Height];
       Byte __pin* arrptr = &arr[0,0];
       C::memcpy(arrptr, Pixels, Width * Height * PixelSize);
       return arr;
     }
 
     Byte GrabPixels() __gc[] {
+      if (m_Disposed) {
+        throw new ObjectDisposedException(
+          "GrabPixels executed on disposed Corona.Image");
+      }
+
       Byte arr __gc[] = __gc new Byte[Width * Height * PixelSize];
       Byte __pin* arrptr = &arr[0];
       C::memcpy(arrptr, Pixels, Width * Height * PixelSize);
@@ -179,10 +333,15 @@ namespace Corona {
     }
 
     Byte GrabPalette() __gc[] {
+      if (m_Disposed) {
+        throw new ObjectDisposedException(
+          "GrabPalette() executed on disposed Corona.Image");
+      }
+
       Byte arr __gc[] = __gc new Byte[PaletteSize * PaletteElementSize];
       Byte __pin* arrptr = &arr[0];
       C::memcpy(arrptr, Palette, PaletteSize * PaletteElementSize);
       return arr;
-    }    
+    }
   };
 }
