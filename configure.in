@@ -1,0 +1,39 @@
+AC_INIT(corona.h)
+
+MAJOR_VERSION=0
+MINOR_VERSION=1
+PATCH_VERSION=0
+VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
+PACKAGE="corona"
+
+AC_SUBST(MAJOR_VERSION)
+AC_SUBST(MINOR_VERSION)
+AC_SUBST(PATCH_VERSION)
+AC_SUBST(VERSION)
+AC_SUBST(PACKAGE)
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_CXX
+AC_PROG_CXXCPP
+AC_PROG_MAKE_SET
+AC_PROG_LIBTOOL
+
+dnl Checks for libraries.
+
+AC_CHECK_LIB(png, png_create_read_struct,,AC_MSG_RESULT(no)
+    AC_MSG_ERROR(could not find libpng))
+AC_CHECK_LIB(jpeg, jpeg_start_decompress,,AC_MSG_RESULT(no)
+    AC_MSG_ERROR(could not find libjpeg))
+
+dnl Checks for header files.
+
+AC_HEADER_STDC
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+
+dnl Output makefiles.
+
+AC_OUTPUT(Makefile)
