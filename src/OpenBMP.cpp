@@ -582,8 +582,7 @@ namespace corona {
         int clr = read16_le(in);
         in += 2;
 
-#define C16(C) \
-  (byte)( ((clr & h.bf_##C##_mask) >> h.bf_##C##_shift) << h.bf_##C##_rshift);
+#define C16(C) (byte)( ((clr & h.bf_##C##_mask) >> h.bf_##C##_shift) << h.bf_##C##_rshift);
 
         out->red   = C16(red);
         out->green = C16(green);
