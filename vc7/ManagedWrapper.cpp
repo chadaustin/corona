@@ -31,7 +31,9 @@ namespace Corona {
     DontCare  = 0x0200,
     R8G8B8A8  = 0x0201,
     R8G8B8    = 0x0202,
-    PF_I8     = 0x0203,
+    I8        = 0x0203,
+    B8G8R8A8  = 0x0204,
+    B8G8R8    = 0x0205,
   };
 
 
