@@ -3,8 +3,10 @@ from os import path
 pj = path.join
 
 
+Default('.')
+
+
 BUILD = 'dist'
-Default(BUILD)
 
 
 VERSION_MAJOR = 1
@@ -108,7 +110,5 @@ if GNU_SYSTEM:
 
 
 # normal SCons builders
-LIBRARY = pj(BUILD, 'library')
-BuildDir(LIBRARY, 'src', 0)
-
-SConscript(pj(LIBRARY, 'SConscript'))
+SConscript('src/SConscript')
+SConscript('test/SConscript')

@@ -19,14 +19,10 @@ namespace corona {
   }
 
   bool SavePNG(File* file, Image* source) {
-    Image* image = hidden::CorConvertImage(source, PF_R8G8B8A8);
-    if (!image) {
+    std::auto_ptr<Image> image(CloneImage(source, PF_R8G8B8A8));
+    if (!image.get()) {
       return false;
     }
-
-    // if ConvertImage didn't need to do a conversion, don't delete the
-    // source image...  otherwise, delete the one it converted
-    std::auto_ptr<Image> doomed(image == source ? 0 : image);
 
     // create write struct
     png_structp png_ptr = png_create_write_struct(
@@ -40,7 +36,6 @@ namespace corona {
       png_destroy_write_struct(&png_ptr, NULL);
       return false;
     }
-
 
     // create info struct
     png_infop info_ptr = png_create_info_struct(png_ptr);
