@@ -1,3 +1,6 @@
+2004.04.19
+- Moved some entry points into the hidden namespace. (Peter Schueller)
+
 2003.12.23
 - Fixed corrupt loading of certain GIF files. (Brian Robb)
 - Build winviewer in Cygwin in SCons build.
