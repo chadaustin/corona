@@ -1,9 +1,17 @@
+2002.07.06
+- added JPEG tests to test suite (aegis)
+
+
+--- undocumented changes ---
+- fill this area in!
+
+
 2002.02.22
 
-- fixed PNG palette bug in release builds
-- added debugging framework
+- fixed PNG palette bug in release builds (aegis)
+- added debugging framework (aegis)
 
 
 2002.02.21
 
-- changelog started
+- changelog started (aegis)
