@@ -2,8 +2,18 @@ import os
 
 SConscript('cppunit-1.6.2/SConscript')
 
+sources = [
+    'CoronaTest.cpp',
+    'APITests.cpp',
+    'BMPTests.cpp',
+    'JPEGTests.cpp',
+    'PCXTests.cpp',
+    'PNGTests.cpp',
+    'TGATests.cpp',
+]
+
 env = Environment(ENV = os.environ,
                   CPPPATH = ['#src', Dir('cppunit-1.6.2')],
                   LIBPATH = ['#src', Dir('cppunit-1.6.2')],
                   LIBS = ['cppunit', 'corona', 'png', 'z', 'jpeg'])
-env.Program(target = 'CoronaTest', source = 'CoronaTest.cpp')
+env.Program(target = 'CoronaTest', source = sources)
