@@ -9,12 +9,13 @@ Supported read formats:
 <li>JPEG</li>
 <li>PCX</li>
 <li>PNG</li>
-<li>GIF</li>
+<li>TGA</li>
 </ul>
 
 Supported write formats:
 <ul>
 <li>PNG</li>
+<li>TGA</li>
 </ul>
 
 */
