@@ -6,10 +6,10 @@
 
 
 namespace corona {
-  inline Image* OpenBMP (File* file) { return 0; }
-  Image* OpenJPEG(File* file);
-  Image* OpenPCX (File* file);
-  Image* OpenPNG (File* file);
+  Image* OpenBMP (File* file); // OpenBMP.cpp
+  Image* OpenJPEG(File* file); // OpenJPEG.cpp
+  Image* OpenPCX (File* file); // OpenPCX.cpp
+  Image* OpenPNG (File* file); // OpenPNG.cpp
 }
 
 

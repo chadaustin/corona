@@ -5,16 +5,12 @@
 template<typename T>
 class auto_array {
 public:
-  auto_array(T* initial = 0) {
+  explicit auto_array(T* initial = 0) {
     array = initial;
   }
 
   ~auto_array() {
     delete[] array;
-  }
-
-  T& operator[](int i) {
-    return array[i];
   }
 
   operator T*() {
@@ -25,6 +21,14 @@ public:
     T* old = array;
     array = 0;
     return old;
+  }
+
+  auto_array<T>& operator=(T* a) {
+    if (array != a) {
+      delete array;
+      array = a;
+    }
+    return *this;
   }
 
 private:

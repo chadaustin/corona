@@ -45,6 +45,12 @@ namespace corona {
       return 0;
     }
 
+    // the PNG error function calls longjmp(png_ptr->jmpbuf)
+    if (setjmp(png_ptr->jmpbuf)) {
+      png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+      return 0;
+    }
+
     // read the image
     png_set_read_fn(png_ptr, file, PNG_read_function);
     png_set_sig_bytes(png_ptr, 8);  // we already read 8 bytes for the sig
@@ -54,8 +60,7 @@ namespace corona {
     png_read_png(png_ptr, info_ptr, png_transform, NULL);
 
     if (!png_get_rows(png_ptr, info_ptr)) {
-      png_destroy_info_struct(png_ptr, &info_ptr);
-      png_destroy_read_struct(&png_ptr, NULL, NULL);
+      png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
       return 0;
     }
 
@@ -157,7 +162,7 @@ namespace corona {
             *out++ = *row; // red
             *out++ = *row; // green
             *out++ = *row; // blue
-            *out++ = alphas[int(*row)];
+            *out++ = alphas[*row];
             ++row;
           }
         }
@@ -168,7 +173,7 @@ namespace corona {
             *out++ = palette[*row].red;
             *out++ = palette[*row].green;
             *out++ = palette[*row].blue;
-            *out++ = alphas[int(*row)];
+            *out++ = alphas[*row];
             ++row;
           }
         }
@@ -238,6 +243,58 @@ namespace corona {
         }
       }
 
+    // 2-bit palettized
+    } else if (bit_depth == 2 && num_channels == 1) {
+
+      format = R8G8B8;
+      pixels = new byte[width * height * 3];
+      byte* out = pixels;
+
+      // try to read the palette
+      png_colorp palette;
+      int num_palette;
+      png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette);
+
+      if (num_palette < 4) {  // greyscale
+        for (int i = 0; i < height; i++) {
+
+          int level = 0;
+          byte* row = row_pointers[i];
+
+          for (int j = 0; j < width; j++) {
+
+            *out++ = ((*row >> level) & 3) * 85;
+            *out++ = ((*row >> level) & 3) * 85;
+            *out++ = ((*row >> level) & 3) * 85;
+
+            level += 2;
+            if (level == 8) {
+              row++;
+              level = 0;
+            }
+          }
+        }
+      } else {                // palettized
+        for (int i = 0; i < height; i++) {
+
+          int level = 0;
+          byte* row = row_pointers[i];
+
+          for (int j = 0; j < width; j++) {
+
+            *out++ = palette[(*row >> level) & 3].red;
+            *out++ = palette[(*row >> level) & 3].green;
+            *out++ = palette[(*row >> level) & 3].blue;
+
+            level += 2;
+            if (level == 8) {
+              row++;
+              level = 0;
+            }
+          }
+        }
+      }
+
     // 1-bit palettized
     } else if (bit_depth == 1 && num_channels == 1) {
 
@@ -296,8 +353,7 @@ namespace corona {
       return 0;
     }
 
-    png_destroy_info_struct(png_ptr, &info_ptr);
-    png_destroy_read_struct(&png_ptr, NULL, NULL);
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     return new SimpleImage(width, height, format, pixels);
   }
 

@@ -118,6 +118,10 @@ SOURCE=.\Open.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\OpenBMP.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\OpenJPEG.cpp
 # End Source File
 # Begin Source File
@@ -346,19 +350,11 @@ SOURCE=".\jpeg-6b\jmorecfg.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\third-party\sphere\jmorecfg.h"
-# End Source File
-# Begin Source File
-
 SOURCE=".\jpeg-6b\jpegint.h"
 # End Source File
 # Begin Source File
 
 SOURCE=".\jpeg-6b\jpeglib.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\third-party\sphere\jpeglib.h"
 # End Source File
 # Begin Source File
 
@@ -390,19 +386,11 @@ SOURCE=".\libpng-1.2.1\png.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\third-party\sphere\png.h"
-# End Source File
-# Begin Source File
-
 SOURCE=".\libpng-1.2.1\pngasmrd.h"
 # End Source File
 # Begin Source File
 
 SOURCE=".\libpng-1.2.1\pngconf.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\third-party\sphere\pngconf.h"
 # End Source File
 # Begin Source File
 
@@ -566,15 +554,7 @@ SOURCE=".\zlib-1.1.3\zconf.h"
 # End Source File
 # Begin Source File
 
-SOURCE="..\third-party\sphere\zconf.h"
-# End Source File
-# Begin Source File
-
 SOURCE=".\zlib-1.1.3\zlib.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\third-party\sphere\zlib.h"
 # End Source File
 # Begin Source File
 
