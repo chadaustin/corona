@@ -1,5 +1,7 @@
 How to Add a File Type (decoder or encoder)
 
+Read code_guidelines.txt.
+
 1) add FF_<filetype> constant to corona.h
 2) add proper function to Open.h or Save.h
 3) call function in CorOpenImageFromFile or CorSaveImageToFile in Corona.cpp
