@@ -80,7 +80,7 @@ namespace corona {
      * Destroy the object, freeing all associated memory.  This is
      * the same as a destructor.
      */
-    virtual void destroy() = 0;
+    virtual void COR_CALL destroy() = 0;
 
   public:
     /**
@@ -113,7 +113,7 @@ namespace corona {
     /**
      * Call the destructor in a Win32 ABI-compatible way.
      */
-    virtual void destroy() {
+    virtual void COR_CALL destroy() {
       delete this;
     }
 
@@ -138,19 +138,19 @@ namespace corona {
      * Get image width.
      * @return  image width
      */
-    virtual int getWidth() = 0;
+    virtual int COR_CALL getWidth() = 0;
 
     /**
      * Get image height.
      * @return  image height
      */
-    virtual int getHeight() = 0;
+    virtual int COR_CALL getHeight() = 0;
 
     /**
      * Get pixel format.
      * @return  pixel format
      */
-    virtual PixelFormat getFormat() = 0;
+    virtual PixelFormat COR_CALL getFormat() = 0;
 
     /**
      * Get pixel buffer.  The pixels are packed in the format defined
@@ -158,7 +158,7 @@ namespace corona {
      *
      * @return  pointer to first element in pixel buffer
      */
-    virtual void* getPixels() = 0;
+    virtual void* COR_CALL getPixels() = 0;
 
     /**
      * Get the palette.  Pixels are packed in the format defined by
@@ -166,21 +166,21 @@ namespace corona {
      *
      * @return  pointer to first palette entry
      */
-    virtual void* getPalette() = 0;
+    virtual void* COR_CALL getPalette() = 0;
 
     /**
      * Get the number of entries in the palette.
      *
      * @return  number of palette entries
      */
-    virtual int getPaletteSize() = 0;
+    virtual int COR_CALL getPaletteSize() = 0;
 
     /**
      * Get the format of the colors in the palette.
      *
      * @return  pixel format of palette entries
      */
-    virtual PixelFormat getPaletteFormat() = 0;
+    virtual PixelFormat COR_CALL getPaletteFormat() = 0;
   };
 
 
@@ -211,7 +211,7 @@ namespace corona {
      *
      * @return  number of bytes successfully read
      */
-    virtual int read(void* buffer, int size) = 0;
+    virtual int COR_CALL read(void* buffer, int size) = 0;
 
     /**
      * Write size bytes from buffer to the file.
@@ -221,7 +221,7 @@ namespace corona {
      *
      * @return  number of bytes successfully written
      */
-    virtual int write(const void* buffer, int size) = 0;
+    virtual int COR_CALL write(const void* buffer, int size) = 0;
 
     /**
      * Jump to a new position in the file, using the specified seek
@@ -234,14 +234,14 @@ namespace corona {
      *
      * @return  true on success, false otherwise
      */
-    virtual bool seek(int position, SeekMode mode) = 0;
+    virtual bool COR_CALL seek(int position, SeekMode mode) = 0;
 
     /**
      * Get current position within the file.
      *
      * @return  current position
      */
-    virtual int tell() = 0;
+    virtual int COR_CALL tell() = 0;
   };
 
 
