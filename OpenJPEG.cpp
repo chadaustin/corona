@@ -93,7 +93,7 @@ namespace corona {
 
     // create the image object now, so that if the error handler is called,
     // the longjmp code will know what to free
-    image = new SimpleImage(width, height, R8G8B8, pixels);
+    image = new SimpleImage(width, height, PF_R8G8B8, pixels);
 
     // read the scanlines
     while (cinfo.output_scanline < height) {

@@ -77,7 +77,7 @@ namespace corona {
     // 32-bit RGBA
     if (bit_depth == 8 && num_channels == 4) {
 
-      format = R8G8B8A8;
+      format = PF_R8G8B8A8;
       pixels = new byte[width * height * 4];
       for (int i = 0; i < height; ++i) {
         memcpy(pixels + i * width * 4, row_pointers[i], width * 4);
@@ -86,7 +86,7 @@ namespace corona {
     // 24-bit RGB
     } else if (bit_depth == 8 && num_channels == 3) {
 
-      format = R8G8B8;
+      format = PF_R8G8B8;
       pixels = new byte[width * height * 3];
       for (int i = 0; i < height; ++i) {
         memcpy(pixels + i * width * 3, row_pointers[i], width * 3);
@@ -95,7 +95,7 @@ namespace corona {
     // palettized or greyscale with alpha
     } else if (bit_depth == 8 && num_channels == 2) {
 
-      format = R8G8B8A8;
+      format = PF_R8G8B8A8;
       pixels = new byte[width * height * 4];
       byte* out = pixels;
 
@@ -130,7 +130,7 @@ namespace corona {
     // palettized or greyscale, no alpha
     } else if (bit_depth == 8 && num_channels == 1) {
 
-      format = R8G8B8A8;
+      format = PF_R8G8B8A8;
       pixels = new byte[width * height * 4];
       byte* out = pixels;
 
@@ -182,7 +182,7 @@ namespace corona {
     // 4-bit palettized
     } else if (bit_depth == 4 && num_channels == 1) {
 
-      format = R8G8B8;
+      format = PF_R8G8B8;
       pixels = new byte[width * height * 3];
       byte* out = pixels;
 
@@ -246,7 +246,7 @@ namespace corona {
     // 2-bit palettized
     } else if (bit_depth == 2 && num_channels == 1) {
 
-      format = R8G8B8;
+      format = PF_R8G8B8;
       pixels = new byte[width * height * 3];
       byte* out = pixels;
 
@@ -298,7 +298,7 @@ namespace corona {
     // 1-bit palettized
     } else if (bit_depth == 1 && num_channels == 1) {
 
-      format = R8G8B8;
+      format = PF_R8G8B8;
       pixels = new byte[width * height * 3];
       byte* out = pixels;
 

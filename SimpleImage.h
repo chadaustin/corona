@@ -3,11 +3,12 @@
 
 
 #include "corona.h"
+#include "Utility.h"
 
 
 namespace corona {
 
-  class SimpleImage : public Image {
+  class SimpleImage : public DefaultDelete<Image> {
   public:
     SimpleImage(int width,
                 int height,

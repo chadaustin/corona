@@ -47,4 +47,22 @@ T Max(T a, T b) {
 }
 
 
+template<typename T>
+class DefaultDelete : public T {
+
+  // Deriving from DefaultDelete<T> instead of T shadows any interface-
+  // defined |operator delete|, thus making implementation code easier to
+  // write and read.
+
+  // For example, SimpleImage's implementation of Image::destroy is simply
+  // |delete this|, which, if SimpleImage inherited Image directly, would
+  // infinitely recurse.  (Image::operator delete simply calls destroy())
+  // This class "undefines" the overloaded operator delete by shadowing it.
+
+  void operator delete(void* p) {
+    ::operator delete(p);
+  }
+};
+
+
 #endif

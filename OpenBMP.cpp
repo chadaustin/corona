@@ -284,7 +284,7 @@ namespace corona {
 
     }
 
-    return new SimpleImage(h.width, h.height, R8G8B8, pixels.release());
+    return new SimpleImage(h.width, h.height, PF_R8G8B8, pixels.release());
   }
 
 }

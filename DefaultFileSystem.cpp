@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "DefaultFileSystem.h"
+#include "Utility.h"
 
 
 namespace corona {
@@ -43,9 +44,9 @@ namespace corona {
 
 
   class CFileSystem : public FileSystem {
-
+  public:
     void destroy() {
-      delete this;
+      // singleton!  no need to clean it up!
     }
 
     File* openFile(const char* filename, OpenMode mode) {
@@ -61,8 +62,10 @@ namespace corona {
       FILE* file = fopen(filename, mode_str);
       return (file ? new CFile(file) : 0);
     }
-  } fs;
+  } g_default_fs;
 
 
-  FileSystem* const g_DefaultFileSystem = &fs;
+  FileSystem* GetDefaultFileSystem() {
+    return &g_default_fs;
+  }
 }

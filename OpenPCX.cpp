@@ -160,7 +160,7 @@ namespace corona {
       return 0;
     }
 
-    return new SimpleImage(width, height, R8G8B8, pixels.release());
+    return new SimpleImage(width, height, PF_R8G8B8, pixels.release());
   }
 
   //////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,7 @@
 EXPORTS
   CorGetVersion
   CorOpenImage
-  CorOpenImageFileSystem
-  CorOpenImageFile
+  CorOpenImageFromFileSystem
+  CorOpenImageFromFile
+  CorConvertImage
+  CorGuaranteeFormat

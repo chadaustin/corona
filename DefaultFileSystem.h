@@ -6,7 +6,7 @@
 
 
 namespace corona {
-  extern FileSystem* const g_DefaultFileSystem;
+  FileSystem* GetDefaultFileSystem();
 }
 
 
