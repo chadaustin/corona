@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="corona_static"
 	ProjectGUID="{20977D23-8499-4CCD-8C36-9D09AA278B3E}"
 	Keyword="Win32Proj">
@@ -48,6 +48,12 @@
 				Name="VCResourceCompilerTool"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -91,8 +97,16 @@
 				Name="VCResourceCompilerTool"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="files"
@@ -102,6 +116,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Corona.cpp">
+			</File>
+			<File
+				RelativePath="..\src\corona.h">
 			</File>
 			<File
 				RelativePath="..\src\Debug.cpp">
@@ -150,9 +167,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Utility.h">
-			</File>
-			<File
-				RelativePath="..\src\corona.h">
 			</File>
 		</Filter>
 		<Filter

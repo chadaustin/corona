@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="corona"
 	ProjectGUID="{62C246C9-F8C3-4F84-BDEE-B5B8C466D67B}"
 	Keyword="Win32Proj">
@@ -56,7 +56,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -109,9 +115,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="files"
@@ -121,6 +135,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Corona.cpp">
+			</File>
+			<File
+				RelativePath="..\src\corona.h">
 			</File>
 			<File
 				RelativePath="..\src\Debug.cpp">
@@ -172,9 +189,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Utility.h">
-			</File>
-			<File
-				RelativePath="..\src\corona.h">
 			</File>
 		</Filter>
 		<Filter
@@ -501,25 +515,6 @@
 		<Filter
 			Name=".net"
 			Filter="">
-			<File
-				RelativePath="ManagedWrapper.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						MinimalRebuild="FALSE"
-						BasicRuntimeChecks="0"
-						DebugInformationFormat="0"
-						CompileAsManaged="2"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						DebugInformationFormat="0"
-						CompileAsManaged="2"/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="libungif-4.1.0"
