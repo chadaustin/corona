@@ -2,9 +2,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <corona.h>
 using namespace std;
 using namespace corona;
+
+
+int strcmp_ci(const char* a, const char* b) {
+    while (*a && *b) {
+        const int diff = tolower(*a) - tolower(*b);
+        if (diff != 0) {
+            return diff;
+        }
+        ++a;
+        ++b;
+    }
+    return tolower(*a) - tolower(*b);
+}
+
 
 FileFormat getFormat(const char* ext) {
     // get extension's format
@@ -12,7 +27,7 @@ FileFormat getFormat(const char* ext) {
     for (size_t i = 0; formats[i]; ++i) {
         size_t extCount = formats[i]->getExtensionCount();
         for (size_t j = 0; j < extCount; ++j) {
-            if (stricmp(ext, formats[i]->getExtension(j)) == 0) {
+            if (strcmp_ci(ext, formats[i]->getExtension(j)) == 0) {
                 return formats[i]->getFormat();
             }
         }
