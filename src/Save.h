@@ -9,6 +9,7 @@ namespace corona {
 #ifndef NO_PNG
   bool SavePNG(File* file, Image* image); // SavePNG.cpp
 #endif
+  bool SaveTGA(File* file, Image* image); // SaveTGA.cpp
 }
 
 

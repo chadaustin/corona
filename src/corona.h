@@ -480,8 +480,8 @@ namespace corona {
 
   /**
    * Opens an image from the default filesystem.  This function simply
-   * forwards the call to OpenImage(fs, filename, file_format,
-   * pixel_format) with the default filesystem object.
+   * forwards the call to OpenImage(file, file_format, pixel_format)
+   * with a standard C library file.
    *
    * See OpenImage(fs, filename, file_format, pixel_format) for more
    * information.
@@ -554,14 +554,14 @@ namespace corona {
 
   /**
    * Saves an image to a file in the default filesystem.  This
-   * function simply calls SaveImage(fs, filename, file_format, image)
-   * with the default filesystem.
+   * function simply calls SaveImage(file, file_format, image)
+   * with a standard C library file.
    *
    * See SaveImage(fs, filename, file_format, image) for more information.
    *
    * @param filename     name of the file to save the image to
-   * @param file_format  file format in which to save image -- must not be
-   *                     FF_AUTODETECT
+   * @param file_format  file format in which to save image.  if FF_AUTODETECT,
+   *                     SaveImage guesses the type from the file extension
    * @param image        image to save
    *
    * @return  true if save succeeds, false otherwise
@@ -578,7 +578,11 @@ namespace corona {
    * Saves an image to the specified file.  This function saves image
    * to a file of type file_format.  If file_format is not a supported
    * output type, the function fails.  As of now, Corona only supports
-   * saving images of type FF_PNG.
+   * saving images of type FF_PNG and FF_TGA.
+   *
+   * @note This function may create the file even if the save does not
+   *       succeed, so users of this library should remove the file after
+   *       the call to SaveImage().
    *
    * @param file         file in which to save the image
    * @param file_format  file format in which to save image -- must not be

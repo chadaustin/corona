@@ -35,6 +35,7 @@ libcorona_la_SOURCES =				\
 	OpenPCX.cpp				\
 	OpenTGA.cpp				\
 	Save.h					\
+	SaveTGA.cpp				\
 	SimpleImage.h				\
 	Types.h					\
 	Utility.h

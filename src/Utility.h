@@ -10,6 +10,7 @@
 
 namespace corona {
 
+
   template<typename T>
   class auto_array {
   public:
@@ -79,8 +80,18 @@ namespace corona {
     return b[0] + (b[1] << 8);
   }
 
+  inline void write16_le(byte* b, u16 value) {
+    b[0] = value & 0xFF;
+    b[1] = value >> 8;
+  }
+
   inline u16 read16_be(const byte* b) {
     return (b[0] << 8) + b[1];
+  }
+
+  inline void write16_be(byte* b, u16 value) {
+    b[0] = value >> 8;
+    b[1] = value & 0xFF;
   }
 
   inline u32 read32_le(const byte* b) {

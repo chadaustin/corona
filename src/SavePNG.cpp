@@ -2,11 +2,10 @@
 #include <png.h>
 #include "Debug.h"
 #include "Save.h"
+#include "Types.h"
 
 
 namespace corona {
-
-  typedef unsigned char byte;
 
   void PNG_write(png_structp png_ptr, png_bytep data, png_size_t length) {
     File* file = (File*)png_get_io_ptr(png_ptr);

@@ -17,6 +17,7 @@ SOURCES = [
     'OpenPNG.cpp',
     'OpenTGA.cpp',
     'SavePNG.cpp',
+    'SaveTGA.cpp',
 ] + map(lambda n: gifdir + '/' + n, SConscript(dirs = gifdir))
 
 env2 = env.Copy(CPPPATH = gifdir)

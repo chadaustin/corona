@@ -1,5 +1,6 @@
 #include <string.h>
 #include <memory>
+#include <ctype.h>
 #include "corona.h"
 #include "DefaultFileSystem.h"
 #include "MemoryFile.h"
@@ -39,9 +40,9 @@ namespace corona {
     COR_EXPORT(const char*, CorGetSupportedWriteFormats)() {
       return ""
 #ifndef NO_PNG
-	"PNG Files:png"
+	"PNG Files:png"  ";"
 #endif
-        ;
+        "TGA Files:tga"  ;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -197,6 +198,25 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    int strcmp_ci(const char* a, const char* b) {
+      while (*a && *b) {
+        const int diff = tolower(*a) - tolower(*b);
+        if (diff != 0) {
+          return diff;
+        }
+        ++a;
+        ++b;
+      }
+      return tolower(*a) - tolower(*b);
+    }
+
+    bool ends_with(const char* str, const char* ext) {
+      const int str_len = strlen(str);
+      const int ext_len = strlen(ext);
+      return (str_len >= ext_len &&
+              strcmp_ci(str + str_len - ext_len, ext) == 0);
+    }
+
     COR_EXPORT(bool, CorSaveImage)(
       const char* filename,
       FileFormat file_format,
@@ -204,6 +224,16 @@ namespace corona {
     {
       if (!filename) {
         return false;
+      }
+
+      if (file_format == FF_AUTODETECT) {
+        if (ends_with(filename, ".png")) {
+          file_format = FF_PNG;
+        } else if (ends_with(filename, ".tga")) {
+          file_format = FF_TGA;
+        } else {
+          return false;
+        }
       }
 
       std::auto_ptr<File> file(OpenDefaultFile(filename, true));
@@ -228,7 +258,7 @@ namespace corona {
         case FF_JPEG: return false;
         case FF_PCX:  return false;
         case FF_BMP:  return false;
-        case FF_TGA:  return false;
+        case FF_TGA:  return SaveTGA(file, image);
         case FF_GIF:  return false;
         default:      return false;
       }
