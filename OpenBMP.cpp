@@ -1,4 +1,5 @@
 // format information gleaned from http://www.daubnet.com/formats/BMP.html
+// and http://www.edm2.com/0107/os2bmp.html
 
 #include "corona.h"
 #include "SimpleImage.h"
@@ -17,6 +18,8 @@ namespace corona {
 
 
   struct Header {
+    bool os2;
+
     int file_size;
     int data_offset;
     int width;
@@ -81,25 +84,50 @@ namespace corona {
 
 
   bool ReadInfoHeader(File* file, Header& h) {
-    byte header[40];
-    if (file->read(header, 40) != 40) {
+
+    const int HEADER_READ_SIZE = 24;
+
+    // read the only part of the header we need
+    byte header[HEADER_READ_SIZE];
+    if (file->read(header, HEADER_READ_SIZE) != HEADER_READ_SIZE) {
       return false;
     }
 
-    int size        = read32(header);
-    int width       = read32(header + 4);
-    int height      = read32(header + 8);
-    int planes      = read16(header + 12);
-    int bpp         = read16(header + 14);
-    int compression = read32(header + 16);
-    int image_size  = read32(header + 20);
-    int x_per_m     = read32(header + 24);
-    int y_per_m     = read32(header + 28);
-    int colors_used = read32(header + 32);
-    int colors_imp  = read32(header + 36);
+    int size = read32(header + 0);
+    int width;
+    int height;
+    int planes;
+    int bpp;
+    int compression;
+    int image_size;
 
+    if (size < 40) {  // assume OS/2 bitmap
+      if (size < 12) {
+        return false;
+      }
+
+      h.os2 = true;
+      width  = read16(header + 4);
+      height = read16(header + 6);
+      planes = read16(header + 8);
+      bpp    = read16(header + 10);
+      compression = 0;
+      image_size = 0;
+      
+    } else {
+
+      h.os2 = false;
+      width       = read32(header + 4);
+      height      = read32(header + 8);
+      planes      = read16(header + 12);
+      bpp         = read16(header + 14);
+      compression = read32(header + 16);
+      image_size  = read32(header + 20);
+
+    }
+    
     // sanity check the info header
-    if (size != 40 || planes != 1) {
+    if (planes != 1) {
       return false;
     }
 
@@ -118,6 +146,9 @@ namespace corona {
     h.pitch       = line_size;
     h.image_size  = image_size;
 
+    // jump forward (backward in the OS/2 case :) to the palette data
+    file->seek(size - HEADER_READ_SIZE, File::CURRENT);
+
     return true;
   }
 
@@ -131,7 +162,7 @@ namespace corona {
     h.palette = new RGB[h.palette_size];
 
     // read the BMP color table
-    const int buffer_size = h.palette_size * 3;
+    const int buffer_size = h.palette_size * (h.os2 ? 3 : 4);
     auto_array<byte> buffer(new byte[buffer_size]);
     if (file->read(buffer, buffer_size) != buffer_size) {
       return false;
@@ -143,7 +174,9 @@ namespace corona {
       out->blue  = *in++;
       out->green = *in++;
       out->red   = *in++;
-      ++in;  // skip alpha
+      if (!h.os2) {
+        ++in;  // skip alpha
+      }
       ++out;
     }
 
