@@ -40,6 +40,7 @@ namespace corona {
   //////////////////////////////////////////////////////////////////////////////
 
   COR_EXPORT(Image*, CorOpenImageFile)(File* file, FileFormat file_format) {
+    file->seek(0, File::BEGIN);
     switch (file_format) {
       case AUTODETECT: {
         Image* image = CorOpenImageFile(file, PNG);

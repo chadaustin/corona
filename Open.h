@@ -7,7 +7,7 @@
 
 namespace corona {
   inline Image* OpenBMP (File* file) { return 0; }
-  inline Image* OpenJPEG(File* file) { return 0; }
+  Image* OpenJPEG(File* file);
   Image* OpenPCX (File* file);
   inline Image* OpenPNG (File* file) { return 0; }
 }

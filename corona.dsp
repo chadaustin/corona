@@ -114,6 +114,10 @@ SOURCE=.\DefaultFileSystem.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\JPEG.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Open.h
 # End Source File
 # Begin Source File
@@ -127,6 +131,210 @@ SOURCE=.\SimpleImage.h
 # Begin Source File
 
 SOURCE=.\Utility.h
+# End Source File
+# End Group
+# Begin Group "libjpeg"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcapimin.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcapistd.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jccoefct.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jccolor.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcdctmgr.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jchuff.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcinit.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcmainct.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcmarker.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcmaster.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcomapi.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\sphere\jconfig.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcparam.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcphuff.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcprepct.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jcsample.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jctrans.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdapimin.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdapistd.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdatadst.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdatasrc.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdcoefct.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdcolor.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jddctmgr.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdhuff.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdinput.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdmainct.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdmarker.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdmaster.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdmerge.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdphuff.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdpostct.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdsample.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jdtrans.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jerror.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jfdctflt.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jfdctfst.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jfdctint.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jidctflt.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jidctfst.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jidctint.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jidctred.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jmemansi.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jmemmgr.c"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\sphere\jmorecfg.h"
+# End Source File
+# Begin Source File
+
+SOURCE="..\third-party\sphere\jpeglib.h"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jquant1.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jquant2.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\jutils.c"
+# End Source File
+# Begin Source File
+
+SOURCE=".\jpeg-6b\transupp.c"
 # End Source File
 # End Group
 # End Target
