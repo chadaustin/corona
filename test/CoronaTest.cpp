@@ -388,6 +388,10 @@ public:
       img2.get(),
       4);
 
+    // force pixel format conversion (don't destroy the old image)
+    auto_ptr<Image> img3(OpenImage(filename, FF_AUTODETECT, PF_R8G8B8));
+    CPPUNIT_ASSERT(SaveImage(filename, FF_PNG, img3.get()) == true);
+
     // remove the temporary file we made
     remove(filename);
   }
