@@ -182,7 +182,7 @@ namespace corona {
      *
      * @return  number of bytes successfully written
      */
-    virtual int write(void* buffer, int size) = 0;
+    virtual int write(const void* buffer, int size) = 0;
 
     /**
      * Jump to a new position in the file, using the specified seek
