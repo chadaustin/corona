@@ -23,7 +23,7 @@ namespace corona {
       return fread(buffer, 1, size, m_file);
     }
 
-    int write(void* buffer, int size) {
+    int write(const void* buffer, int size) {
       return fwrite(buffer, 1, size, m_file);
     }
 
