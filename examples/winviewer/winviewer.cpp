@@ -1,3 +1,4 @@
+#include <memory>
 #include <string>
 #include <windows.h>
 #include <commctrl.h>
@@ -69,7 +70,8 @@ static bool UpdateImage(const char* filename) {
   // destroy the old DC and bitmap
   UpdateImage(0);
 
-  gImage = corona::OpenImage(filename, corona::PF_B8G8R8);
+  // use a format that keeps the most possible image fidelity
+  gImage = corona::OpenImage(filename, corona::PF_B8G8R8A8);
   if (!gImage) {
     return false;
   }
@@ -89,7 +91,7 @@ static bool UpdateImage(const char* filename) {
   bmih.biWidth       = gImageWidth;
   bmih.biHeight      = -gImageHeight;
   bmih.biPlanes      = 1;
-  bmih.biBitCount    = 24;
+  bmih.biBitCount    = 32;
   bmih.biCompression = BI_RGB;
 
   void* dest;
@@ -110,7 +112,7 @@ static bool UpdateImage(const char* filename) {
     return false;
   }
 
-  memcpy(dest, gImage->getPixels(), gImageWidth * gImageHeight * 3);
+  memcpy(dest, gImage->getPixels(), gImageWidth * gImageHeight * 4);
   return true;
 }
 
@@ -195,7 +197,7 @@ static LRESULT CALLBACK WindowProc(
           if (gImage) {
             std::string fn = BrowseForFileDialog(window, "Save Image", true);
             if (!fn.empty()) {
-              if (!corona::SaveImage(fn.c_str(), corona::FF_PNG, gImage)) {
+              if (!corona::SaveImage(fn.c_str(), corona::FF_AUTODETECT, gImage)) {
                 MessageBox(window, "Error saving image", "Save Image", MB_OK | MB_ICONERROR);
               }
             }
