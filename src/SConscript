@@ -1,6 +1,9 @@
 import os
+from os import path
 
-sources = [
+Import('env')
+
+SOURCES = [
     'Corona.cpp',
     'Debug.cpp',
     'DefaultFileSystem.cpp',
@@ -11,5 +14,4 @@ sources = [
     'SavePNG.cpp',
 ]
 
-env = Environment(ENV = os.environ)
-env.Library(target = 'corona', source = sources)
+env.Library(target = 'corona', source = SOURCES)
