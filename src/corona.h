@@ -39,7 +39,7 @@
 #    ifdef CORONA_EXPORTS
 #      define COR_DECL __declspec(dllexport)
 #    else
-#      define COR_DECL __declspec(dllimport)
+#      define COR_DECL
 #    endif
 #  else
 #    define COR_DECL
