@@ -91,7 +91,7 @@ public:
       int comparison = memcmp(img1->getPixels(),
                               img2->getPixels(),
                               width * height * 3);
-      CPPUNIT_ASSERT(comparison == 0);
+      CPPUNIT_ASSERT_MESSAGE("pixels wrong in " + left, comparison == 0);
     }
   }
 

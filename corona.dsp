@@ -154,6 +154,10 @@ SOURCE=.\SimpleImage.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Types.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Utility.h
 # End Source File
 # End Group

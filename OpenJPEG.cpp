@@ -21,8 +21,6 @@ namespace corona {
   void    JPEG_emit_message(j_common_ptr cinfo, int msg_level);
 
 
-  typedef unsigned char byte;
-
   struct InternalStruct {
     struct {
       jpeg_error_mgr mgr;
@@ -101,7 +99,7 @@ namespace corona {
 
       // copy scanline into pixel buffer
       if (cinfo.output_components == 1) {        // greyscale
-        byte* in = (*buffer);
+        byte* in = (byte*)(*buffer);
         for (unsigned i = 0; i < width; ++i) {
           *pixels++ = *in; // red
           *pixels++ = *in; // green

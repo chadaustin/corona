@@ -5,9 +5,6 @@
 namespace corona {
 
 
-  typedef unsigned char byte;
-
-
   template<typename T>
   class auto_array {
   public:
@@ -20,6 +17,18 @@ namespace corona {
     }
 
     operator T*() {
+      return array;
+    }
+
+    operator const T*() const {
+      return array;
+    }
+
+    T* get() {
+      return array;
+    }
+
+    const T* get() const {
       return array;
     }
 

@@ -31,8 +31,6 @@ namespace corona {
 
   //////////////////////////////////////////////////////////////////////////////
 
-  typedef unsigned char byte;
-
   struct RGB {
     byte red;
     byte green;

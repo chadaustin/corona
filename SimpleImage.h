@@ -3,6 +3,7 @@
 
 
 #include "corona.h"
+#include "Types.h"
 #include "Utility.h"
 
 

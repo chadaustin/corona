@@ -13,8 +13,6 @@ namespace corona {
   namespace hidden {
 
 
-  typedef unsigned char byte;
-
   //////////////////////////////////////////////////////////////////////////////
 
   COR_EXPORT(const char*, CorGetVersion)() {
