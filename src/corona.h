@@ -337,20 +337,14 @@ namespace corona {
       Image* image,
       PixelFormat palette_format);
 
-    // file
+    // files
 
-    COR_FUNCTION(File*) CorOpenFile(
-      const char* name,
-      bool writeable);
-
-    COR_FUNCTION(File*) CorCreateMemoryFile(
-      const void* buffer,
-      int size);
+    COR_FUNCTION(File*) CorOpenFile(const char* name, bool writeable);
+    COR_FUNCTION(File*) CorCreateMemoryFile(const void* buffer, int size);
 
     // utility
 
-    COR_FUNCTION(int) CorGetPixelSize(
-      PixelFormat format);
+    COR_FUNCTION(int) CorGetPixelSize(PixelFormat format);
   }
 
 

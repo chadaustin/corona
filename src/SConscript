@@ -10,6 +10,7 @@ SOURCES = [
     'Corona.cpp',
     'Debug.cpp',
     'DefaultFileSystem.cpp',
+    'MemoryFile.cpp',
     'OpenBMP.cpp',
     'OpenGIF.cpp',
     'OpenJPEG.cpp',

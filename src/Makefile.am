@@ -27,6 +27,7 @@ libcorona_la_SOURCES =				\
 	Debug.cpp				\
 	Debug.h					\
 	DefaultFileSystem.cpp			\
+	MemoryFile.cpp                          \
 	MemoryFile.h				\
 	Open.h					\
 	OpenBMP.cpp				\

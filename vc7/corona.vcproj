@@ -132,6 +132,9 @@
 				RelativePath="..\src\DefaultFileSystem.cpp">
 			</File>
 			<File
+				RelativePath="..\src\MemoryFile.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Open.h">
 			</File>
 			<File

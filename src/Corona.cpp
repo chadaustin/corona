@@ -264,22 +264,6 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    COR_EXPORT(File*) CorCreateMemoryFile(
-      const void* buffer,
-      int size)
-    {
-      if (size && !buffer) {
-        return 0;
-      }
-      if (size < 0) {
-        return 0;
-      }
-
-      return new MemoryFile(buffer, size);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
     COR_EXPORT(int) CorGetPixelSize(PixelFormat format) {
       switch (format) {
         case PF_R8G8B8A8: return 4;
