@@ -1,3 +1,8 @@
+2002.07.28
+- made GetBytesPerPixel public within the API
+- added a MemoryFile implementation for loading images from a block of
+  memory
+
 2002.07.12
 - removed the FileSystem interface
 
