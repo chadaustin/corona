@@ -219,7 +219,7 @@ APITests::testFormatQueries() {
  * uninitialized memory.
  */
 template<typename T>
-inline T* alloc(size_t size) {
+inline T* allocate(size_t size) {
   T* t = new T[size];
   std::fill(t, t + size, T());
   return t;
@@ -233,7 +233,7 @@ APITests::testMemory() {
     // converts.
     bool convert_image_deleted = false;
     Image* image = new TestDeletionImage(
-      16, 16, PF_I8, alloc<byte>(256), alloc<byte>(256 * 4), 256, PF_R8G8B8,
+      16, 16, PF_I8, allocate<byte>(256), allocate<byte>(256 * 4), 256, PF_R8G8B8,
       convert_image_deleted);
     delete ConvertImage(image, PF_R8G8B8A8);
     CPPUNIT_ASSERT(convert_image_deleted == true);
@@ -244,7 +244,7 @@ APITests::testMemory() {
     // convert.
     bool convert_image_deleted = false;
     Image* image = new TestDeletionImage(
-      16, 16, PF_I8, alloc<byte>(256), alloc<byte>(256 * 4), 256, PF_R8G8B8,
+      16, 16, PF_I8, allocate<byte>(256), allocate<byte>(256 * 4), 256, PF_R8G8B8,
       convert_image_deleted);
     delete ConvertImage(image, PF_I8);
     CPPUNIT_ASSERT(convert_image_deleted == true);
@@ -253,7 +253,7 @@ APITests::testMemory() {
   {
     bool convert_palette_deleted = false;
     Image* image = new TestDeletionImage(
-      16, 16, PF_I8, alloc<byte>(256), alloc<byte>(256 * 4), 256, PF_R8G8B8,
+      16, 16, PF_I8, allocate<byte>(256), allocate<byte>(256 * 4), 256, PF_R8G8B8,
       convert_palette_deleted);
     delete ConvertPalette(image, PF_R8G8B8A8);
     CPPUNIT_ASSERT(convert_palette_deleted == true);
@@ -262,7 +262,7 @@ APITests::testMemory() {
   {
     bool convert_palette_deleted = false;
     Image* image = new TestDeletionImage(
-      16, 16, PF_I8, alloc<byte>(256), alloc<byte>(256 * 4), 256, PF_R8G8B8,
+      16, 16, PF_I8, allocate<byte>(256), allocate<byte>(256 * 4), 256, PF_R8G8B8,
       convert_palette_deleted);
     delete ConvertPalette(image, PF_I8);
     CPPUNIT_ASSERT(convert_palette_deleted == true);
@@ -271,7 +271,7 @@ APITests::testMemory() {
   {
     bool convert_image_deleted = false;
     Image* image = new TestDeletionImage(
-      16, 16, PF_I8, alloc<byte>(256), alloc<byte>(256 * 4), 256, PF_R8G8B8,
+      16, 16, PF_I8, allocate<byte>(256), allocate<byte>(256 * 4), 256, PF_R8G8B8,
       convert_image_deleted);
     delete FlipImage(image, CA_X);
     CPPUNIT_ASSERT(convert_image_deleted == true);
