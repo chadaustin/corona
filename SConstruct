@@ -16,4 +16,5 @@ sources = [
 env = Environment(ENV = os.environ)
 env.Library(target = 'corona', source = sources)
 
+SConscript('examples/SConscript')
 SConscript('test/SConscript')
