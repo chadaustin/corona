@@ -29,8 +29,8 @@ namespace corona {
     int pixel_depth      = header[16];
     int image_descriptor = header[17];
     
-    bool mirrored = image_descriptor & (1 << 4);  // left-to-right?
-    bool flipped  = image_descriptor & (1 << 5);  // bottom-to-top?
+    bool mirrored = (image_descriptor & (1 << 4)) != 0;  // left-to-right?
+    bool flipped  = (image_descriptor & (1 << 5)) != 0;  // bottom-to-top?
 
     /*
      * image types
