@@ -6,5 +6,4 @@ EXTRA_DIST = \
 	literature.txt \
 	readme.txt \
 	release-howto.txt \
-	todo.txt \
 	tutorial.txt
