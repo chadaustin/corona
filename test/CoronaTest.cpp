@@ -17,8 +17,30 @@ typedef unsigned char byte;
 
 class ImageTestCase : public TestCase {
 public:
+  struct Comparison {
+    const char* image;
+    const char* reference;
+  };
+
   void AssertImagesEqual(
-    string message,
+    const string& image_file,
+    const string& reference_file)
+  {
+    auto_ptr<Image> img1(OpenImage(image_file.c_str(),
+                                   FF_AUTODETECT,
+                                   PF_R8G8B8A8));
+    CPPUNIT_ASSERT_MESSAGE("opening " + image_file, img1.get() != 0);
+
+    auto_ptr<Image> img2(OpenImage(reference_file.c_str(),
+                                   FF_AUTODETECT,
+                                   PF_R8G8B8A8));
+    CPPUNIT_ASSERT_MESSAGE("opening " + reference_file, img2.get() != 0);
+
+    AssertImagesEqual("testing " + image_file, img1.get(), img2.get(), 4);
+  }
+
+  void AssertImagesEqual(
+    const string& message,
     Image* i1,
     Image* i2,
     int bytes_per_pixel)
@@ -113,11 +135,6 @@ class BMPTests : public ImageTestCase {
 public:
   void testLoader() {
 
-    struct Comparison {
-      const char* image;
-      const char* reference;
-    };
-
     static const string base = "images/bmpsuite/";
     static const string reference_base = "images/bmpsuite/reference/";
 
@@ -154,18 +171,8 @@ public:
     static const int image_count = sizeof(images) / sizeof(*images);
 
     for (int i = 0; i < image_count; ++i) {
-      string left = base + images[i].image;
-      string right = reference_base + images[i].reference;
-
-      // base image
-      auto_ptr<Image> img1(OpenImage(left.c_str(), FF_AUTODETECT, PF_R8G8B8));
-      CPPUNIT_ASSERT_MESSAGE("opening " + left, img1.get() != 0);
-
-      // reference image
-      auto_ptr<Image> img2(OpenImage(right.c_str(), FF_AUTODETECT, PF_R8G8B8));
-      CPPUNIT_ASSERT_MESSAGE("opening " + right, img2.get() != 0);
-
-      AssertImagesEqual("comparing " + left, img1.get(), img2.get(), 3);
+      AssertImagesEqual(base + images[i].image,
+                        reference_base + images[i].reference);
     }
   }
 
@@ -194,9 +201,23 @@ public:
 };
 
 
-class PCXTests : public TestCase {
+class PCXTests : public ImageTestCase {
 public:
   void testLoader() {
+    static Comparison images[] = {
+      { "greyscale.pcx",  "greyscale.png"  },
+      { "palettized.pcx", "palettized.png" },
+      { "test.pcx",       "test.png"       },
+    };
+    static const int image_count = sizeof(images) / sizeof(*images);
+
+    static const string image_base("images/pcx/");
+    static const string reference_base("images/pcx/ref/");
+
+    for (int i = 0; i < image_count; ++i) {
+      AssertImagesEqual(image_base + images[i].image,
+                        reference_base + images[i].reference);
+    }
   }
 
   static Test* suite() {
@@ -448,15 +469,8 @@ class TGATests : public ImageTestCase {
 public:
 
   void testLoader() {
-    auto_ptr<Image> tga(OpenImage("images/targa/test.tga",
-                                  FF_AUTODETECT, PF_R8G8B8));
-    CPPUNIT_ASSERT(tga.get() != 0);
-
-    auto_ptr<Image> ref(OpenImage("images/targa/reference/test.png",
-                                  FF_AUTODETECT, PF_R8G8B8));
-    CPPUNIT_ASSERT(ref.get() != 0);
-
-    AssertImagesEqual("Comparing Targa image", tga.get(), ref.get(), 3);
+    AssertImagesEqual("images/targa/test.tga",
+                      "images/targa/reference/test.png");
   }
 
   static Test* suite() {
