@@ -1,6 +1,6 @@
 import os
 
-Import("CORONA_LIBS")
+Import("env CORONA_LIBS")
 
 SConscript('cppunit-1.6.2/SConscript')
 
@@ -15,8 +15,7 @@ sources = [
     'TGATests.cpp',
 ]
 
-env = Environment(ENV = os.environ,
-                  CPPPATH = ['#src', Dir('cppunit-1.6.2')],
-                  LIBPATH = ['#src', Dir('cppunit-1.6.2')],
-                  LIBS = ['cppunit'] + CORONA_LIBS)
-env.Program(target = 'CoronaTest', source = sources)
+env2 = env.Copy(CPPPATH = ['#src', Dir('cppunit-1.6.2')],
+                LIBPATH = ['#src', Dir('cppunit-1.6.2')],
+                LIBS = ['cppunit'] + CORONA_LIBS)
+env2.Program(target = 'CoronaTest', source = sources)
