@@ -21,6 +21,7 @@ else:
     # but do make sure we look in /usr/freeware for libraries
     base_env.Prepend(CPPPATH = ['/usr/freeware/include'],
                      LIBPATH = ['/usr/freeware/$LIBDIR'])
+    base_env.Append(LINKFLAGS=['-LANG:std'])
     if ARGUMENTS.get('debug'):
         base_env.Append(CCFLAGS = ['-g', '-DCORONA_DEBUG'])
     if ARGUMENTS.get('64'):
