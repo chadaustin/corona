@@ -646,14 +646,13 @@ namespace corona {
   }
 
   /**
-   * Flips the pixels in the image around the given axis, destroying
-   * the old image.  If the source is 0, the function returns 0.
+   * Flips the pixels in the image around the given axis.
    *
    * @param source           image to flip
    * @param coordinate_axis  Axis around which to flip.  Both CA_X and CA_Y
    *                         can be specified by ORing them together.
    *
-   * @return  valid image object if flip succeeds, 0 otherwise
+   * @return  the image passed in
    */
   inline Image* FlipImage(Image* source, int coordinate_axis) {
     return hidden::CorFlipImage(source, coordinate_axis);

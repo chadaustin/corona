@@ -51,10 +51,8 @@ APITests::testBasicOperations(int width, int height) {
   auto_ptr<Image> flip_x   (FlipImage(CloneImage(image.get()), CA_X));
   auto_ptr<Image> flip_y   (FlipImage(CloneImage(image.get()), CA_Y));
   auto_ptr<Image> flip_xy  (FlipImage(CloneImage(image.get()), CA_X | CA_Y));
-  auto_ptr<Image> flip_inv (FlipImage(CloneImage(image.get()), 0xFFFF));
 
   AssertImagesEqual("No flipping", flip_none.get(), image.get());
-  CPPUNIT_ASSERT(flip_inv.get() == 0);
 
   CPPUNIT_ASSERT(flip_x.get() != 0);
   CPPUNIT_ASSERT(width  == flip_x->getWidth());

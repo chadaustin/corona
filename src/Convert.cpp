@@ -226,25 +226,16 @@ namespace corona {
 
       // if we don't have an image, don't flip.
       if (!image) {
-        return image;
-      }
-      // only two possible values are CA_X and CA_Y
-      if (coordinate_axis & ~(CA_X | CA_Y)) {
-        delete image;
         return 0;
       }
 
       COR_LOG("Doing the flip...");
 
-      const int width                 = image->getWidth();
-      const int height                = image->getHeight();
-      const PixelFormat pixel_format  = image->getFormat();
-      const int pixel_size            = GetPixelSize(pixel_format);
-
-      byte* pixels = new byte[width * height * pixel_size];
-      memcpy(pixels, image->getPixels(), width * height * pixel_size);
-      delete image;
-      image = 0;
+      const int width                = image->getWidth();
+      const int height               = image->getHeight();
+      byte* pixels                   = (byte*)image->getPixels();
+      const PixelFormat pixel_format = image->getFormat();
+      const int pixel_size           = GetPixelSize(pixel_format);
 
       // flip about the X axis
       if (coordinate_axis & CA_X) {
@@ -277,7 +268,7 @@ namespace corona {
 
       }
 
-      return new SimpleImage(width, height, pixel_format, pixels);
+      return image;
     }
   }
 
