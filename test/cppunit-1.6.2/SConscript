@@ -1,4 +1,5 @@
 import os
+Import('base_env')
 
 sources = [
     'Exception.cpp',
@@ -16,6 +17,6 @@ sources = [
     'TypeInfoHelper.cpp',
 ]
 
-env = Environment(ENV = os.environ,
-                  CPPPATH = ['.'])
+env = base_env.Copy()
+env.Append(CPPPATH = ['.'])
 env.Library(target = 'cppunit', source = sources)

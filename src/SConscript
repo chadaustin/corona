@@ -1,7 +1,7 @@
 import os
 from os import path
 
-Import('env')
+Import('base_env')
 
 gifdir = 'libungif-4.1.0'
 
@@ -20,6 +20,7 @@ SOURCES = [
     'SaveTGA.cpp',
 ] + map(lambda n: gifdir + '/' + n, SConscript(dirs = gifdir))
 
-env2 = env.Copy(CPPPATH = gifdir)
+env = base_env.Copy()
+env.Append(CPPPATH = gifdir)
 
-env2.Library(target = 'corona', source = SOURCES)
+env.Library(target = 'corona', source = SOURCES)
