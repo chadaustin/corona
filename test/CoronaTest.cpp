@@ -204,19 +204,29 @@ public:
 class PCXTests : public ImageTestCase {
 public:
   void testLoader() {
-    static Comparison images[] = {
-      { "greyscale.pcx",  "greyscale.png"  },
-      { "palettized.pcx", "palettized.png" },
-      { "test.pcx",       "test.png"       },
+    static string images[] = {
+      "greyscale",
+      "greyscale_odd",
+      "palettized",
+      "palettized_odd",
+      "test",
+      "test_odd",
+      "test_v0",
+      "test_v0_odd",
+      "test_v2",
+      "test_v2_odd",
     };
     static const int image_count = sizeof(images) / sizeof(*images);
 
-    static const string image_base("images/pcx/");
-    static const string reference_base("images/pcx/ref/");
+    static const string img_prefix("images/pcx/");
+    static const string img_suffix(".pcx");
+
+    static const string ref_prefix("images/pcx/ref/");
+    static const string ref_suffix(".png");
 
     for (int i = 0; i < image_count; ++i) {
-      AssertImagesEqual(image_base + images[i].image,
-                        reference_base + images[i].reference);
+      AssertImagesEqual(img_prefix + images[i] + img_suffix,
+                        ref_prefix + images[i] + ref_suffix);
     }
   }
 
