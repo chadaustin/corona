@@ -6,5 +6,9 @@ execfile('examples/glut/glut_libs.py')
 
 LIBS = ['corona'] + GLUT_LIBS + ['png', 'jpeg']
 
-env = Environment(ENV = os.environ, LIBS = LIBS)
+env = Environment(
+    CPPPATH = '#src',
+    ENV = os.environ,
+    LIBPATH = '#src',
+    LIBS = LIBS)
 env.Program(target = 'glut', source = 'glut.cpp')

@@ -1,4 +1,4 @@
-AC_INIT(corona.h)
+AC_INIT(src/corona.h)
 
 MAJOR_VERSION=0
 MINOR_VERSION=1
@@ -36,4 +36,8 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Output makefiles.
 
-AC_OUTPUT(Makefile documentation/Makefile)
+AC_OUTPUT(
+        Makefile
+        documentation/Makefile
+        src/Makefile
+)

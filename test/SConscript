@@ -3,7 +3,7 @@ import os
 SConscript('cppunit-1.6.2/SConscript')
 
 env = Environment(ENV = os.environ,
-                  CPPPATH = ['#', Dir('cppunit-1.6.2')],
-                  LIBPATH = ['#', Dir('cppunit-1.6.2')],
+                  CPPPATH = ['#src', Dir('cppunit-1.6.2')],
+                  LIBPATH = ['#src', Dir('cppunit-1.6.2')],
                   LIBS = ['cppunit', 'corona', 'png', 'z', 'jpeg'])
 env.Program(target = 'CoronaTest', source = 'CoronaTest.cpp')
