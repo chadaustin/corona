@@ -183,7 +183,7 @@ static LRESULT CALLBACK WindowProc(
 
     case WM_COMMAND: {
       switch (LOWORD(wparam)) {
-        case ID_FILE_OPEN: {
+        case ID_FILE_OPENIMAGE: {
           std::string image = BrowseForFileDialog(window, "Open Image");
           if (!image.empty()) {
             InvalidateRect(window, NULL, TRUE);

@@ -94,11 +94,11 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\winviewer.cpp
+SOURCE=..\..\examples\winviewer\winviewer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\winviewer.rc
+SOURCE=..\..\examples\winviewer\winviewer.rc
 # End Source File
 # End Group
 # End Target
