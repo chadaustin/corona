@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 
   glutInit(&argc, argv);
 
-  auto_ptr<Image> img(OpenImage(argv[1], FF_AUTODETECT, PF_R8G8B8A8));
+  auto_ptr<Image> img(OpenImage(argv[1], PF_R8G8B8A8));
   if (!img.get()) {
     error("Error loading image");
     return EXIT_FAILURE;

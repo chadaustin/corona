@@ -35,16 +35,13 @@ delete image;
 
 However, since I hate manually dealing with the possibility of
 multiple pixel formats, I'd like corona to just give me the image in a
-single format I can handle.  The third parameter to OpenImage is the
+single format I can handle.  The second parameter to OpenImage is the
 format you want the returned image in.  It defaults to PF_DONTCARE
-(i.e., just give me any format you can).  The second parameter is the
+(i.e., just give me any format you can).  The third parameter is the
 file format, which defaults to FF_AUTODETECT.
 
 
-corona::Image* image = corona::OpenImage(
-  "img.png",
-  corona::FF_AUTODETECT,
-  corona::PF_R8G8B8A8);
+corona::Image* image = corona::OpenImage("img.png", corona::PF_R8G8B8A8);
 if (!image) {
   // error!
 }

@@ -206,7 +206,7 @@ PNGTests::testWriter() {
   CPPUNIT_ASSERT(SaveImage(filename, FF_PNG, image.get()) == true);
 
   // load it back
-  auto_ptr<Image> img2(OpenImage(filename, FF_AUTODETECT, PF_R8G8B8A8));
+  auto_ptr<Image> img2(OpenImage(filename, PF_R8G8B8A8));
   CPPUNIT_ASSERT_MESSAGE("reloading image file", img2.get() != 0);
 
   AssertImagesEqual(
@@ -216,7 +216,7 @@ PNGTests::testWriter() {
     4);
 
   // force pixel format conversion (don't destroy the old image)
-  auto_ptr<Image> img3(OpenImage(filename, FF_AUTODETECT, PF_R8G8B8));
+  auto_ptr<Image> img3(OpenImage(filename, PF_R8G8B8));
   CPPUNIT_ASSERT(SaveImage(filename, FF_PNG, img3.get()) == true);
 
   // remove the temporary file we made

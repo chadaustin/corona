@@ -16,14 +16,10 @@ public:
     const string& image_file,
     const string& reference_file)
   {
-    auto_ptr<Image> img1(OpenImage(image_file.c_str(),
-                                   FF_AUTODETECT,
-                                   PF_R8G8B8A8));
+    auto_ptr<Image> img1(OpenImage(image_file.c_str(), PF_R8G8B8A8));
     CPPUNIT_ASSERT_MESSAGE("opening " + image_file, img1.get() != 0);
 
-    auto_ptr<Image> img2(OpenImage(reference_file.c_str(),
-                                   FF_AUTODETECT,
-                                   PF_R8G8B8A8));
+    auto_ptr<Image> img2(OpenImage(reference_file.c_str(), PF_R8G8B8A8));
     CPPUNIT_ASSERT_MESSAGE("opening " + reference_file, img2.get() != 0);
 
     AssertImagesEqual("testing " + image_file, img1.get(), img2.get(), 4);

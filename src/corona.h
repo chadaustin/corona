@@ -407,8 +407,8 @@ namespace corona {
    */
   inline Image* OpenImage(
     const char* filename,
-    FileFormat file_format = FF_AUTODETECT,
-    PixelFormat pixel_format = PF_DONTCARE)
+    PixelFormat pixel_format = PF_DONTCARE,
+    FileFormat file_format = FF_AUTODETECT)
   {
     return hidden::CorConvertImage(
       hidden::CorOpenImage(filename, file_format),
@@ -435,8 +435,8 @@ namespace corona {
   inline Image* OpenImage(
     FileSystem* fs,
     const char* filename,
-    FileFormat file_format = FF_AUTODETECT,
-    PixelFormat pixel_format = PF_DONTCARE)
+    PixelFormat pixel_format = PF_DONTCARE,
+    FileFormat file_format = FF_AUTODETECT)
   {
     return hidden::CorConvertImage(
       hidden::CorOpenImageFromFileSystem(fs, filename, file_format),
@@ -465,8 +465,8 @@ namespace corona {
    */
   inline Image* OpenImage(
     File* file,
-    FileFormat file_format = FF_AUTODETECT,
-    PixelFormat pixel_format = PF_DONTCARE)
+    PixelFormat pixel_format = PF_DONTCARE,
+    FileFormat file_format = FF_AUTODETECT)
   {
     return hidden::CorConvertImage(
       hidden::CorOpenImageFromFile(file, file_format),
