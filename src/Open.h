@@ -11,6 +11,7 @@ namespace corona {
   Image* OpenPCX (File* file); // OpenPCX.cpp
   Image* OpenPNG (File* file); // OpenPNG.cpp
   Image* OpenTGA (File* file); // OpenTGA.cpp
+  Image* OpenGIF (File* file); // OpenGIF.cpp
 }
 
 

@@ -8,6 +8,7 @@ SOURCES = [
     'Debug.cpp',
     'DefaultFileSystem.cpp',
     'OpenBMP.cpp',
+    'OpenGIF.cpp',
     'OpenJPEG.cpp',
     'OpenPCX.cpp',
     'OpenPNG.cpp',

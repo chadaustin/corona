@@ -158,6 +158,8 @@ namespace corona {
           if (image) { return image; }
           image = CorOpenImageFromFile(file, FF_TGA);
           if (image) { return image; }
+          image = CorOpenImageFromFile(file, FF_GIF);
+          if (image) { return image; }
           return 0;
         }
         
@@ -166,6 +168,7 @@ namespace corona {
         case FF_PCX:  return OpenPCX(file);
         case FF_BMP:  return OpenBMP(file);
         case FF_TGA:  return OpenTGA(file);
+        case FF_GIF:  return OpenGIF(file);
         default:      return 0;
       }
     }
@@ -215,6 +218,7 @@ namespace corona {
         case FF_PCX:  return false;
         case FF_BMP:  return false;
         case FF_TGA:  return false;
+        case FF_GIF:  return false;
         default:      return false;
       }
     }

@@ -1,14 +1,14 @@
 import os
 
+Import("CORONA_LIBS");
+
 # XXXaegis this will change when scons chdir's to SConscript directory
 # execfile('glut_libs.py')
 execfile('examples/glut/glut_libs.py')
-
-LIBS = ['corona'] + GLUT_LIBS + ['png', 'jpeg', 'z']
 
 env = Environment(
     CPPPATH = '#src',
     ENV = os.environ,
     LIBPATH = '#src',
-    LIBS = LIBS)
+    LIBS = CORONA_LIBS + GLUT_LIBS)
 env.Program(target = 'glut', source = 'glut.cpp')

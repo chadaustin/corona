@@ -96,8 +96,9 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	install-exec-recursive installdirs-recursive install-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = Makefile.am Makefile.in aclocal.m4 config/config.guess \
-	config/config.sub config/install-sh config/ltmain.sh \
-	config/missing config/mkinstalldirs configure configure.in
+	config/config.sub config/depcomp config/install-sh \
+	config/ltmain.sh config/missing config/mkinstalldirs configure \
+	configure.in
 DIST_SUBDIRS = $(SUBDIRS)
 all: all-recursive
 

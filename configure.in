@@ -38,6 +38,8 @@ AC_CHECK_LIB(png, png_create_read_struct,,
     -lz -lm)
 AC_CHECK_LIB(jpeg, jpeg_start_decompress,,
     AC_MSG_ERROR(could not find libjpeg))
+AC_CHECK_LIB(ungif, DGifSlurp,,
+    AC_MSG_ERROR(could not find libungif))
 
 dnl Checks for header files.
 

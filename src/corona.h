@@ -42,6 +42,7 @@ namespace corona {
     FF_PCX        = 0x0103,
     FF_BMP        = 0x0104,
     FF_TGA        = 0x0105,
+    FF_GIF        = 0x0106,
   };
 
   /**
