@@ -19,9 +19,15 @@ elif string.find(sys.platform, 'irix') == -1:
 else:
     # but do make sure we look in /usr/freeware for libraries
     base_env.Prepend(CPPPATH = ['/usr/freeware/include'],
-                     LIBPATH = ['/usr/freeware/lib32'])
+                     LIBPATH = ['/usr/freeware/$LIBDIR'])
     if ARGUMENTS.get('debug'):
-        base_env.Append(CXXFLAGS = ['-g', '-DCORONA_DEBUG'])
+        base_env.Append(CCFLAGS = ['-g', '-DCORONA_DEBUG'])
+    if ARGUMENTS.get('64'):
+        base_env.Append(CCFLAGS = ['-64', '-mips4'],
+                        LINKFLAGS = ['-64', '-mips4'])
+        base_env['LIBDIR'] = 'lib64'
+    else:
+        base_env['LIBDIR'] = 'lib32'
     
 
 CORONA_LIBS = ['corona', 'png', 'z', 'jpeg']
