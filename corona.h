@@ -36,17 +36,21 @@ namespace corona {
 
 
   class Image {
+  protected:
+    ~Image() { } // use destroy()
+
   public:
-    virtual ~Image() { }
+    virtual void destroy() = 0;
     virtual int getWidth() = 0;
     virtual int getHeight() = 0;
     virtual PixelFormat getFormat() = 0;
-    virtual void* getData() = 0;
+    virtual void* getPixels() = 0;
   };
 
   class File {
   protected:
-    ~File() { }
+    ~File() { } // use close()
+
   public:
     enum SeekMode {
       BEGIN,
@@ -61,6 +65,9 @@ namespace corona {
   };
 
   class FileSystem {
+  protected:
+    ~FileSystem() { } // use destroy()
+
   public:
     enum OpenMode {
       READ   = 0x0001,
@@ -68,7 +75,7 @@ namespace corona {
       /* BINARY = 0x0004, binary mode is always enabled */
     };
 
-    virtual ~FileSystem() { }
+    virtual void destroy() = 0;
     virtual File* openFile(const char* filename, OpenMode mode) = 0;
   };
 

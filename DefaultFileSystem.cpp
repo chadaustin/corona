@@ -43,6 +43,11 @@ namespace corona {
 
 
   class CFileSystem : public FileSystem {
+
+    void destroy() {
+      delete this;
+    }
+
     File* openFile(const char* filename, OpenMode mode) {
       char mode_str[4];
       char* c = mode_str;
