@@ -16,7 +16,8 @@ VERSION_PATCH = 0
 GNU_SYSTEM = 0
 print 'attempting to detect a GNU system...'
 cmd = 'tar cfz _temp_file.tgz _temp_file && rm _temp_file.tgz'
-if os.system('touch _temp_file') and os.system(cmd) == 0:
+if os.system('touch _temp_file') == 0 and os.system(cmd) == 0:
+    print 'found GNU system!'
     GNU_SYSTEM = 1
 
 try:
@@ -62,9 +63,9 @@ if GNU_SYSTEM:
         env.Install(dir, pj('src', file))
         INSTALL_TARGETS.append(pj(dir, file))
 
-    AUTOTOOLFILES = [ 'config.guess', 'config.sub', 'install-sh',
-                      'ltmain.sh', 'Makefile.am', 'missing',
-                      'mkinstalldirs' ]
+    AUTOTOOLFILES = [ 'config.guess', 'config.sub', 'depcomp',
+                      'install-sh', 'ltmain.sh', 'Makefile.am',
+                      'missing', 'mkinstalldirs' ]
 
     for file in AUTOTOOLFILES:
         env.Install(BASE, pj('autotools', file))
@@ -89,7 +90,7 @@ if GNU_SYSTEM:
                 INSTALL_TARGETS + [ pj(BASE, 'configure.in') ],
                 "(cd %s && aclocal)" % BASE)
 
-    AUTOMAKE_REQUIRES = AUTOTOOLFILES + [ 'configure.in' ]
+    AUTOMAKE_REQUIRES = AUTOTOOLFILES + [ 'configure.in', 'aclocal.m4' ]
     AUTOMAKE_REQUIRES = map(lambda a: pj(BASE, a), AUTOMAKE_REQUIRES)
     AUTOMAKE_REQUIRES.extend(INSTALL_TARGETS)
 
