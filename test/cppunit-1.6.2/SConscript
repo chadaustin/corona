@@ -1,0 +1,21 @@
+import os
+
+sources = [
+    'Exception.cpp',
+    'NotEqualException.cpp',
+    'RepeatedTest.cpp',
+    'TestAssert.cpp',
+    'TestCase.cpp',
+    'TestFactoryRegistry.cpp',
+    'TestFailure.cpp',
+    'TestRegistry.cpp',
+    'TestResult.cpp',
+    'TestSuite.cpp',
+    'TextTestResult.cpp',
+    'TextTestRunner.cpp',
+    'TypeInfoHelper.cpp',
+]
+
+env = Environment(ENV = os.environ,
+                  CPPPATH = ['.'])
+env.Library(target = 'cppunit', source = sources)
