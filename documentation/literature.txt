@@ -5,3 +5,5 @@ http://www.libpng.org/pub/png/libpng.html
 http://www.ijg.org/
 http://www.zlib.org/
 http://www.daubnet.com/formats/BMP.html
+http://www.audre.org/GraphicFAQ/2d-hi.html
+http://www.imagemagick.org/www/formats.html
