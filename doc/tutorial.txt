@@ -51,7 +51,7 @@ int height = image->getHeight();
 void* pixels = image->getPixels();
 
 // we're guaranteed that the first eight bits of every pixel is red,
-// the next eight bits is blue, and so on...
+// the next eight bits is green, and so on...
 
 typedef unsigned char byte;
 byte* p = (byte*)pixels;
