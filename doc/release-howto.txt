@@ -1,10 +1,9 @@
-The length of this document clearly shows a need to simplify this process.
-
-
 Bump the Version Number
 
     The following files contain version information:
         configure.in
+        full-release.sh
+        make-release-win32.sh
         doc/doxygen/corona.doxy
         doc/doxygen/mainpage.doxy
         doc/doxygen/docify.sh
