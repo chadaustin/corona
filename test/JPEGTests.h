@@ -8,6 +8,7 @@
 class JPEGTests : public ImageTestCase {
 public:
   void testLoader();
+  void testIncomplete();
   static Test* suite();
 };
 
