@@ -177,7 +177,7 @@ namespace Corona {
     __property int get_PaletteSize() { return m_CorImage->getPaletteSize(); }
     __property Corona::PixelFormat get_PaletteFormat() { return static_cast<Corona::PixelFormat>(m_CorImage->getPaletteFormat()); }
     __property void __nogc* get_Pixels() { return m_CorImage->getPixels(); }
-    __property void __nogc* get_Palette() { return m_CorImage->getPixels(); }
+    __property void __nogc* get_Palette() { return m_CorImage->getPalette(); }
     __property int get_PixelSize() { return GetFormatSize(PixelFormat); }
     __property int get_PaletteElementSize() { return GetFormatSize(PaletteFormat); }
 
