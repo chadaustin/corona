@@ -62,6 +62,7 @@ Generate Documentation
         cygstart html/index.hhp
         <click "build project">
         mv html/index.chm ./corona-$VERSION-doxygen.chm
+    2) scp -r corona-1.0.1-doxygen aegis@shell.sourceforge.net:~/corona/htdocs
 
 
 Upload files to SourceForge
@@ -69,6 +70,6 @@ Upload files to SourceForge
 
 Announce Release
 
-    1) Update web site with release notes and changelog.
+    1) Update web site with release notes, changelog, and new links.
     2) Send out release announcement to corona-annc mailing list.
     3) Add news to corona project on SourceForge.
