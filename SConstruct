@@ -3,9 +3,9 @@ import os
 Default('.')
 
 # are we building debug?
-CXXFLAGS = ''
+CXXFLAGS = ['-Wall', '-Wno-non-virtual-dtor']
 if ARGUMENTS.get('debug', 0):
-    CXXFLAGS = '-g -DCORONA_DEBUG'
+    CXXFLAGS = ['-g', '-DCORONA_DEBUG']
 
 CORONA_LIBS = ['corona', 'png', 'z', 'jpeg']
 env = Environment(ENV = os.environ,
