@@ -102,13 +102,13 @@ namespace corona {
         return 0;
       }
 
-      // convert pixels from ARGB to RGBA
+      // convert pixels from BGRA to RGBA
       byte* in = pixels;
       for (int i = 0; i < width * height; ++i) {
-        byte a = in[0];
-        byte r = in[1];
-        byte g = in[2];
-        byte b = in[3];
+        byte b = in[0];
+        byte g = in[1];
+        byte r = in[2];
+        byte a = in[3];
         *in++ = r;
         *in++ = g;
         *in++ = b;
