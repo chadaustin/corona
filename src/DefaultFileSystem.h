@@ -6,7 +6,13 @@
 
 
 namespace corona {
-  FileSystem* GetDefaultFileSystem();
+  /**
+   * Returns a default File implementation.
+   *
+   * @param  filename   name of the file
+   * @param  writeable  whether the file can be written to
+   */
+  File* OpenDefaultFile(const char* filename, bool writeable);
 }
 
 

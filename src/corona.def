@@ -4,9 +4,7 @@ EXPORTS
   CorCreatePalettizedImage
   CorCloneImage
   CorOpenImage
-  CorOpenImageFromFileSystem
   CorOpenImageFromFile
   CorSaveImage
-  CorSaveImageToFileSystem
   CorSaveImageToFile
   CorConvertImage

@@ -5,7 +5,7 @@
 
 namespace corona {
 
-  class CFile : public File {
+  class CFile : public DLLImplementation<File> {
   public:
     CFile(FILE* file) {
       m_file = file;
@@ -13,10 +13,6 @@ namespace corona {
 
     ~CFile() {
       fclose(m_file);
-    }
-
-    void close() {
-      delete this;
     }
 
     int read(void* buffer, int size) {
@@ -47,29 +43,12 @@ namespace corona {
   };
 
 
-  class CFileSystem : public FileSystem {
-  public:
-    void destroy() {
-      // singleton!  no need to clean it up!
-    }
+  File* OpenDefaultFile(const char* filename, bool writeable) {
+    char mode_str[3] = " b";
+    mode_str[0] = (writeable ? 'w' : 'r');
 
-    File* openFile(const char* filename, OpenMode mode) {
-      char mode_str[4];
-      char* c = mode_str;
-      if (mode == READ) {
-        *c++ = 'r';
-      } else if (mode == WRITE) {
-        *c++ = 'w';
-      }
-      *c++ = 'b';
-
-      FILE* file = fopen(filename, mode_str);
-      return (file ? new CFile(file) : 0);
-    }
-  } g_default_fs;
-
-
-  FileSystem* GetDefaultFileSystem() {
-    return &g_default_fs;
+    FILE* file = fopen(filename, mode_str);
+    return (file ? new CFile(file) : 0);
   }
+
 }

@@ -20,7 +20,7 @@
 #endif
   
 
-/* calling convention */
+// DLLs in Windows should use the standard calling convention
 #if defined(WIN32) || defined(_WIN32)
 #  define COR_CALL __stdcall
 #else
@@ -60,19 +60,72 @@ namespace corona {
 
 
   /**
+   * A helper class for DLL-compatible interfaces.  Derive your cross-DLL
+   * interfaces from this class.
+   *
+   * When deriving from this class, do not declare a virtual destructor
+   * on your interface.
+   */
+  class DLLInterface {
+  private:
+    /**
+     * Destroy the object, freeing all associated memory.  This is
+     * the same as a destructor.
+     */
+    virtual void destroy() = 0;
+
+  public:
+    /**
+     * "delete image" should actually call image->destroy(), thus putting the
+     * burden of calling the destructor and freeing the memory on the image
+     * object, and thus on Corona's side of the DLL boundary.
+     */
+    void operator delete(void* p) {
+      if (p) {
+        DLLInterface* i = static_cast<DLLInterface*>(p);
+        i->destroy();
+      }
+    }
+  };
+
+
+  /**
+   * A helper class for DLL-compatible interface implementations.  Derive
+   * your implementations from DLLImplementation<YourInterface>.
+   */
+  template<class Interface>
+  class DLLImplementation : public Interface {
+  public:
+    /**
+     * So the implementation can put its destruction logic in the destructor,
+     * as natural C++ code does.
+     */
+    virtual ~DLLImplementation() { }
+
+    /**
+     * Call the destructor in a Win32 ABI-compatible way.
+     */
+    virtual void destroy() {
+      delete this;
+    }
+
+    /**
+     * So destroy()'s "delete this" doesn't go into an infinite loop,
+     * calling the interface's operator delete, which calls destroy()...
+     */
+    void operator delete(void* p) {
+      ::operator delete(p);
+    }
+  };
+
+  
+  /**
    * An image object represents a rectangular collections of pixels.
    * They have a width, a height, and a pixel format.  Images cannot
    * be resized.
    */
-  class Image {
+  class Image : public DLLInterface {
   public:
-
-    /**
-     * Destroy the image object, freeing the pixel buffer and any
-     * associated memory.
-     */
-    virtual void destroy() = 0;
-
     /**
      * Get image width.
      * @return  image width
@@ -120,18 +173,6 @@ namespace corona {
      * @return  pixel format of palette entries
      */
     virtual PixelFormat getPaletteFormat() = 0;
-
-    /**
-     * "delete image" should actually call image->destroy(), thus putting the
-     * burden of calling the destructor and freeing the memory on the image
-     * object, and thus on Corona's side of the DLL boundary.
-     */
-    void operator delete(void* p) {
-      if (p) {
-        Image* i = static_cast<Image*>(p);
-        i->destroy();
-      }
-    }
   };
 
 
@@ -141,13 +182,7 @@ namespace corona {
    * transformations.  File objects are roughly analogous to ANSI C
    * FILE* objects.
    */
-  class File {
-  protected:
-    /**
-     * Protected destructor.  Use close().
-     */
-    ~File() { }
-
+  class File : public DLLInterface {
   public:
 
     /**
@@ -159,11 +194,6 @@ namespace corona {
       END       /**< relative to the end of the file: position should
                      be negative*/
     };
-
-    /**
-     * Close the file and destroy the file object.
-     */
-    virtual void close() = 0;
 
     /**
      * Read size bytes from the file, storing them in buffer.
@@ -207,49 +237,6 @@ namespace corona {
   };
 
 
-  /**
-   * FileSystem objects represent a heirarchical collection of files.
-   * In this particular case, they can even be simplified down to a
-   * mapping from names to file objects.
-   *
-   * Files can be opened in read-only, write-only, or read-write
-   * modes.  All files are treated as binary files.  That is, no
-   * processing is done to end-of-line markers.
-   */
-  class FileSystem {
-  protected:
-    /**
-     * You can't manually delete files.  Use destroy() instead.
-     */
-    ~FileSystem() { }
-
-  public:
-
-    /**
-     * openFile() mode bitmasks.  OR these together to combine them.
-     */
-    enum OpenMode {
-      READ   = 0x0001,  /**< open file in read-only mode */
-      WRITE  = 0x0002,  /**< open file in write-only mode */
-    };
-
-    /**
-     * Destroy the filesystem object.
-     */
-    virtual void destroy() = 0;
-
-    /**
-     * Open a file from the filesystem.
-     *
-     * @param filename  name of the file in the filesystem
-     * @param mode      file mode
-     *
-     * @return  new file object on success, 0 on failure
-     */
-    virtual File* openFile(const char* filename, OpenMode mode) = 0;
-  };
-
-
   /** PRIVATE API - for internal use only */
   namespace hidden {
 
@@ -284,11 +271,6 @@ namespace corona {
       const char* filename,
       FileFormat file_format));
 
-    COR_FUNCTION(Image*, CorOpenImageFromFileSystem(
-      FileSystem* fs,
-      const char* filename,
-      FileFormat file_format));
-
     COR_FUNCTION(Image*, CorOpenImageFromFile(
       File* file,
       FileFormat file_format));
@@ -296,12 +278,6 @@ namespace corona {
     // saving
 
     COR_FUNCTION(bool, CorSaveImage(
-      const char* filename,
-      FileFormat file_format,
-      Image* image));
-
-    COR_FUNCTION(bool, CorSaveImageToFileSystem(
-      FileSystem* fs,
       const char* filename,
       FileFormat file_format,
       Image* image));
@@ -417,34 +393,6 @@ namespace corona {
   }
 
   /**
-   * Opens an image from the specified filesystem.  This function
-   * simply opens a file from the filesystem and passes it to
-   * OpenImage(file, file_format, pixel_format).
-   *
-   * See OpenImage(file, file_format, pixel_format) for more
-   * information.
-   *
-   * @param fs            filesystem to load the image from
-   * @param filename      name of the file that contains the image
-   * @param file_format   file format the image is stored in, or FF_AUTODETECT
-   *                      to try all loaders
-   * @param pixel_format  desired pixel format, or PF_DONTCARE to use image's
-   *                      native format
-   *
-   * @return  the image loaded from the file, or 0 if it cannot be opened
-   */
-  inline Image* OpenImage(
-    FileSystem* fs,
-    const char* filename,
-    PixelFormat pixel_format = PF_DONTCARE,
-    FileFormat file_format = FF_AUTODETECT)
-  {
-    return hidden::CorConvertImage(
-      hidden::CorOpenImageFromFileSystem(fs, filename, file_format),
-      pixel_format);
-  }
-
-  /**
    * Opens an image from the specified file.
    *
    * If file_format is FF_AUTODETECT, the loader tries
@@ -494,30 +442,6 @@ namespace corona {
     Image* image)
   {
     return hidden::CorSaveImage(filename, file_format, image);
-  }
-
-  /**
-   * Saves an image to a file in the specified filesystem.  This
-   * function simply opens a file from the filesystem and calls
-   * SaveImage(file, file_format, image).
-   *
-   * See SaveImage(file, file_format, image) for more information.
-   *
-   * @param fs           filesystem used to open output file
-   * @param filename     name of output file in which image is saved
-   * @param file_format  file format in which to save image -- must not be
-   *                     FF_AUTODETECT
-   * @param image        image to save
-   *
-   * @return  true if save succeeds, false otherwise
-   */
-  inline bool SaveImage(
-    FileSystem* fs,
-    const char* filename,
-    FileFormat file_format,
-    Image* image)
-  {
-    return hidden::CorSaveImageToFileSystem(fs, filename, file_format, image);
   }
 
   /**

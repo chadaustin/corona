@@ -1,4 +1,5 @@
 #include <string.h>
+#include <memory>
 #include "corona.h"
 #include "DefaultFileSystem.h"
 #include "Open.h"
@@ -116,27 +117,12 @@ namespace corona {
       const char* filename,
       FileFormat file_format)
     {
-      return CorOpenImageFromFileSystem(
-        GetDefaultFileSystem(),
-        filename,
-        file_format);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    COR_EXPORT(Image*, CorOpenImageFromFileSystem)(
-      FileSystem* fs,
-      const char* filename,
-      FileFormat file_format)
-    {
-      File* file = fs->openFile(filename, FileSystem::READ);
-      if (!file) {
+      if (!filename) {
         return 0;
       }
 
-      Image* image = CorOpenImageFromFile(file, file_format);
-      file->close();
-      return image;
+      std::auto_ptr<File> file(OpenDefaultFile(filename, false));
+      return CorOpenImageFromFile(file.get(), file_format);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -145,6 +131,10 @@ namespace corona {
       File* file,
       FileFormat file_format)
     {
+      if (!file) {
+        return 0;
+      }
+
       file->seek(0, File::BEGIN);
       switch (file_format) {
         case FF_AUTODETECT: {
@@ -180,29 +170,12 @@ namespace corona {
       FileFormat file_format,
       Image* image)
     {
-      return CorSaveImageToFileSystem(
-        GetDefaultFileSystem(),
-        filename,
-        file_format,
-        image);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    COR_EXPORT(bool, CorSaveImageToFileSystem)(
-      FileSystem* fs,
-      const char* filename,
-      FileFormat file_format,
-      Image* image)
-    {
-      File* file = fs->openFile(filename, FileSystem::WRITE);
-      if (!file) {
-        return 0;
+      if (!filename) {
+        return false;
       }
 
-      bool success = CorSaveImageToFile(file, file_format, image);
-      file->close();
-      return success;
+      std::auto_ptr<File> file(OpenDefaultFile(filename, true));
+      return CorSaveImageToFile(file.get(), file_format, image);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -212,6 +185,10 @@ namespace corona {
       FileFormat file_format,
       Image* image)
     {
+      if (!file || !image) {
+        return false;
+      }
+
       switch (file_format) {
         case FF_PNG:  return SavePNG(file, image);
         case FF_JPEG: return false;
