@@ -158,6 +158,7 @@ namespace corona {
       h.palette_size = 1 << h.bpp;
     } else {
       h.palette_size = 0;
+      return true;
     }
     h.palette = new RGB[h.palette_size];
 
@@ -291,9 +292,12 @@ namespace corona {
         byte* out = pixels + (h.height - i - 1) * h.width * 3;
 
         for (int j = 0; j < h.width; ++j) {
-          *out++ = *in++;
-          *out++ = *in++;
-          *out++ = *in++;
+          byte b = *in++;
+          byte g = *in++;
+          byte r = *in++;
+          *out++ = r;
+          *out++ = g;
+          *out++ = b;
         }
       }
 
