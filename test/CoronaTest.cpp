@@ -2,6 +2,7 @@
 #include "APITests.h"
 #include "BMPTests.h"
 #include "JPEGTests.h"
+#include "PaletteTests.h"
 #include "PCXTests.h"
 #include "PNGTests.h"
 #include "TGATests.h"
@@ -15,5 +16,9 @@ int main() {
   runner.addTest(PCXTests::suite());
   runner.addTest(PNGTests::suite());
   runner.addTest(TGATests::suite());
+
+  // this is last because it depends on proper image loaders
+  runner.addTest(PaletteTests::suite());
+
   runner.run();
 }
