@@ -37,11 +37,6 @@ namespace corona {
     byte blue;
   };
 
-
-  inline int read16(byte* c) {
-    return c[0] + (c[1] << 8);
-  }
-
   //////////////////////////////////////////////////////////////////////////////
 
   bool ReadScanline(File* file, int scansize, byte* scanline)
@@ -89,12 +84,12 @@ namespace corona {
 
     // parse the header...
     int bpp            = pcx_header[3];
-    int xmin           = read16(pcx_header + 4);
-    int ymin           = read16(pcx_header + 6);
-    int xmax           = read16(pcx_header + 8);
-    int ymax           = read16(pcx_header + 10);
+    int xmin           = read16_le(pcx_header + 4);
+    int ymin           = read16_le(pcx_header + 6);
+    int xmax           = read16_le(pcx_header + 8);
+    int ymax           = read16_le(pcx_header + 10);
     int num_planes     = pcx_header[65];
-    int bytes_per_line = read16(pcx_header + 66);
+    int bytes_per_line = read16_le(pcx_header + 66);
 
     // create the image structure
     int width  = xmax - xmin + 1;

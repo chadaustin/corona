@@ -2,6 +2,9 @@
 #define CORONA_UTILITY_H
 
 
+#include "Types.h"
+
+
 namespace corona {
 
 
@@ -88,6 +91,23 @@ namespace corona {
       case PF_R8G8B8:   return 3;
       default:          return 0;
     }
+  }
+
+
+  inline u16 read16_le(const byte* b) {
+    return b[0] + (b[1] << 8);
+  }
+
+  inline u16 read16_be(const byte* b) {
+    return (b[0] << 8) + b[1];
+  }
+
+  inline u32 read32_le(const byte* b) {
+    return read16_le(b) + (read16_le(b + 2) << 16);
+  }
+
+  inline u32 read32_be(const byte* b) {
+    return (read16_be(b) << 16) + read16_be(b + 2);
   }
 
 }

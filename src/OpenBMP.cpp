@@ -45,15 +45,6 @@ namespace corona {
   };
 
 
-  inline u16 read16(const byte* c) {
-    return (c[1] << 8) + c[0];
-  }
-
-  inline u32 read32(const byte* c) {
-    return (read16(c + 2) << 16) + read16(c);
-  }
-
-
   bool   ReadHeader(File* file, Header& h);
   bool   ReadInfoHeader(File* file, Header& h);
   bool   ReadPalette(File* file, Header& h);
@@ -87,8 +78,8 @@ namespace corona {
       return false;
     }
 
-    h.file_size   = read32(header + 2);
-    h.data_offset = read32(header + 10);
+    h.file_size   = read32_le(header + 2);
+    h.data_offset = read32_le(header + 10);
     return true;
   }
 
@@ -103,7 +94,7 @@ namespace corona {
       return false;
     }
 
-    int size = read32(header + 0);
+    int size = read32_le(header + 0);
     int width;
     int height;
     int planes;
@@ -117,22 +108,22 @@ namespace corona {
       }
 
       h.os2 = true;
-      width  = read16(header + 4);
-      height = read16(header + 6);
-      planes = read16(header + 8);
-      bpp    = read16(header + 10);
+      width  = read16_le(header + 4);
+      height = read16_le(header + 6);
+      planes = read16_le(header + 8);
+      bpp    = read16_le(header + 10);
       compression = 0;
       image_size = 0;
       
     } else {
 
       h.os2 = false;
-      width       = read32(header + 4);
-      height      = read32(header + 8);
-      planes      = read16(header + 12);
-      bpp         = read16(header + 14);
-      compression = read32(header + 16);
-      image_size  = read32(header + 20);
+      width       = read32_le(header + 4);
+      height      = read32_le(header + 8);
+      planes      = read16_le(header + 12);
+      bpp         = read16_le(header + 14);
+      compression = read32_le(header + 16);
+      image_size  = read32_le(header + 20);
 
     }
     
@@ -209,9 +200,9 @@ namespace corona {
           return false;
         }
 
-        h.bf_red_mask   = read32((byte*)bitfields);
-        h.bf_green_mask = read32((byte*)bitfields + 4);
-        h.bf_blue_mask  = read32((byte*)bitfields + 8);
+        h.bf_red_mask   = read32_le((byte*)bitfields);
+        h.bf_green_mask = read32_le((byte*)bitfields + 4);
+        h.bf_blue_mask  = read32_le((byte*)bitfields + 8);
 
         // calculate shifts
         h.bf_red_shift    = count_right_zeroes(h.bf_red_mask);
@@ -578,7 +569,7 @@ namespace corona {
       byte* out = pixels + (h.height - i - 1) * h.width * 3;
 
       for (int j = 0; j < h.width; ++j) {
-        int clr = read16(in);
+        int clr = read16_le(in);
         in += 2;
 
 #define C16(C) \
@@ -621,7 +612,7 @@ namespace corona {
       byte* out = pixels + (h.height - i - 1) * h.width * 3;
 
       for (int j = 0; j < h.width; ++j) {
-        u32 pixel = read32(in);
+        u32 pixel = read32_le(in);
         in += 4;
         *out++ = (byte)((pixel & h.bf_red_mask)   >> h.bf_red_shift);
         *out++ = (byte)((pixel & h.bf_green_mask) >> h.bf_green_shift);
