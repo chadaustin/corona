@@ -33,6 +33,19 @@
 #  endif
 #endif
 
+// Export functions from the DLL
+#ifndef COR_DECL
+#  if defined(WIN32) || defined(_WIN32)
+#    ifdef CORONA_EXPORTS
+#      define COR_DECL __declspec(dllexport)
+#    else
+#      define COR_DECL __declspec(dllimport)
+#    endif
+#  else
+#    define COR_DECL
+#  endif
+#endif
+
 
 // evil "identifier is too long in debug information" warning
 #ifdef _MSC_VER
@@ -40,7 +53,7 @@
 #endif
 
 
-#define COR_FUNCTION(ret, name) extern "C" ret COR_CALL name
+#define COR_FUNCTION(ret, name) extern "C" COR_DECL ret COR_CALL name
 
 
 namespace corona {

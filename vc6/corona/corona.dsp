@@ -102,10 +102,6 @@ SOURCE=..\..\src\Corona.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\corona.def
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\src\corona.h
 # End Source File
 # Begin Source File
