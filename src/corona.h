@@ -18,6 +18,10 @@
 #ifndef __cplusplus
 #error Corona requires C++
 #endif
+
+
+#include <string>
+#include <vector>
   
 
 // DLLs in Windows should use the standard calling convention
@@ -247,6 +251,22 @@ namespace corona {
 
     COR_FUNCTION(const char*, CorGetVersion)();
 
+    /**
+     * Returns a formatted string that lists the file formats that
+     * Audiere supports.  This function is DLL-safe.
+     *
+     * It is formatted in the following way:
+     *
+     * description1:ext1,ext2,ext3;description2:ext1,ext2,...
+     *
+     * @{
+     */
+    COR_FUNCTION(const char*, CorGetSupportedReadFormats)();
+    COR_FUNCTION(const char*, CorGetSupportedWriteFormats)();
+    /**
+     * @}
+     */
+
     // creation
 
     COR_FUNCTION(Image*, CorCreateImage)(
@@ -317,6 +337,63 @@ namespace corona {
   inline const char* GetVersion() {
     return hidden::CorGetVersion();
   }
+
+
+  /// Describes a file format that Corona supports.
+  struct FileFormatDesc {
+    /// Short description of format, such as "PNG Files" or "JPEG Files"
+    std::string description;
+
+    /// List of supported extensions, such as {"bmp", "rle", "dib"}
+    std::vector<std::string> extensions;
+  };
+
+  inline void SplitString(
+    std::vector<std::string>& out,
+    const char* in,
+    char delim)
+  {
+    out.clear();
+    while (*in) {
+      const char* next = strchr(in, delim);
+      if (next) {
+        out.push_back(std::string(in, next));
+      } else {
+        out.push_back(in);
+      }
+
+      in = (next ? next + 1 : "");
+    }
+  }
+
+  /// Populates a vector of FileFormatDesc structs.
+  inline void GetSupportedReadFormats(std::vector<FileFormatDesc>& formats) {
+    std::vector<std::string> descriptions;
+    SplitString(descriptions, hidden::CorGetSupportedReadFormats(), ';');
+
+    formats.resize(descriptions.size());
+    for (unsigned i = 0; i < descriptions.size(); ++i) {
+      const char* d = descriptions[i].c_str();
+      const char* colon = strchr(d, ':');
+      formats[i].description.assign(d, colon);
+      SplitString(formats[i].extensions, colon + 1, ',');
+    }
+  }
+
+  /// Populates a vector of FileFormatDesc structs.
+  inline void GetSupportedWriteFormats(std::vector<FileFormatDesc>& formats) {
+    std::vector<std::string> descriptions;
+    SplitString(descriptions, hidden::CorGetSupportedWriteFormats(), ';');
+
+    formats.resize(descriptions.size());
+    for (unsigned i = 0; i < descriptions.size(); ++i) {
+      const char* d = descriptions[i].c_str();
+      const char* colon = strchr(d, ':');
+      formats[i].description.assign(d, colon);
+      SplitString(formats[i].extensions, colon + 1, ',');
+    }
+  }
+
 
   /**
    * Create a new, blank image with a specified width, height, and

@@ -1,5 +1,3 @@
-import os
-
 Import("env CORONA_LIBS");
 
 # @todo  use SConscript_chdir

@@ -23,6 +23,25 @@ namespace corona {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    COR_EXPORT(const char*, CorGetSupportedReadFormats)() {
+      return
+	"PNG Files:png"  ";"
+	"JPEG Files:jpeg,jpg"  ";"
+	"PCX Files:pcx"  ";"
+	"BMP Files:bmp"  ";"
+	"TGA Files:tga"  ";"
+	"GIF Files:gif"  ;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    COR_EXPORT(const char*, CorGetSupportedWriteFormats)() {
+      return
+	"PNG Files:png"  ;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
     COR_EXPORT(Image*, CorCreateImage)(
       int width,
       int height,

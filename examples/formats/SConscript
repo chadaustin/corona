@@ -1,0 +1,6 @@
+Import("env CORONA_LIBS");
+
+env2 = env.Copy(CPPPATH = '#src',
+                LIBPATH = '#src',
+                LIBS = CORONA_LIBS)
+env2.Program('formats', source = 'formats.cpp')
