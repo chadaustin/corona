@@ -212,8 +212,7 @@ PNGTests::testWriter() {
   AssertImagesEqual(
     "comparing saved with loaded",
     image.get(),
-    img2.get(),
-    4);
+    img2.get());
 
   // force pixel format conversion (don't destroy the old image)
   auto_ptr<Image> img3(OpenImage(filename, PF_R8G8B8));

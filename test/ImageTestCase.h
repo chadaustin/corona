@@ -22,14 +22,13 @@ public:
     auto_ptr<Image> img2(OpenImage(reference_file.c_str(), PF_R8G8B8A8));
     CPPUNIT_ASSERT_MESSAGE("opening " + reference_file, img2.get() != 0);
 
-    AssertImagesEqual("testing " + image_file, img1.get(), img2.get(), 4);
+    AssertImagesEqual("testing " + image_file, img1.get(), img2.get());
   }
 
   void AssertImagesEqual(
     const string& message,
     Image* i1,
-    Image* i2,
-    int bytes_per_pixel)
+    Image* i2)
   {
     // compare sizes
     CPPUNIT_ASSERT(i1->getWidth()  == i2->getWidth() &&
@@ -40,12 +39,14 @@ public:
     int height = i1->getHeight();
     
     // compare formats
-    CPPUNIT_ASSERT(i1->getFormat() == i2->getFormat());
-    
+    PixelFormat i1_format = i1->getFormat();
+    CPPUNIT_ASSERT(i1_format == i2->getFormat());
+
     // compare pixel data
-    int pixel_comparison = memcmp(i1->getPixels(),
-                                  i2->getPixels(),
-                                  width * height * bytes_per_pixel);
+    int pixel_comparison = memcmp(
+      i1->getPixels(),
+      i2->getPixels(),
+      width * height * GetBytesPerPixel(i1_format));
     CPPUNIT_ASSERT_MESSAGE(message, pixel_comparison == 0);
   }
 };

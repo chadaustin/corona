@@ -1,6 +1,7 @@
 #include "TestFramework.h"
 #include "APITests.h"
 #include "BMPTests.h"
+#include "FileTests.h"
 #include "GIFTests.h"
 #include "JPEGTests.h"
 #include "PaletteTests.h"
@@ -12,6 +13,7 @@
 int main() {
   TextTestRunner runner;
   runner.addTest(APITests::suite());
+  runner.addTest(FileTests::suite());
   runner.addTest(BMPTests::suite());
   runner.addTest(GIFTests::suite());
   runner.addTest(JPEGTests::suite());
