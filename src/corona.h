@@ -277,7 +277,7 @@ namespace corona {
     /// @{
     /**
      * Returns a formatted string that lists the file formats that
-     * Audiere supports.  This function is DLL-safe.
+     * Corona supports.  This function is DLL-safe.
      *
      * It is formatted in the following way:
      *
