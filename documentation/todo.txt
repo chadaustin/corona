@@ -1,0 +1,3 @@
+Integrate a proper build system
+Set up unit tests (test API changes, Release/Debug DLLs in different situations, compile with Borland C++ and gcc...)
+Basic image transformations such as scaling to power of 2

@@ -1,3 +1,12 @@
+/*
+  Corona Image I/O Library
+  (c) 2002 Chad Austin
+
+  This API uses principles explained at
+  http://aegisknight.org/cppinterface.html
+*/
+
+
 #ifndef CORONA_H
 #define CORONA_H
 
@@ -30,7 +39,7 @@ namespace corona {
   };
 
   enum PixelFormat {
-    PF_DONTCARE = 0x0200,  // unused?
+    PF_DONTCARE = 0x0200,
     PF_R8G8B8A8 = 0x0201,
     PF_R8G8B8   = 0x0202,
   };
@@ -38,21 +47,35 @@ namespace corona {
 
   class Image {
   public:
+
+    // destroy the image object, freeing all associated memory
     virtual void destroy() = 0;
+
+    // returns image dimensions
     virtual int getWidth() = 0;
     virtual int getHeight() = 0;
+
+    // pixel format
     virtual PixelFormat getFormat() = 0;
+
+    // actual pixel data
     virtual void* getPixels() = 0;
 
     // "delete image" should actually call image->destroy(), thus putting the
     // burden of calling the destructor and freeing the memory on the image
     // object, and thus on the DLL.
     void operator delete(void* p) {
-      Image* i = static_cast<Image*>(p);
-      i->destroy();
+      if (p) {
+        Image* i = static_cast<Image*>(p);
+        i->destroy();
+      }
     }
   };
 
+
+  // represents a random-access file
+  // always binary (no end-of-line translations)
+  // XXXaegis semantics roughly analagous to C stdio files
   class File {
   protected:
     ~File() { }  // use close()
@@ -64,12 +87,23 @@ namespace corona {
       END
     };
 
+    // close the file and delete the File object
     virtual void close() = 0;
+
+    // return the number of bytes read
     virtual int read(void* buffer, int size) = 0;
+
+    // return the number of bytes written
     virtual int write(void* buffer, int size) = 0;
+
+
+    // seek to a position in the file, return true if successful
     virtual bool seek(int position, SeekMode mode) = 0;
+
+    // return current position in file
     virtual int tell() = 0;
   };
+
 
   class FileSystem {
   protected:
@@ -79,10 +113,14 @@ namespace corona {
     enum OpenMode {
       READ   = 0x0001,
       WRITE  = 0x0002,
-      /* BINARY = 0x0004, binary mode is always enabled */
+      /* all files are binary */
     };
 
+    // destroy the filesystem object
     virtual void destroy() = 0;
+
+    // open a new file from the filesystem
+    // return 0 on failure
     virtual File* openFile(const char* filename, OpenMode mode) = 0;
   };
 
@@ -142,10 +180,13 @@ namespace corona {
 
   /** PUBLIC API **/
 
+  // return current API version string
   inline const char* GetVersion() {
     return hidden::CorGetVersion();
   }
 
+  // open image from default filesystem
+  // return 0 on failure
   inline Image* OpenImage(
     const char* filename,
     FileFormat file_format = FF_AUTODETECT,
@@ -156,6 +197,8 @@ namespace corona {
       pixel_format);
   }
 
+  // open image from specified filesystem
+  // return 0 on failure
   inline Image* OpenImage(
     FileSystem* fs,
     const char* filename,
@@ -167,6 +210,8 @@ namespace corona {
       pixel_format);
   }
 
+  // open image from file
+  // return 0 on failure
   inline Image* OpenImage(
     File* file,
     FileFormat file_format = FF_AUTODETECT,
@@ -177,6 +222,8 @@ namespace corona {
       pixel_format);
   }
 
+  // save image to default filesystem
+  // return false on failure
   inline bool SaveImage(
     const char* filename,
     FileFormat file_format,
@@ -185,6 +232,8 @@ namespace corona {
     return hidden::CorSaveImage(filename, file_format, image);
   }
 
+  // save image to specified filesystem
+  // return false on failure
   inline bool SaveImage(
     FileSystem* fs,
     const char* filename,
@@ -194,6 +243,8 @@ namespace corona {
     return hidden::CorSaveImageToFileSystem(fs, filename, file_format, image);
   }
 
+  // save image to file
+  // return false on failure
   inline bool SaveImage(
     File* file,
     FileFormat file_format,
@@ -201,6 +252,15 @@ namespace corona {
   {
     return hidden::CorSaveImageToFile(file, file_format, image);
   }
+
+  // convert an image from its pixel format to the specified one.
+  // if the formats are the same, returns 'source' directly
+  // otherwise, destroys the old image and returns a new one of the
+  // correct format
+  inline Image* ConvertImage(Image* source, PixelFormat format) {
+    return hidden::CorConvertImage(source, format);
+  }
+
 }
 
 

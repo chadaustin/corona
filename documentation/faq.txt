@@ -1,0 +1,24 @@
+-- Where'd the name come from? --
+
+My friend Ben came over and said "You should name something Corona."
+So I did.
+
+
+-- Why another image library?  We already have DevIL, FreeImage,
+   etc... --
+
+I simply wasn't satisifed with the others.  They either had complex
+APIs, weren't portable, didn't support the functionality I wanted, or
+weren't deployed well (i.e. no nice Win32 distribution and GNU
+autoconf/automake install).  Also, Corona was a direct outgrowth of
+Sphere's image loading/saving functionality.  Corona gave me a chance
+to rewrite it, making it clearer, faster, and safer.  At the same
+time, Sphere's binary code size shrunk.
+
+Corona only took about a week's worth of work to create.  The bulk of
+the code was written in two late nights, and the rest has been
+cleaning things up, writing documentation, and testing the decoders.
+
+This library is designed for use within several of my personal
+projects (Sphere, PictureShow, Naikai, Battlements) and the ISU Game
+Developers Club (http://isugamedev.sf.net/).

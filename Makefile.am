@@ -12,6 +12,8 @@ libcorona_la_SOURCES = \
 	OpenJPEG.cpp \
 	OpenPCX.cpp \
 	OpenPNG.cpp \
+	Save.h \
+	SavePNG.cpp \
 	SimpleImage.h \
 	Utility.h
 
