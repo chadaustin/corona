@@ -24,6 +24,7 @@ Generate Documentation
 
 
 Upload files to SourceForge
+Add doxygen stuff to Corona web space.
 
 
 Announce Release
@@ -31,3 +32,6 @@ Announce Release
     1) Update web site with release notes, changelog, and new links.
     2) Send out release announcement to corona-annc mailing list.
     3) Add news to corona project on SourceForge.
+
+
+Update changelog to include release date.
