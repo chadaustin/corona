@@ -68,7 +68,7 @@ namespace corona {
       ExtensionBlock* eb = gif_image->ExtensionBlocks + i;
       if (eb->Function == 0xF9 && 
           eb->ByteCount == 4) {
-        bool has_transparency = (eb->Bytes[0] & 1 == 1);
+        bool has_transparency = ((eb->Bytes[0] & 1) == 1);
         if (has_transparency) {
           transparent = eb->Bytes[3];
         }
