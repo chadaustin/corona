@@ -57,7 +57,7 @@ namespace corona {
 
     auto_array<T>& operator=(T* a) {
       if (array != a) {
-	delete array;
+	delete[] array;
 	array = a;
       }
       return *this;
