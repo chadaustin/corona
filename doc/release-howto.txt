@@ -1,15 +1,74 @@
-This document will eventually describe how to release a new version of
-Corona.  For now, it just lists some information that will be useful
-when the time to release comes around.
+The length of this document clearly shows a need to simplify this process.
 
 
-== Bumping the Version Number ==
+Bump the Version Number
 
-The following files contain version information:
-  configure.in
-  doc/doxygen/corona.doxy
-  doc/doxygen/mainpage.doxy
-  doc/doxygen/docify.sh
-  src/corona.h
-  src/Corona.cpp
-  vc7/ManagedWrapper.cpp
+    The following files contain version information:
+        configure.in
+        doc/doxygen/corona.doxy
+        doc/doxygen/mainpage.doxy
+        doc/doxygen/docify.sh
+        src/corona.h
+        src/Corona.cpp
+        vc7/ManagedWrapper.cpp
+
+
+Run the test suite!!
+
+
+Build the VC6 Binary Release
+
+    1) Check out a fresh copy from CVS in a temporary directory
+    2) Do a complete VC6 build from corona.dsw
+    3) Make a corona-$VERSION-vc6 directory
+    4) Include the following subdirectories:
+       bin/     : winviewer.exe, corona.dll
+       doc/     : entire contents of doc directory
+       include/ : corona.h
+       lib/     : corona.lib
+
+
+Build the VC7 Binary Release
+
+    1) Check out a fresh copy from CVS in a temporary directory
+    2) Do a complete VC7 build from corona.sln
+    3) Make a corona-$VERSION-vc7 directory
+    4) Include the following subdirectories:
+       bin/     : winviewer.exe, corona.dll
+       doc/     : entire contents of doc directory
+       include/ : corona.h
+       lib/     : corona.lib
+
+
+Build the automake dist Release
+
+    1) ssh to a UNIX machine
+    2) Check out a fresh copy from CVS
+    3) ./bootstrap && ./configure && gmake dist
+
+
+Build Source Release
+
+    1) Export a fresh copy from CVS:
+        cvs export -D now corona
+    2) tar cfvj corona-$VERSION-src.tar.bz2 corona
+
+
+Generate Documentation
+
+    1) From a checked out copy...
+        cd corona/doc/doxygen
+        ./docify.sh
+        cygstart html/index.hhp
+        <click "build project">
+        mv html/index.chm ./corona-$VERSION-doxygen.chm
+
+
+Upload files to SourceForge
+
+
+Announce Release
+
+    1) Update web site with release notes and changelog.
+    2) Send out release announcement to corona-annc mailing list.
+    3) Add news to corona project on SourceForge.
