@@ -12,6 +12,4 @@ env = Environment(ENV = os.environ, CXXFLAGS = CXXFLAGS)
 
 Export('env CORONA_LIBS')
 
-SConscript('examples/SConscript')
-SConscript('src/SConscript')
-SConscript('test/SConscript')
+SConscript(dirs = ['examples', 'src', 'test'])
