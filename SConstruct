@@ -31,7 +31,12 @@ finally:
 if not GNU_SYSTEM:
     print 'Warning: GNU system not detected: not building autoconf dist'
 
-env = Environment(ENV = os.environ)
+# are we building debug?
+CXXFLAGS = ''
+if ARGUMENTS.get('debug', 0):
+    CXXFLAGS = '-g -DCORONA_DEBUG'
+
+env = Environment(ENV = os.environ, CXXFLAGS = CXXFLAGS)
 Export('env')
 
 

@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+#include "Debug.h"
 #include "Open.h"
 #include "SimpleImage.h"
 #include "Utility.h"
@@ -31,40 +34,30 @@ namespace corona {
 
   //////////////////////////////////////////////////////////////////////////////
 
-  struct RGB {
-    byte red;
-    byte green;
-    byte blue;
-  };
-
-  //////////////////////////////////////////////////////////////////////////////
-
-  bool ReadScanline(File* file, int scansize, byte* scanline)
-  {
+  bool ReadScanline(File* file, int scansize, byte* scanline) {
     byte* out = scanline;
+    while (out - scanline < scansize) {
 
-    while ((out - scanline) < scansize) {
-
+      // read a byte!
       byte data;
-      int read = file->read(&data, 1);
-      if (read != 1) {
+      if (file->read(&data, 1) != 1) {
         return false;
       }
 
-      if ((data & 0xC0) == 0xC0) {
+      if ((data & 0xC0) != 0xC0) {  // non RLE
+        *out++ = data;
+      } else {                      // RLE
 
+        // read the repeated byte
         int numbytes = data & 0x3F;
-        read = file->read(&data, 1);
-        if (read != 1) {
+        if (file->read(&data, 1) != 1) {
           return false;
         }
 
-        while (numbytes--) {
+        while (numbytes-- && out - scanline < scansize) {
           *out++ = data;
         }
 
-      } else {
-        *out++ = data;
       }
     }
 
@@ -74,6 +67,7 @@ namespace corona {
   //////////////////////////////////////////////////////////////////////////////
 
   Image* OpenPCX(File* file) {
+    COR_GUARD("OpenPCX");
 
     // read the header block
     byte pcx_header[128];
@@ -83,6 +77,9 @@ namespace corona {
     }
 
     // parse the header...
+    int manufacturer   = pcx_header[0];
+    int version        = pcx_header[1];
+    int encoding       = pcx_header[2];
     int bpp            = pcx_header[3];
     int xmin           = read16_le(pcx_header + 4);
     int ymin           = read16_le(pcx_header + 6);
@@ -91,9 +88,34 @@ namespace corona {
     int num_planes     = pcx_header[65];
     int bytes_per_line = read16_le(pcx_header + 66);
 
+
+    // verify the header
+
+    // we only support RLE encoding
+    if (encoding != 1) {
+      COR_LOG("Unsupported encoding");
+      return 0;
+    }
+
+    COR_IF_DEBUG {
+      char str[100];
+      sprintf(str, "bits per pixel - %d", bpp);
+      COR_LOG(str);
+      sprintf(str, "bytes per line - %d", bytes_per_line);
+      COR_LOG(str);
+    }
+
+    // we only support 8 bits per pixel
+    if (bpp != 8) {
+      COR_LOG("Unsupported bpp");
+      return 0;
+    }
+
     // create the image structure
     int width  = xmax - xmin + 1;
     int height = ymax - ymin + 1;
+
+    auto_array<byte> scanline(new byte[bytes_per_line]);
     auto_array<byte> pixels(new byte[width * height * 3]);
 
     // decode the pixel data
@@ -101,21 +123,33 @@ namespace corona {
     if (num_planes == 1) {               // 256 colors
 
       RGB palette[256];
-      auto_array<byte> image(new byte[bytes_per_line * height]);
+      auto_array<byte> image(new byte[width * height]);
 
       // read all of the scanlines
       for (int iy = 0; iy < height; ++iy) {
-        if (!ReadScanline(file, bytes_per_line, image + iy * bytes_per_line)) {
+        if (!ReadScanline(file, bytes_per_line, scanline)) {
+          COR_LOG("Failure reading scanline");
           return 0;
         }
+        memcpy((byte*)image + iy * width, scanline, width);
+      }
+
+      // seek back from the end 769 bytes
+      if (!file->seek(-769, File::END)) {
+        COR_LOG("Failure seeking to palette");
+        return 0;
+      }
+
+      // do we have a palette?
+      byte has_palette;
+      if (file->read(&has_palette, 1) != 1 || has_palette != 12) {
+        COR_LOG("Failure testing for existence of palette");
+        return 0;
       }
 
       // read palette
-      // one byte padding :P
-      byte dummy;
-      read = file->read(&dummy, 1);
-      read += file->read(palette, 3 * 256);
-      if (read != 1 + 3 * 256) {
+      if (file->read(palette, 3 * 256) != 3 * 256) {
+        COR_LOG("Failure reading palette");
         return 0;
       }
 
@@ -137,7 +171,10 @@ namespace corona {
 
       byte* out = pixels;
       for (int iy = 0; iy < height; ++iy) {
-        ReadScanline(file, 3 * bytes_per_line, scanline);
+        if (!ReadScanline(file, 3 * bytes_per_line, scanline)) {
+          COR_LOG("Failure reading scanline");
+          return 0;
+        }
 
         byte* r = scanline;
         byte* g = scanline + bytes_per_line;
@@ -150,6 +187,7 @@ namespace corona {
       }
 
     } else {
+      COR_LOG("Unknown number of planes");
       return 0;
     }
 

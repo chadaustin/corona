@@ -69,6 +69,7 @@ namespace corona {
 
     if (num_palette >= 256) {
 
+#if 0
       COR_IF_DEBUG {
         for (int i = 0; i < 256; ++i) {
           char str[80];
@@ -79,6 +80,7 @@ namespace corona {
           COR_LOG(str);
         }
       }
+#endif
 
       memcpy(palette, png_palette, 256 * sizeof(png_color));
     }
@@ -220,6 +222,7 @@ namespace corona {
             *out++ = palette[c].blue;
             *out++ = alpha[c];
 
+#if 0
             COR_IF_DEBUG {
               char str[100];
               sprintf(str, "%d %d %d %d %d",
@@ -230,6 +233,8 @@ namespace corona {
                 int(c));
               COR_LOG(str);
             }
+#endif
+
           }
         }
       }

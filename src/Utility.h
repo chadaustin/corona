@@ -110,6 +110,13 @@ namespace corona {
     return (read16_be(b) << 16) + read16_be(b + 2);
   }
 
+
+  struct RGB {
+    byte red;
+    byte green;
+    byte blue;
+  };
+
 }
 
 

@@ -14,13 +14,6 @@
 
 namespace corona {
 
-  struct RGB {
-    byte red;
-    byte green;
-    byte blue;
-  };
-
-
   struct Header {
     bool os2;
 

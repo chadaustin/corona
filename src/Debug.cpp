@@ -31,7 +31,11 @@ void
 Log::EnsureOpen()
 {
   if (!handle) {
+#ifdef WIN32
     handle = fopen("C:/corona_debug.log", "w");
+#else
+    handle = stderr;
+#endif
     atexit(Close);
   }
 }
