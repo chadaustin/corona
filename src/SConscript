@@ -3,6 +3,8 @@ from os import path
 
 Import('env')
 
+gifdir = 'libungif-4.1.0'
+
 SOURCES = [
     'Corona.cpp',
     'Debug.cpp',
@@ -14,6 +16,8 @@ SOURCES = [
     'OpenPNG.cpp',
     'OpenTGA.cpp',
     'SavePNG.cpp',
-]
+] + map(lambda n: gifdir + '/' + n, SConscript(dirs = gifdir))
 
-env.Library(target = 'corona', source = SOURCES)
+env2 = env.Copy(CPPPATH = gifdir)
+
+env2.Library(target = 'corona', source = SOURCES)

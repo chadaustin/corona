@@ -1,3 +1,7 @@
+SUBDIRS = libungif-4.1.0
+
+INCLUDES = -I $(top_srcdir)/src/libungif-4.1.0
+
 lib_LTLIBRARIES = libcorona.la
 include_HEADERS = corona.h
 
@@ -19,6 +23,9 @@ libcorona_la_SOURCES =				\
 	SimpleImage.h				\
 	Types.h					\
 	Utility.h
+
+libcorona_la_LIBADD = \
+	libungif-4.1.0/libungif.la
 
 libcorona_la_LDFLAGS = \
 	-release $(VERSION) \
