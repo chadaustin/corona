@@ -8,6 +8,11 @@
  *
  * This code licensed under the terms of the zlib license.  See
  * license.txt.
+ *
+ *
+ * Note: When compiling this header in gcc, you may want to use the
+ * -Wno-non-virtual-dtor flag to get rid of those annoying "class has
+ * virtual functions but no virtual destructor" warnings.
  */
 
 
