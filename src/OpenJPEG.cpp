@@ -88,32 +88,40 @@ namespace corona {
     unsigned width  = cinfo.output_width;
     unsigned height = cinfo.output_height;
     byte* pixels = new byte[width * height * 3];
+    memset(pixels, 0, width * height * 3);
 
     // create the image object now, so that if the error handler is called,
     // the longjmp code will know what to free
     image = new SimpleImage(width, height, PF_R8G8B8, pixels);
 
     // read the scanlines
+    bool finished = true;
     while (cinfo.output_scanline < height) {
-      jpeg_read_scanlines(&cinfo, buffer, 1);
+      int num_rows = jpeg_read_scanlines(&cinfo, buffer, 1);
+      if (num_rows == 0) {
+        finished = false;
+        break;
+      }
 
       // copy scanline into pixel buffer
       if (cinfo.output_components == 1) {        // greyscale
         byte* in = (byte*)(*buffer);
-        for (unsigned i = 0; i < width; ++i) {
+        for (unsigned i = 0; i < width * num_rows; ++i) {
           *pixels++ = *in; // red
           *pixels++ = *in; // green
           *pixels++ = *in; // blue
           ++in;
         }
       } else if (cinfo.output_components == 3) { // RGB
-        memcpy(pixels, (*buffer), width * 3);
-        pixels += width * 3;
+        memcpy(pixels, (*buffer), num_rows * width * 3);
+        pixels += num_rows * width * 3;
       }
     }
 
     // finish up
-    jpeg_finish_decompress(&cinfo);
+    if (finished) {
+      jpeg_finish_decompress(&cinfo);
+    }
     jpeg_destroy_decompress(&cinfo);
 
     return image;
