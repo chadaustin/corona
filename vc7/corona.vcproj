@@ -20,12 +20,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../src/libpng-1.2.1;../src/jpeg-6b;../src/zlib-1.1.4"
+				AdditionalIncludeDirectories="../src/libpng-1.2.1;../src/jpeg-6b;../src/zlib-1.1.4;../src/libungif-4.1.0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CORONA_EXPORTS"
 				StringPooling="TRUE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -36,7 +36,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/corona.dll"
-				LinkIncremental="2"
+				LinkIncremental="0"
 				ModuleDefinitionFile="../src/corona.def"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/corona.pdb"
@@ -64,7 +64,7 @@
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
 			CharacterSet="2"
-			WholeProgramOptimization="TRUE">
+			WholeProgramOptimization="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
@@ -73,10 +73,10 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="../src/libpng-1.2.1;../src/jpeg-6b;../src/zlib-1.1.4"
+				AdditionalIncludeDirectories="../src/libpng-1.2.1;../src/jpeg-6b;../src/zlib-1.1.4;../src/libungif-4.1.0"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CORONA_EXPORTS"
 				StringPooling="TRUE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
@@ -88,7 +88,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/corona.dll"
-				LinkIncremental="1"
+				LinkIncremental="0"
 				ModuleDefinitionFile="../src/corona.def"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
@@ -138,6 +138,9 @@
 				RelativePath="..\src\OpenBMP.cpp">
 			</File>
 			<File
+				RelativePath="..\src\OpenGIF.cpp">
+			</File>
+			<File
 				RelativePath="..\src\OpenJPEG.cpp">
 			</File>
 			<File
@@ -169,7 +172,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="png"
+			Name="libpng-1.2.1"
 			Filter="">
 			<File
 				RelativePath="..\src\libpng-1.2.1\png.c">
@@ -236,7 +239,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="zlib"
+			Name="zlib-1.1.4"
 			Filter="">
 			<File
 				RelativePath="..\src\zlib-1.1.4\adler32.c">
@@ -315,7 +318,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="jpeg"
+			Name="jpeg-6b"
 			Filter="">
 			<File
 				RelativePath="..\src\jpeg-6b\jcapimin.c">
@@ -487,6 +490,48 @@
 			</File>
 			<File
 				RelativePath="..\src\jpeg-6b\jversion.h">
+			</File>
+		</Filter>
+		<Filter
+			Name=".net"
+			Filter="">
+			<File
+				RelativePath="ManagedWrapper.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						MinimalRebuild="FALSE"
+						BasicRuntimeChecks="0"
+						DebugInformationFormat="0"
+						CompileAsManaged="2"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+						CompileAsManaged="2"/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="libungif-4.1.0"
+			Filter="">
+			<File
+				RelativePath="..\src\libungif-4.1.0\dgif_lib.c">
+			</File>
+			<File
+				RelativePath="..\src\libungif-4.1.0\gif_err.c">
+			</File>
+			<File
+				RelativePath="..\src\libungif-4.1.0\gif_lib.h">
+			</File>
+			<File
+				RelativePath="..\src\libungif-4.1.0\gif_lib_private.h">
+			</File>
+			<File
+				RelativePath="..\src\libungif-4.1.0\gifalloc.c">
 			</File>
 		</Filter>
 	</Files>
