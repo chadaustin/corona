@@ -90,6 +90,9 @@ namespace corona {
 #ifndef NO_PNG
 	*f++ = &ffPNG;
 #endif
+#ifndef NO_JPEG
+        *f++ = &ffJPEG;
+#endif
         *f++ = &ffTGA;
       }
       return g_write_formats;
@@ -296,6 +299,8 @@ namespace corona {
           file_format = FF_PNG;
         } else if (ends_with(filename, ".tga")) {
           file_format = FF_TGA;
+        } else if (ends_with(filename, ".jpg") || ends_with(filename, ".jpeg")) {
+          file_format = FF_JPEG;
         } else {
           return false;
         }
@@ -320,7 +325,9 @@ namespace corona {
 #ifndef NO_PNG
         case FF_PNG:  return SavePNG(file, image);
 #endif
-        case FF_JPEG: return false;
+#ifndef NO_JPEG
+        case FF_JPEG: return SaveJPEG(file, image);
+#endif
         case FF_PCX:  return false;
         case FF_BMP:  return false;
         case FF_TGA:  return SaveTGA(file, image);

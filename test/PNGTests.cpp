@@ -173,13 +173,13 @@ PNGTests::testLoader() {
     
   for (int i = 0; i < good_length; ++i) {
     string fn = base + good[i];
-    auto_ptr<Image> image(OpenImage(fn.c_str()));
+    auto_ptr<Image> image(OpenImage(fn));
     CPPUNIT_ASSERT_MESSAGE("should work - opening " + fn, image.get() != 0);
   }
 
   for (int i = 0; i < bad_length; ++i) {
     string fn = base + bad[i];
-    auto_ptr<Image> image(OpenImage(fn.c_str()));
+    auto_ptr<Image> image(OpenImage(fn));
     CPPUNIT_ASSERT_MESSAGE("should fail - opening " + fn, image.get() == 0);
   }
 }

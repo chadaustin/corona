@@ -158,6 +158,10 @@ SOURCE=..\..\src\Save.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\src\SaveJPEG.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\SavePNG.cpp
 # End Source File
 # Begin Source File

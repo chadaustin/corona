@@ -26,6 +26,7 @@
 
 
 #include <stddef.h>
+#include <string>
 
 
 // DLLs in Windows should use the standard calling convention
@@ -503,6 +504,15 @@ namespace corona {
       pixel_format);
   }
 
+  /// For convenience.  Accepts a std::string.
+  inline Image* OpenImage(
+    const std::string& filename,
+    PixelFormat pixel_format = PF_DONTCARE,
+    FileFormat file_format = FF_AUTODETECT)
+  {
+    return OpenImage(filename.c_str(), pixel_format, file_format);
+  }
+
   /**
    * Opens an image from the specified file.
    *
@@ -571,6 +581,15 @@ namespace corona {
     Image* image)
   {
     return hidden::CorSaveImage(filename, file_format, image);
+  }
+
+  /// For convenience.  Accepts a std::string.
+  inline bool SaveImage(
+    const std::string& filename,
+    FileFormat file_format,
+    Image* image)
+  {
+    return SaveImage(filename.c_str(), file_format, image);
   }
 
   /**

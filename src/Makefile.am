@@ -12,9 +12,9 @@ PNG_SOURCES = OpenPNG.cpp SavePNG.cpp
 endif
 
 if NO_JPEG
-JPEG_DIST    = OpenJPEG.cpp
+JPEG_DIST    = OpenJPEG.cpp SaveJPEG.cpp
 else
-JPEG_SOURCES = OpenJPEG.cpp
+JPEG_SOURCES = OpenJPEG.cpp SaveJPEG.cpp
 endif
 
 EXTRA_DIST = $(PNG_DIST) $(JPEG_DIST)

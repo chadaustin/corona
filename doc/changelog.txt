@@ -1,3 +1,8 @@
+2004.05.26
+- Added support for saving JPEG files. (Rob Jones)
+- Add convenience versions of SaveImage and OpenImage that accept a
+  std::string instead of a const char*.
+
 2004.04.19
 - Moved some entry points into the hidden namespace. (Peter Schueller)
 

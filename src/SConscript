@@ -17,6 +17,7 @@ SOURCES = [
     'OpenPCX.cpp',
     'OpenPNG.cpp',
     'OpenTGA.cpp',
+    'SaveJPEG.cpp',
     'SavePNG.cpp',
     'SaveTGA.cpp',
 ] + map(lambda n: gifdir + '/' + n, SConscript(dirs = gifdir))
