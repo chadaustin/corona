@@ -67,6 +67,11 @@ BEGIN
         MENUITEM "Flip About &Y",               ID_MODIFY_FLIPABOUTY
         MENUITEM "Flip About &Both",            ID_MODIFY_FLIPABOUTBOTH
     END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&RGB",                        ID_VIEW_RGB
+        MENUITEM "&Alpha",                      ID_VIEW_ALPHA
+    END
 END
 
 #endif    // English (U.S.) resources

@@ -25,6 +25,7 @@ static HDC gDC;
 static HBITMAP gBitmap;
 static int gImageWidth;
 static int gImageHeight;
+static bool gViewAlpha = false;
 
 
 static std::string BrowseForFileDialog(
@@ -98,7 +99,25 @@ static bool UpdateImage() {
     return false;
   }
 
-  memcpy(dest, gImage->getPixels(), gImageWidth * gImageHeight * 4);
+  if (gViewAlpha) {
+
+    unsigned char* input = (unsigned char*)gImage->getPixels();
+    unsigned char* out   = (unsigned char*)dest;
+    for (int i = 0; i < gImageWidth * gImageHeight; ++i) {
+      out[0] = input[3];
+      out[1] = input[3];
+      out[2] = input[3];
+      out[3] = 255;
+      
+      out   += 4;
+      input += 4;
+    }
+
+  } else {
+
+    memcpy(dest, gImage->getPixels(), gImageWidth * gImageHeight * 4);
+
+  }
   return true;
 }
 
@@ -129,6 +148,15 @@ static bool UpdateImage(const char* filename) {
   }
 
   return UpdateImage();
+}
+
+
+static void UpdateMenu(HWND window) {
+  HMENU menu = GetMenu(window);
+  UINT rgb_checked   = (gViewAlpha ? MF_UNCHECKED : MF_CHECKED);
+  UINT alpha_checked = (gViewAlpha ? MF_CHECKED : MF_UNCHECKED);
+  CheckMenuItem(menu, ID_VIEW_RGB,   rgb_checked   | MF_BYCOMMAND);
+  CheckMenuItem(menu, ID_VIEW_ALPHA, alpha_checked | MF_BYCOMMAND);
 }
 
 
@@ -248,6 +276,22 @@ static LRESULT CALLBACK WindowProc(
           InvalidateRect(window, NULL, TRUE);
           return 0;
         }
+
+        case ID_VIEW_RGB: {
+          gViewAlpha = false;
+          UpdateMenu(window);
+          UpdateImage();
+          InvalidateRect(window, NULL, TRUE);
+          return 0;
+        }
+
+        case ID_VIEW_ALPHA: {
+          gViewAlpha = true;
+          UpdateMenu(window);
+          UpdateImage();
+          InvalidateRect(window, NULL, TRUE);
+          return 0;
+        }
         
 
         default:
@@ -318,6 +362,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     return 1;
   }
 
+  UpdateMenu(window);
   ShowWindow(window, SW_SHOW);
   UpdateWindow(window);
 
