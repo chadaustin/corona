@@ -4,15 +4,19 @@
 
 namespace corona {
 
-  COR_EXPORT(File*) CorCreateMemoryFile(const void* buffer, int size) {
-    if (size && !buffer) {
-      return 0;
-    }
-    if (size < 0) {
-      return 0;
-    }
+  namespace hidden {
 
-    return new MemoryFile(buffer, size);
+    COR_EXPORT(File*) CorCreateMemoryFile(const void* buffer, int size) {
+      if (size && !buffer) {
+        return 0;
+      }
+      if (size < 0) {
+        return 0;
+      }
+
+      return new MemoryFile(buffer, size);
+    }
+    
   }
 
 

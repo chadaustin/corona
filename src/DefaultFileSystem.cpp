@@ -41,10 +41,13 @@ namespace corona {
     FILE* m_file;
   };
 
+  namespace hidden {
 
-  COR_EXPORT(File*) CorOpenFile(const char* filename, bool writeable) {
-    FILE* file = fopen(filename, (writeable ? "wb" : "rb"));
-    return (file ? new CFile(file) : 0);
+    COR_EXPORT(File*) CorOpenFile(const char* filename, bool writeable) {
+      FILE* file = fopen(filename, (writeable ? "wb" : "rb"));
+      return (file ? new CFile(file) : 0);
+    }
+    
   }
 
 }
