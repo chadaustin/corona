@@ -276,16 +276,20 @@ namespace corona {
     return true;
   }
 
-  bool ReadBitmap1(const byte* raster_data, byte* pixels, const Header& h) {
+  Image* ReadBitmap1(const byte* raster_data, const Header& h) {
+    auto_array<byte> pixels(new byte[h.width * h.height]);
+    
+    auto_array<RGB> palette(new RGB[256]);
+    memset(palette, 0, 256 * sizeof(RGB));
+    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
-      byte* out = pixels + (h.height - i - 1) * h.width * 3;
+      byte* out = pixels + (h.height - i - 1) * h.width;
 
       int mask = 128;
       for (int j = 0; j < h.width; ++j) {
-        *out++ = h.palette[(*in & mask) > 0].red;
-        *out++ = h.palette[(*in & mask) > 0].green;
-        *out++ = h.palette[(*in & mask) > 0].blue;
+        *out++ = (*in & mask) > 0;
 
         mask >>= 1;
         if (mask == 0) {
@@ -294,38 +298,47 @@ namespace corona {
         }
       }
     }
-    return true;
+
+    return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
+                           (byte*)palette.release(), 256, PF_R8G8B8);
   }
 
-  bool ReadBitmap4(const byte* raster_data, byte* pixels, const Header& h) {
+  Image* ReadBitmap4(const byte* raster_data, const Header& h) {
+    auto_array<byte> pixels(new byte[h.width * h.height]);
+    
+    auto_array<RGB> palette(new RGB[256]);
+    memset(palette, 0, 256 * sizeof(RGB));
+    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
-      byte* out = pixels + (h.height - i - 1) * h.width * 3;
+      byte* out = pixels + (h.height - i - 1) * h.width;
 
       for (int j = 0; j < h.width / 2; ++j) {
-        *out++ = h.palette[*in >> 4].red;
-        *out++ = h.palette[*in >> 4].green;
-        *out++ = h.palette[*in >> 4].blue;
-
-        *out++ = h.palette[*in & 0x0F].red;
-        *out++ = h.palette[*in & 0x0F].green;
-        *out++ = h.palette[*in & 0x0F].blue;
+        *out++ = (*in >> 4);
+        *out++ = (*in & 0x0F);
 
         ++in;
       }
 
       if (h.width % 2) {
-        *out++ = h.palette[*in >> 4].red;
-        *out++ = h.palette[*in >> 4].green;
-        *out++ = h.palette[*in >> 4].blue;
+        *out++ = (*in >> 4);
       }
     }
-    return true;
+
+    return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
+                           (byte*)palette.release(), 256, PF_R8G8B8);
   }
 
-  bool ReadBitmapRLE4(const byte* raster_data, byte* pixels, const Header& h) {
+  Image* ReadBitmapRLE4(const byte* raster_data, const Header& h) {
+    auto_array<byte> pixels(new byte[h.width * h.height]);
+    
+    auto_array<RGB> palette(new RGB[256]);
+    memset(palette, 0, 256 * sizeof(RGB));
+    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+
     // by default, we have an empty bitmap
-    memset(pixels, 0, h.width * h.height * 3);
+    memset(pixels, 0, h.width * h.height);
 
     // we read the image from the bottom down, and then flip it when
     // we're done
@@ -370,8 +383,7 @@ namespace corona {
 
         } else {              // read uncompressed
 
-          RGB* rgb_pixels = (RGB*)(byte*)pixels;
-
+          // the input raster data is padded on DWORD boundaries
           // c == num_pixels
           int num_bytes = (c + 3) / 4 * 2;
           
@@ -388,12 +400,12 @@ namespace corona {
             byte r = (in[j] & 0x0F);
             ++j;
 
-            rgb_pixels[y * h.width + x] = h.palette[l];
+            pixels[y * h.width + x] = l;
             if (!advance(x, y, h) || ++i >= c) {
               break;
             }
 
-            rgb_pixels[y * h.width + x] = h.palette[r];
+            pixels[y * h.width + x] = r;
             if (!advance(x, y, h) || ++i >= c) {
               break;
             }
@@ -404,20 +416,18 @@ namespace corona {
 
       } else {
 
-        RGB* rgb_pixels = (RGB*)(byte*)pixels;
-
         // a less nasty decoding loop...
-        RGB lc = h.palette[(c & 0xF0) >> 4];
-        RGB rc = h.palette[c & 0x0F];
+        byte lc = (c & 0xF0) >> 4;
+        byte rc = c & 0x0F;
 
         int i = 0;
         while (true) {
-          rgb_pixels[y * h.width + x] = lc;
+          pixels[y * h.width + x] = lc;
           if (!advance(x, y, h) || ++i >= n) {
             break;
           }
 
-          rgb_pixels[y * h.width + x] = rc;
+          pixels[y * h.width + x] = rc;
           if (!advance(x, y, h) || ++i >= n) {
             break;
           }
@@ -427,7 +437,7 @@ namespace corona {
     } // end while
 
     // flippy flippy!
-    int pitch = h.width * 3;
+    int pitch = h.width;
     auto_array<byte> row(new byte[pitch]);
     for (int i = 0; i < h.height / 2; ++i) {
       int j = h.height - i - 1;
@@ -436,28 +446,39 @@ namespace corona {
       memcpy(pixels + j * pitch, (byte*)row,         pitch);
     }
 
-    return true;
+    return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
+                           (byte*)palette.release(), 256, PF_R8G8B8);
   }
 
-  bool ReadBitmap8(const byte* raster_data, byte* pixels, const Header& h) {
+  Image* ReadBitmap8(const byte* raster_data, const Header& h) {
+    auto_array<byte> pixels(new byte[h.width * h.height]);
+    
+    auto_array<RGB> palette(new RGB[256]);
+    memset(palette, 0, 256 * sizeof(RGB));
+    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
-      byte* out = pixels + (h.height - i - 1) * h.width * 3;
+      byte* out = pixels + (h.height - i - 1) * h.width;
 
       for (int j = 0; j < h.width; ++j) {
-        *out++ = h.palette[*in].red;
-        *out++ = h.palette[*in].green;
-        *out++ = h.palette[*in].blue;
-        ++in;
+        *out++ = *in++;
       }
     }
 
-    return true;
+    return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
+                           (byte*)palette.release(), 256, PF_R8G8B8);
   }
 
-  bool ReadBitmapRLE8(const byte* raster_data, byte* pixels, const Header& h) {
+  Image* ReadBitmapRLE8(const byte* raster_data, const Header& h) {
+    auto_array<byte> pixels(new byte[h.width * h.height]);
+    
+    auto_array<RGB> palette(new RGB[256]);
+    memset(palette, 0, 256 * sizeof(RGB));
+    memcpy(palette, h.palette, h.palette_size * sizeof(RGB));
+
     // by default, we have an empty bitmap
-    memset(pixels, 0, h.width * h.height * 3);
+    memset(pixels, 0, h.width * h.height);
 
     // we read the image from the bottom down, and then flip it when
     // we're done
@@ -502,8 +523,6 @@ namespace corona {
 
         } else {              // read uncompressed
 
-          RGB* rgb_pixels = (RGB*)(byte*)pixels;
-
           // c == num_pixels
           int num_bytes = (c + 1) / 2 * 2;
           
@@ -516,7 +535,7 @@ namespace corona {
           int i = 0;
           int j = 0;
           while (true) {
-            rgb_pixels[y * h.width + x] = h.palette[in[j++]];
+            pixels[y * h.width + x] = in[j++];
             if (!advance(x, y, h) || ++i >= c) {
               break;
             }
@@ -527,14 +546,9 @@ namespace corona {
 
       } else {
 
-        RGB* rgb_pixels = (RGB*)(byte*)pixels;
-
-        // yet another decoding loop
-        RGB color = h.palette[c];
-
         int i = 0;
         while (true) {
-          rgb_pixels[y * h.width + x] = color;
+          pixels[y * h.width + x] = c;
           if (!advance(x, y, h) || ++i >= n) {
             break;
           }
@@ -544,7 +558,7 @@ namespace corona {
     } // end while
 
     // flippy flippy!
-    int pitch = h.width * 3;
+    int pitch = h.width;
     auto_array<byte> row(new byte[pitch]);
     for (int i = 0; i < h.height / 2; ++i) {
       int j = h.height - i - 1;
@@ -553,13 +567,16 @@ namespace corona {
       memcpy(pixels + j * pitch, (byte*)row,         pitch);
     }
 
-    return true;
+    return new SimpleImage(h.width, h.height, PF_I8, pixels.release(),
+                           (byte*)palette.release(), 256, PF_R8G8B8);
   }
+  
+  Image* ReadBitmap16(const byte* raster_data, const Header& h) {
+    auto_array<RGB> pixels(new RGB[h.width * h.height]);
 
-  bool ReadBitmap16(const byte* raster_data, byte* pixels, const Header& h) {
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
-      byte* out = pixels + (h.height - i - 1) * h.width * 3;
+      RGB* out = pixels + (h.height - i - 1) * h.width;
 
       for (int j = 0; j < h.width; ++j) {
         int clr = read16_le(in);
@@ -568,52 +585,57 @@ namespace corona {
 #define C16(C) \
   (byte)( ((clr & h.bf_##C##_mask) >> h.bf_##C##_shift) << h.bf_##C##_rshift);
 
-        *out++ = C16(red);
-        *out++ = C16(green);
-        *out++ = C16(blue);
+        out->red   = C16(red);
+        out->green = C16(green);
+        out->blue  = C16(blue);
+        ++out;
 
 #undef C16
       }
     }
 
-    return true;
+    return new SimpleImage(h.width, h.height, PF_R8G8B8,
+                           (byte*)pixels.release());
   }
 
-  bool ReadBitmap24(const byte* raster_data, byte* pixels, const Header& h) {
+  Image* ReadBitmap24(const byte* raster_data, const Header& h) {
+    auto_array<RGB> pixels(new RGB[h.width * h.height]);
+
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
-      byte* out = pixels + (h.height - i - 1) * h.width * 3;
+      RGB* out = pixels + (h.height - i - 1) * h.width;
 
       for (int j = 0; j < h.width; ++j) {
-        byte b = *in++;
-        byte g = *in++;
-        byte r = *in++;
-        *out++ = r;
-        *out++ = g;
-        *out++ = b;
+        out->blue  = *in++;
+        out->green = *in++;
+        out->red   = *in++;
+        ++out;
       }
     }
 
-    return true;
+    return new SimpleImage(h.width, h.height, PF_R8G8B8,
+                           (byte*)pixels.release());
   }
 
-  bool ReadBitmap32(const byte* raster_data, byte* pixels, const Header& h) {
-    // is this right?  does anybody actually use 32-bit bitmaps?
+  Image* ReadBitmap32(const byte* raster_data, const Header& h) {
+    auto_array<RGB> pixels(new RGB[h.width * h.height]);
 
     for (int i = 0; i < h.height; ++i) {
       const byte* in = raster_data + i * h.pitch;
-      byte* out = pixels + (h.height - i - 1) * h.width * 3;
+      RGB* out = pixels + (h.height - i - 1) * h.width;
 
       for (int j = 0; j < h.width; ++j) {
         u32 pixel = read32_le(in);
         in += 4;
-        *out++ = (byte)((pixel & h.bf_red_mask)   >> h.bf_red_shift);
-        *out++ = (byte)((pixel & h.bf_green_mask) >> h.bf_green_shift);
-        *out++ = (byte)((pixel & h.bf_blue_mask)  >> h.bf_blue_shift);
+        out->red   = (byte)((pixel & h.bf_red_mask)   >> h.bf_red_shift);
+        out->green = (byte)((pixel & h.bf_green_mask) >> h.bf_green_shift);
+        out->blue  = (byte)((pixel & h.bf_blue_mask)  >> h.bf_blue_shift);
+        ++out;
       }
     }
 
-    return true;
+    return new SimpleImage(h.width, h.height, PF_R8G8B8,
+                           (byte*)pixels.release());
   }
 
   Image* DecodeBitmap(File* file, const Header& h) {
@@ -631,10 +653,7 @@ namespace corona {
     // the output pixel buffer (parameter to new SimpleImage)
     auto_array<byte> pixels(new byte[h.width * h.height * 3]);
 
-    typedef bool (*Decoder)(
-      const byte*   raster_data,
-      byte*         pixels,
-      const Header& h);
+    typedef Image* (*Decoder)(const byte* raster_data, const Header& h);
 
     Decoder decoder = 0;
 
@@ -649,8 +668,8 @@ namespace corona {
     else if (h.bpp == 32 && (h.compression == 0 ||
                              h.compression == 3)) { decoder = ReadBitmap32;   }
 
-    if (decoder && decoder(raster_data.get(), pixels.get(), h)) {
-      return new SimpleImage(h.width, h.height, PF_R8G8B8, pixels.release());
+    if (decoder) {
+      return decoder(raster_data.get(), h);
     } else {
       return 0;
     }
