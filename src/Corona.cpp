@@ -1,5 +1,5 @@
-#include <string.h>
 #include <memory>
+#include <string.h>
 #include <ctype.h>
 #include "corona.h"
 #include "DefaultFileSystem.h"
@@ -7,7 +7,6 @@
 #include "Open.h"
 #include "Save.h"
 #include "SimpleImage.h"
-#include "Utility.h"
 
 
 namespace corona {

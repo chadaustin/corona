@@ -8,6 +8,23 @@
 #define COR_EXPORT(ret, name)  COR_FUNCTION(ret, name)
 
 
+#if defined(_MSC_VER) && _MSC_VER <= 1200
+
+// define our own std::min and std::max in VC6
+namespace std {
+  template<typename T>
+  T min(T a, T b) {
+    return a < b ? a : b;
+  }
+  template<typename T>
+  T max(T a, T b) {
+    return a > b ? a : b;
+  }
+}
+
+#endif
+
+
 namespace corona {
 
 
@@ -47,17 +64,6 @@ namespace corona {
   private:
     T* array;
   };
-
-
-  // replace these with std::{min,max} when VC7 is out  :(
-  template<typename T>
-  T Min(T a, T b) {
-    return a < b ? a : b;
-  }
-  template<typename T>
-  T Max(T a, T b) {
-    return a > b ? a : b;
-  }
 
 
   // does this format not use a palette?

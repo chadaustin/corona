@@ -1,3 +1,3 @@
 #!/bin/sh
 
-(cd test && ./CoronaTest $*)
+scons test && (cd test && ./CoronaTest $*)
