@@ -22,8 +22,12 @@ namespace corona {
 
     COR_EXPORT(const char*, CorGetSupportedReadFormats)() {
       return
+#ifndef NO_PNG
 	"PNG Files:png"  ";"
+#endif
+#ifndef NO_JPEG
 	"JPEG Files:jpeg,jpg"  ";"
+#endif
 	"PCX Files:pcx"  ";"
 	"BMP Files:bmp"  ";"
 	"TGA Files:tga"  ";"
@@ -33,8 +37,11 @@ namespace corona {
     ///////////////////////////////////////////////////////////////////////////
 
     COR_EXPORT(const char*, CorGetSupportedWriteFormats)() {
-      return
-	"PNG Files:png"  ;
+      return ""
+#ifndef NO_PNG
+	"PNG Files:png"
+#endif
+        ;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -152,26 +159,34 @@ namespace corona {
         return 0;
       }
 
+#define TRY_TYPE(type)                                 \
+  {                                                    \
+    Image* image = CorOpenImageFromFile(file, (type)); \
+    if (image) { return image; }                       \
+  }
+
       file->seek(0, File::BEGIN);
       switch (file_format) {
         case FF_AUTODETECT: {
-          Image* image = CorOpenImageFromFile(file, FF_PNG);
-          if (image) { return image; }
-          image = CorOpenImageFromFile(file, FF_JPEG);
-          if (image) { return image; }
-          image = CorOpenImageFromFile(file, FF_PCX);
-          if (image) { return image; }
-          image = CorOpenImageFromFile(file, FF_BMP);
-          if (image) { return image; }
-          image = CorOpenImageFromFile(file, FF_TGA);
-          if (image) { return image; }
-          image = CorOpenImageFromFile(file, FF_GIF);
-          if (image) { return image; }
+#ifndef NO_PNG
+          TRY_TYPE(FF_PNG);
+#endif
+#ifndef NO_JPEG
+          TRY_TYPE(FF_JPEG);
+#endif
+          TRY_TYPE(FF_PCX);
+          TRY_TYPE(FF_BMP);
+          TRY_TYPE(FF_TGA);
+          TRY_TYPE(FF_GIF);
           return 0;
         }
         
+#ifndef NO_PNG
         case FF_PNG:  return OpenPNG(file);
+#endif
+#ifndef NO_JPEG
         case FF_JPEG: return OpenJPEG(file);
+#endif
         case FF_PCX:  return OpenPCX(file);
         case FF_BMP:  return OpenBMP(file);
         case FF_TGA:  return OpenTGA(file);
@@ -207,7 +222,9 @@ namespace corona {
       }
 
       switch (file_format) {
+#ifndef NO_PNG
         case FF_PNG:  return SavePNG(file, image);
+#endif
         case FF_JPEG: return false;
         case FF_PCX:  return false;
         case FF_BMP:  return false;

@@ -1,15 +1,9 @@
 AC_INIT(src/corona.h)
 AC_CONFIG_AUX_DIR(config)
 
-MAJOR_VERSION=0
-MINOR_VERSION=2
-PATCH_VERSION=0
-VERSION=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
+VERSION=0.3.0
 PACKAGE="corona"
 
-AC_SUBST(MAJOR_VERSION)
-AC_SUBST(MINOR_VERSION)
-AC_SUBST(PATCH_VERSION)
 AC_SUBST(VERSION)
 AC_SUBST(PACKAGE)
 
@@ -34,12 +28,24 @@ AM_PROG_LIBTOOL
 dnl Checks for libraries.
 
 AC_CHECK_LIB(png, png_create_read_struct,
-    EXTRA_LIBS="-lpng -lz -lm $EXTRA_LIBS",
-    AC_MSG_ERROR(could not find libpng),
+    LIBS="-lpng -lz -lm $LIBS"
+    EXTRA_LIBS="-lpng -lz -lm $EXTRA_LIBS"
+  ,
+    AC_MSG_WARN([libpng not found.  PNG support will not be compiled.])
+    AC_DEFINE(NO_PNG)
+    NO_PNG=true
+  ,
     -lz -lm)
+AM_CONDITIONAL(NO_PNG, test "x$NO_PNG" = "xtrue")
+
 AC_CHECK_LIB(jpeg, jpeg_start_decompress,
-    EXTRA_LIBS="-ljpeg $EXTRA_LIBS",
-    AC_MSG_ERROR(could not find libjpeg))
+    LIBS="-ljpeg $LIBS"
+    EXTRA_LIBS="-ljpeg $EXTRA_LIBS"
+  ,
+    AC_MSG_WARN([libjpeg not found.  JPEG support will not be compiled.])
+    AC_DEFINE(NO_JPEG)
+    NO_JPEG=true)
+AM_CONDITIONAL(NO_JPEG, test "x$NO_JPEG" = "xtrue")
 
 dnl Checks for header files.
 
