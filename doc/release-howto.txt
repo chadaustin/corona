@@ -8,5 +8,5 @@ when the time to release comes around.
 The following files contain version information:
   SConstruct
   configure.in
-  doc/doxygen/mainpage.doxy
+  doc/doxygen/corona.doxy
   src/Corona.cpp
