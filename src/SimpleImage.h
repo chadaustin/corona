@@ -16,7 +16,6 @@ namespace corona {
    * The constructor takes a pixel buffer (and optionally a palette)
    * which it then owns and delete[]'s when the image is destroyed.
    */
-
   class SimpleImage : public DLLImplementation<Image> {
   public:
 

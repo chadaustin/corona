@@ -206,11 +206,13 @@ namespace corona {
                          (byte*)image->getPalette(), image->getPaletteFormat(),
                          palette_size))
       {
+        delete image;
         delete[] pixels;
         delete[] new_palette;
         return 0;
       }
 
+      delete image;
       return new SimpleImage(
         width, height, format, pixels,
         new_palette, palette_size, palette_format);

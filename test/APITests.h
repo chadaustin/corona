@@ -9,6 +9,7 @@ class APITests : public TestCase {
 public:
   void testBasicOperations();
   void testAPI();
+  void testMemory();
   static Test* suite();
 };
 

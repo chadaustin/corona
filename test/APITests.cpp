@@ -58,11 +58,123 @@ APITests::testAPI() {
 }
 
 
+/// Basically the same as SimpleImage, but it sets a boolean flag when
+/// the image is deleted.
+class TestDeletionImage : public DLLImplementation<Image> {
+public:
+  TestDeletionImage(
+    int width, int height,
+    PixelFormat format, byte* pixels,
+    byte* palette, int palette_size, PixelFormat palette_format,
+    bool& deleted)
+  : m_deleted(deleted)
+  {
+    m_width          = width;
+    m_height         = height;
+    m_format         = format;
+    m_pixels         = pixels;
+    m_palette        = palette;
+    m_palette_size   = palette_size;
+    m_palette_format = palette_format;
+  }
+
+  ~TestDeletionImage() {
+    delete[] m_pixels;
+    delete[] m_palette;
+    m_deleted = true;
+  }
+
+  int COR_CALL getWidth() {
+    return m_width;
+  }
+
+  int COR_CALL getHeight() {
+    return m_height;
+  }
+
+  PixelFormat COR_CALL getFormat() {
+    return m_format;
+  }
+
+  void* COR_CALL getPixels() {
+    return m_pixels;
+  }
+
+  void* COR_CALL getPalette() {
+    return m_palette;
+  }
+
+  int COR_CALL getPaletteSize() {
+    return m_palette_size;
+  }
+
+  PixelFormat COR_CALL getPaletteFormat() {
+    return m_palette_format;
+  }
+
+private:
+  int         m_width;
+  int         m_height;
+  PixelFormat m_format;
+  byte*       m_pixels;
+  byte*       m_palette;
+  int         m_palette_size;
+  PixelFormat m_palette_format;
+  bool&       m_deleted;
+};
+
+
+
+void
+APITests::testMemory() {
+  {
+    // ConvertImage() should delete the image if it successfully
+    // converts.
+    bool convert_image_deleted = false;
+    Image* image = new TestDeletionImage(
+      16, 16, PF_I8, new byte[256], new byte[256 * 4], 256, PF_R8G8B8,
+      convert_image_deleted);
+    delete ConvertImage(image, PF_R8G8B8A8);
+    CPPUNIT_ASSERT(convert_image_deleted == true);
+  }
+
+  {
+    // ConvertImage() should also delete the image if it cannot
+    // convert.
+    bool convert_image_deleted = false;
+    Image* image = new TestDeletionImage(
+      16, 16, PF_I8, new byte[256], new byte[256 * 4], 256, PF_R8G8B8,
+      convert_image_deleted);
+    delete ConvertImage(image, PF_I8);
+    CPPUNIT_ASSERT(convert_image_deleted == true);
+  }
+
+  {
+    bool convert_palette_deleted = false;
+    Image* image = new TestDeletionImage(
+      16, 16, PF_I8, new byte[256], new byte[256 * 4], 256, PF_R8G8B8,
+      convert_palette_deleted);
+    delete ConvertPalette(image, PF_R8G8B8A8);
+    CPPUNIT_ASSERT(convert_palette_deleted == true);
+  }
+
+  {
+    bool convert_palette_deleted = false;
+    Image* image = new TestDeletionImage(
+      16, 16, PF_I8, new byte[256], new byte[256 * 4], 256, PF_R8G8B8,
+      convert_palette_deleted);
+    delete ConvertPalette(image, PF_I8);
+    CPPUNIT_ASSERT(convert_palette_deleted == true);
+  }
+}
+
+
 Test*
 APITests::suite() {
   typedef TestCaller<APITests> Caller;
 
   TestSuite* suite = new TestSuite();
   suite->addTest(new Caller("Basic API Tests", &APITests::testAPI));
+  suite->addTest(new Caller("Memory Management", &APITests::testMemory));
   return suite;
 }
