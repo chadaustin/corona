@@ -1,0 +1,9 @@
+# SConstruct for Corona GLUT example
+# Configured for the Cygwin (www.cygwin.com) environment
+# Build with SCons (www.scons.org)
+
+Default('.')
+
+libs = ['opengl32', 'glut32', 'corona', 'png', 'jpeg']
+env = Environment(LIBS = libs)
+env.Program(target = 'glut', source = 'glut.cpp')
