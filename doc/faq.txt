@@ -22,3 +22,18 @@ cleaning things up, writing documentation, and testing the decoders.
 This library is designed for use within several of my personal
 projects (Sphere, PictureShow, Naikai, Battlements) and the ISU Game
 Developers Club (http://isugamedev.sf.net/).
+
+
+-- Corona loads my image upside down! --
+
+There's a good chance it doesn't.  Corona follows the convention that
+the first row of pixels in the array it gives you is the top row.
+Other graphics packages expect rows from the bottom up.  If your image
+appears upside-down, try using the recently-added FlipImage() function
+provided by Corona.
+
+A similar problem is that discreet's 3ds max outputs texture (uv)
+coordinates upside down with respect to how OpenGL expects them.
+There are two common solutions to this problem.  You can flip the
+images when loading them or modify the texture coordinates so that
+v' = 1 - v.
