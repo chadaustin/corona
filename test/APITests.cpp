@@ -23,6 +23,17 @@ APITests::testBasicOperations(int width, int height) {
     pixels[i] = rand() % 256;
   }
 
+  auto_ptr<Image> create_clone(
+      CreateImage(image->getWidth(), image->getHeight(),
+                  image->getFormat(), image->getPixels()));
+  CPPUNIT_ASSERT(create_clone.get());
+  CPPUNIT_ASSERT(image->getWidth()  == create_clone->getWidth());
+  CPPUNIT_ASSERT(image->getHeight() == create_clone->getHeight());
+  CPPUNIT_ASSERT(image->getFormat() == create_clone->getFormat());
+  CPPUNIT_ASSERT(memcmp(image->getPixels(),
+                        create_clone->getPixels(),
+                        width * height * bpp) == 0);
+
   // clone the image (use same pixel format)
   auto_ptr<Image> identical_clone(CloneImage(image.get()));
   CPPUNIT_ASSERT(image->getWidth()  == identical_clone->getWidth());

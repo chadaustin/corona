@@ -1,3 +1,8 @@
+2003.07.16
+- fixed memory leaks in SavePNG (Hosam Abdulrrazek)
+- you can now specify an initial pixel buffer as the fourth argument
+  to CreateImage (Hosam Abdulrrazek)
+
 2003.05.11
 - VERSION 1.0.1 RELEASED
 - added IsDirect(), IsPalettized(), and GetPaletteSize() functions

@@ -307,6 +307,12 @@ namespace corona {
       int height,
       PixelFormat format);
 
+    COR_FUNCTION(Image*) CorCreateImageWithPixels(
+      int width,
+      int height,
+      PixelFormat format,
+      void* pixels);
+
     COR_FUNCTION(Image*) CorCreatePalettizedImage(
       int width,
       int height,
@@ -436,20 +442,26 @@ namespace corona {
 
   /**
    * Create a new, blank image with a specified width, height, and
-   * format.
+   * format.  If pixels is specified, Corona uses them to initialize
+   * the contents of the image.  Corona does *not* take ownership of
+   * the pixel memory, so the caller is responsible for cleaning up
+   * after itself.  If pixels is not specified, the new image is
+   * filled with zeroes.
    *
    * @param width   width of the new image
    * @param height  height of the new image
    * @param format  format the pixels are stored in, cannot be PF_DONTCARE
+   * @param pixels  pixel buffer used to initialize the new image
    *
    * @return  newly created blank image
    */
   inline Image* CreateImage(
     int width,
     int height,
-    PixelFormat format)
+    PixelFormat format,
+    void* pixels = 0)
   {
-    return hidden::CorCreateImage(width, height, format);
+    return hidden::CorCreateImageWithPixels(width, height, format, pixels);
   }
 
   /**

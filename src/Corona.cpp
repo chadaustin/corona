@@ -50,15 +50,30 @@ namespace corona {
       int height,
       PixelFormat format)
     {
+      return CreateImage(width, height, format, 0);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    COR_EXPORT(Image*) CorCreateImageWithPixels(
+      int width,
+      int height,
+      PixelFormat format,
+      void* pixels)
+    {
       // this function only supports creation of non-palettized images
       if (!IsDirect(format)) {
         return 0;
       }
 
       int size = width * height * GetPixelSize(format);
-      byte* pixels = new byte[size];
-      memset(pixels, 0, size);
-      return new SimpleImage(width, height, format, pixels);
+      byte* p = new byte[size];
+      if (pixels) {
+        memcpy(p, pixels, size);
+      } else {
+        memset(p, 0, size);
+      }
+      return new SimpleImage(width, height, format, p);
     }
 
     ///////////////////////////////////////////////////////////////////////////
