@@ -6,7 +6,7 @@
  * http://aegisknight.org/cppinterface.html
  *
  * This code licensed under the terms of the zlib license.  See
- * documentation/license.txt.
+ * doc/license.txt.
  */
 
 
