@@ -69,6 +69,8 @@ AC_OUTPUT(
         corona-config
         Makefile
         doc/Makefile
+        examples/Makefile
+        examples/formats/Makefile
         src/Makefile
         src/libungif-4.1.0/Makefile,
     [chmod a+x corona-config])
