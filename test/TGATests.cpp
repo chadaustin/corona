@@ -3,8 +3,12 @@
 
 void
 TGATests::testLoader() {
-  AssertImagesEqual("images/targa/test.tga",
-                    "images/targa/reference/test.png");
+  std::string images[] = { "test", "rgb", "rgb_bottom_left" };
+  for (unsigned i = 0; i < sizeof(images) / sizeof(*images); ++i) {
+    std::string& img = images[i];
+    AssertImagesEqual("images/targa/" + img + ".tga",
+		      "images/targa/reference/" + img + ".png");
+  }
 }
 
 Test*
