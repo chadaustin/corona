@@ -1,6 +1,6 @@
 /*! \mainpage Corona 1.0.2
 
-Corona is a high-level, portable image I/O library usable from C++.
+Corona is a high-level, portable image I/O library for C++.
 
 Supported read formats:
 <ul>
