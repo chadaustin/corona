@@ -157,6 +157,9 @@
 				RelativePath="..\src\Save.h">
 			</File>
 			<File
+				RelativePath="..\src\SaveJPEG.cpp">
+			</File>
+			<File
 				RelativePath="..\src\SavePNG.cpp">
 			</File>
 			<File
