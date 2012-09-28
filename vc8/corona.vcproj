@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="corona"
 	ProjectGUID="{62C246C9-F8C3-4F84-BDEE-B5B8C466D67B}"
+	RootNamespace="corona"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -40,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../src/libpng-1.2.1;../src/jpeg-6b;../src/zlib-1.1.4;../src/libungif-4.1.0"
+				AdditionalIncludeDirectories="&quot;../src/libpng-1.5.12&quot;;&quot;../src/jpeg-6b&quot;;&quot;../src/zlib-1.1.4&quot;;&quot;../src/libungif-4.1.0&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CORONA_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -127,7 +128,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="../src/libpng-1.2.1;../src/jpeg-6b;../src/zlib-1.1.4;../src/libungif-4.1.0"
+				AdditionalIncludeDirectories="&quot;../src/libpng-1.5.12&quot;;&quot;../src/jpeg-6b&quot;;&quot;../src/zlib-1.1.4&quot;;&quot;../src/libungif-4.1.0&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CORONA_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -277,90 +278,94 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="libpng-1.2.1"
+			Name="libpng-1.5.12"
 			>
 			<File
-				RelativePath="..\src\libpng-1.2.1\png.c"
+				RelativePath="..\src\libpng-1.5.12\png.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\png.h"
+				RelativePath="..\src\libpng-1.5.12\png.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngasmrd.h"
+				RelativePath="..\src\libpng-1.5.12\pngconf.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngconf.h"
+				RelativePath="..\src\libpng-1.5.12\pngdebug.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngerror.c"
+				RelativePath="..\src\libpng-1.5.12\pngerror.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pnggccrd.c"
+				RelativePath="..\src\libpng-1.5.12\pngget.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngget.c"
+				RelativePath="..\src\libpng-1.5.12\pnginfo.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngmem.c"
+				RelativePath="..\src\libpng-1.5.12\pnglibconf.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngpread.c"
+				RelativePath="..\src\libpng-1.5.12\pngmem.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngread.c"
+				RelativePath="..\src\libpng-1.5.12\pngpread.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngrio.c"
+				RelativePath="..\src\libpng-1.5.12\pngpriv.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngrtran.c"
+				RelativePath="..\src\libpng-1.5.12\pngread.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngrutil.c"
+				RelativePath="..\src\libpng-1.5.12\pngrio.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngset.c"
+				RelativePath="..\src\libpng-1.5.12\pngrtran.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngtest.c"
+				RelativePath="..\src\libpng-1.5.12\pngrutil.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngtrans.c"
+				RelativePath="..\src\libpng-1.5.12\pngset.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngvcrd.c"
+				RelativePath="..\src\libpng-1.5.12\pngstruct.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngwio.c"
+				RelativePath="..\src\libpng-1.5.12\pngtrans.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngwrite.c"
+				RelativePath="..\src\libpng-1.5.12\pngwio.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngwtran.c"
+				RelativePath="..\src\libpng-1.5.12\pngwrite.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\libpng-1.2.1\pngwutil.c"
+				RelativePath="..\src\libpng-1.5.12\pngwtran.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\libpng-1.5.12\pngwutil.c"
 				>
 			</File>
 		</Filter>

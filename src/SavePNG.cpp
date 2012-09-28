@@ -4,6 +4,14 @@
 #include "Save.h"
 #include "Types.h"
 
+//try to support old libpngs
+//this seems to be the version it got introduced.. 
+//before then it was in png.h I think and this #include wont be necessary
+#if PNG_LIBPNG_VER_MAJOR <= 1 && PNG_LIBPNG_VER_MINOR < 5
+#else
+#include <pnginfo.h>
+#endif
+
 
 namespace corona {
 

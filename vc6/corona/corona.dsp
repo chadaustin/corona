@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "../../src/libungif-4.1.0" /I "../../src/jpeg-6b" /I "../../src/libpng-1.2.1" /I "../../src/zlib-1.1.4" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "../../src/libungif-4.1.0" /I "../../src/jpeg-6b" /I "../../src/libpng-1.5.12" /I "../../src/zlib-1.1.4" /D "NDEBUG" /D for="if (0) ; else for" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../src/libungif-4.1.0" /I "../../src/jpeg-6b" /I "../../src/libpng-1.2.1" /I "../../src/zlib-1.1.4" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../src/libungif-4.1.0" /I "../../src/jpeg-6b" /I "../../src/libpng-1.5.12" /I "../../src/zlib-1.1.4" /D "_DEBUG" /D for="if (0) ; else for" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CORONA_EXPORTS" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -289,89 +289,72 @@ SOURCE="..\..\src\zlib-1.1.4\zutil.h"
 
 # PROP Default_Filter ""
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\png.c"
+SOURCE="..\..\src\libpng-1.5.12\png.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\png.h"
+SOURCE="..\..\src\libpng-1.5.12\png.h"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngasmrd.h"
+SOURCE="..\..\src\libpng-1.5.12\pngconf.h"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngconf.h"
+SOURCE="..\..\src\libpng-1.5.12\pngdebug.h"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngerror.c"
+SOURCE="..\..\src\libpng-1.5.12\pngerror.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pnggccrd.c"
+SOURCE="..\..\src\libpng-1.5.12\pngget.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngget.c"
+SOURCE="..\..\src\libpng-1.5.12\pnginfo.h"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngmem.c"
+SOURCE="..\..\src\libpng-1.5.12\pnglibconf.h"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngpread.c"
+SOURCE="..\..\src\libpng-1.5.12\pngmem.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngread.c"
+SOURCE="..\..\src\libpng-1.5.12\pngpread.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngrio.c"
+SOURCE="..\..\src\libpng-1.5.12\pngpriv.h"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngrtran.c"
+SOURCE="..\..\src\libpng-1.5.12\pngread.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngrutil.c"
+SOURCE="..\..\src\libpng-1.5.12\pngrio.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngset.c"
+SOURCE="..\..\src\libpng-1.5.12\pngrtran.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngtest.c"
+SOURCE="..\..\src\libpng-1.5.12\pngrutil.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngtrans.c"
+SOURCE="..\..\src\libpng-1.5.12\pngset.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngvcrd.c"
+SOURCE="..\..\src\libpng-1.5.12\pngstruct.h"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngwio.c"
+SOURCE="..\..\src\libpng-1.5.12\pngtrans.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngwrite.c"
+SOURCE="..\..\src\libpng-1.5.12\pngwio.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngwtran.c"
+SOURCE="..\..\src\libpng-1.5.12\pngwrite.c"
 # End Source File
 # Begin Source File
-
-SOURCE="..\..\src\libpng-1.2.1\pngwutil.c"
+SOURCE="..\..\src\libpng-1.5.12\pngwtran.c"
 # End Source File
+# Begin Source File
+SOURCE="..\..\src\libpng-1.5.12\pngwutil.c"
+# End Source File
+
 # End Group
 # Begin Group "jpeg"
 
