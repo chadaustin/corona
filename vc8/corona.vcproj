@@ -131,7 +131,7 @@
 				AdditionalIncludeDirectories="&quot;../src/libpng-1.5.12&quot;;&quot;../src/jpeg-6b&quot;;&quot;../src/zlib-1.1.4&quot;;&quot;../src/libungif-4.1.0&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CORONA_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -708,6 +708,19 @@
 		<Filter
 			Name=".net"
 			>
+			<File
+				RelativePath="..\vc7\ManagedWrapper.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ExceptionHandling="0"
+						CompileAsManaged="4"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<Filter
 			Name="libungif-4.1.0"

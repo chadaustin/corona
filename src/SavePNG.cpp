@@ -4,15 +4,6 @@
 #include "Save.h"
 #include "Types.h"
 
-//try to support old libpngs
-//this seems to be the version it got introduced.. 
-//before then it was in png.h I think and this #include wont be necessary
-#if PNG_LIBPNG_VER_MAJOR <= 1 && PNG_LIBPNG_VER_MINOR < 5
-#else
-#include <pnginfo.h>
-#endif
-
-
 namespace corona {
 
   void PNG_write(png_structp png_ptr, png_bytep data, png_size_t length) {
@@ -153,7 +144,11 @@ namespace corona {
       pixels += width * color_format_bpp;      
     }
     png_set_rows(png_ptr, info_ptr, (png_bytepp)rows);
-    info_ptr->valid |= PNG_INFO_IDAT;
+
+		//zero 28-sep-2012 - it was never necessary, at least as far back as png 1.2.1, to set this
+		//png_set_rows sets it.
+		//good thing, because info_ptr is private >= png 1.5
+    //info_ptr->valid |= PNG_INFO_IDAT;
 
     // actually write the image
     png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
